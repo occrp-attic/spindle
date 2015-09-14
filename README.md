@@ -6,5 +6,6 @@ Running it:
 ```bash
 $ pip install -r requirements.txt
 $ pip install -e .
+$ bower install
 $ getschwifty runserver
 ```
