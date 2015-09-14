@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html ng-app="schwifty">
+<head>
+  <meta charset="utf-8">
+  <title>OCCRP Data Browser</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Bitter:400,700' rel='stylesheet' type='text/css'>
+
+  {% assets filters="scss", output="build/style.css", "style.scss" %}
+    <link href='{{ ASSET_URL }}' rel='stylesheet' type='text/css'>
+  {% endassets %}
+
+  <link rel="shortcut icon" href="https://occrp.org/images/favicon.png">
+</head>
+<body>
+  <h1>I'm a banana!</h1>
+  <a href='#'>This is a link</a>
+</body>
+</html>

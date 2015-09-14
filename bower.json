@@ -1,0 +1,24 @@
+{
+  "name": "schwifty",
+  "version": "0.0.0",
+  "homepage": "https://github.com/occrp/schwifty",
+  "authors": [
+    "OCCRP <tech@occrp.org>"
+  ],
+  "description": "Show us what you got.",
+  "main": "schwifty/static/app.js",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "AGPLv3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "bootstrap-sass-official#~3.3.5"
+  }
+}

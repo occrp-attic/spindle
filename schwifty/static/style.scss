@@ -1,0 +1,13 @@
+$occrp-red: #982022;
+$occrp-light-green: #00bac1;
+$occrp-dark-green: #3a4953;
+
+// override bootstrap defaults
+
+$brand-primary: $occrp-red;
+$brand-success: $occrp-light-green;
+
+$font-family-sans-serif:  'Droid Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-serif:       'Bitter', Georgia, "Times New Roman", Times, serif;
+
+@import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
