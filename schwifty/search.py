@@ -1,9 +1,9 @@
 from schwifty.core import es, es_index
 
 QUERY_FIELDS = ['raw.*']
+# FIXME: need to force all raw fields to be strings.
 QUERY_FIELDS = ['_all']
 DEFAULT_FIELDS = ['source.*', 'id', 'schema', 'entity.*']
-
 
 
 def query(text):
@@ -40,7 +40,11 @@ def query(text):
 
     result = es.search(index=es_index, body=q)
     hits = result.get('hits', {})
-    output = {'results': [], 'total':  hits.get('total')}
+    output = {
+        'status': 'ok',
+        'results': [],
+        'total':  hits.get('total')
+    }
     for doc in hits.get('hits', []):
         output['results'].append(doc.get('_source'))
     return output
