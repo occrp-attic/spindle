@@ -1,7 +1,8 @@
-from flask import render_template, jsonify, abort
+from flask import render_template, jsonify, abort, request
 from elasticsearch import ElasticsearchException
 
 from schwifty.core import app, es, es_index
+from schwifty.search import query
 
 # TODO: support OAuth against ID
 # TODO: make notes, bookmarks, links
@@ -14,10 +15,16 @@ def handle_error(err):
     return res
 
 
-@app.route('/api/entity/<doc_type>/<id>')
+@app.route('/api/entity/<doc_type>/<path:id>')
 def entity(doc_type, id):
     data = es.get(index=es_index, doc_type=doc_type, id=id)
     return jsonify({'status': 'ok', 'data': data.get('_source')})
+
+
+@app.route('/api/search')
+def search():
+    result = query(request.args.get('q', ''))
+    return jsonify(result)
 
 
 @app.route('/')
