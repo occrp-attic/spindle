@@ -1,8 +1,13 @@
 from flask import Flask
-from flask_restful import Api
+from flask.ext.assets import Environment
+from elasticsearch import Elasticsearch
 
-from schwifty import settings
+from schwifty import default_settings
 
-app = Flask("Schwifty")
-api = Api(app)
-app.config.from_object(settings)
+app = Flask(__name__)
+app.config.from_object(default_settings)
+
+es = Elasticsearch(app.config.get('ELASTICSEARCH_URL'))
+es_index = app.config.get('ELASTICSEARCH_INDEX')
+
+assets = Environment(app)

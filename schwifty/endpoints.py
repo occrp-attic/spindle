@@ -1,17 +1,8 @@
-from schwifty import settings
-from flask import request
-from flask_restful import Resource
+from flask import render_template
 
-class Welcome(Resource):
-    def get(self):
-        val = {"message": "GET Schwifty!"}
-        val["version"] = settings.VERSION
-        return val
+from schwifty.core import app
 
-class Search(Resource):
-    def get(self):
-        return {}
 
-class Detail(Resource):
-    def get(self, datatype, eid):
-        return {}
+@app.route('/')
+def index():
+    return "hello, world!"
