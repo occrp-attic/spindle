@@ -26,7 +26,10 @@
   {% endassets %}
 
   {% assets filters="uglifyjs", output="build/app.js",
-      "js/app.js" %}
+      "js/app.js",
+      "js/services/query_state.js",
+      "js/controllers/search.js",
+      "js/util.js" %}
     <script src='{{ ASSET_URL }}'></script>
   {% endassets %}
 

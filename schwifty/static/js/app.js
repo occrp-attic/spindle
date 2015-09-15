@@ -4,30 +4,26 @@ schwifty.config(['$routeProvider',
   function($routeProvider) {
   $routeProvider
     .when('/', {
-      templateUrl: 'home.html',
-      controller: 'HomeController',
-      reloadOnSearch: false,
+      templateUrl: 'search.html',
+      controller: 'SearchController',
+      reloadOnSearch: true,
       resolve: {
         results: loadSearchResult
       }
     });
 }]);
 
-var loadSearchResult = ['$http', '$q', '$route',
-  function($http, $q, $route) {
-  var dfd = $q.defer();
-  dfd.resolve({});
-  return dfd.promise;
-}];
+schwifty.controller('AppController', ['$scope', '$rootScope', '$http', '$location', 'queryState',
+  function($scope, $rootScope, $http, $location, queryState) {
 
-schwifty.controller('AppController', ['$scope', '$http',
-  function($scope, $http) {
-    
-}]);
+  $scope.query = queryState;
 
-schwifty.controller('HomeController', ['$scope', '$http', 'results',
-  function($scope, $http, results) {
+  $rootScope.$on("$routeChangeStart", function (event, next, current) {
+    $scope.query.state = queryState.get();
+  });
 
-  $scope.results = results;
-  console.log("Get schwifty!");
+  $scope.submitSearch = function(form) {
+    $location.search($scope.query.state);
+  };
+
 }]);
