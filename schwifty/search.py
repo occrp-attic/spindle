@@ -2,7 +2,7 @@ from schwifty.core import es, es_index
 
 QUERY_FIELDS = ['raw.*']
 # FIXME: need to force all raw fields to be strings.
-QUERY_FIELDS = ['_all']
+# QUERY_FIELDS = ['_all']
 DEFAULT_FIELDS = ['source.*', 'id', 'schema', 'entity.*']
 
 

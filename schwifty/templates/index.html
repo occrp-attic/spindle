@@ -11,10 +11,27 @@
     <link href='{{ ASSET_URL }}' rel='stylesheet' type='text/css'>
   {% endassets %}
 
-  <link rel="shortcut icon" href="https://occrp.org/images/favicon.png">
+  <link rel="shortcut icon" href="https://www.occrp.org/templates/occrp/favicon.ico">
 </head>
-<body>
-  <h1>I'm a banana!</h1>
-  <a href='#'>This is a link</a>
+<body ng-controller="AppController as app">
+  <div ng-view></div>
+
+  {% assets filters="uglifyjs", output="build/deps.js",
+      "bower_components/angular/angular.js",
+      "bower_components/angular-animate/angular-animate.js",
+      "bower_components/angular-route/angular-route.js",
+      "bower_components/angular-bootstrap/ui-bootstrap.js",
+      "bower_components/angular-bootstrap/ui-bootstrap-tpls.js" %}
+    <script src='{{ ASSET_URL }}'></script>
+  {% endassets %}
+
+  {% assets filters="uglifyjs", output="build/app.js",
+      "js/app.js" %}
+    <script src='{{ ASSET_URL }}'></script>
+  {% endassets %}
+
+  {% for path, tmpl in templates %}
+    <script id="{{path}}" type="text/ng-template">{{ tmpl | safe }}</script>
+  {% endfor %}
 </body>
 </html>

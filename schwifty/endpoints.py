@@ -1,8 +1,9 @@
-from flask import render_template, jsonify, abort, request
+from flask import render_template, jsonify, request
 from elasticsearch import ElasticsearchException
 
 from schwifty.core import app, es, es_index
 from schwifty.search import query
+from schwifty.util import angular_templates
 
 # TODO: support OAuth against ID
 # TODO: make notes, bookmarks, links
@@ -29,4 +30,5 @@ def search():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    templates = angular_templates()
+    return render_template('index.html', templates=templates)

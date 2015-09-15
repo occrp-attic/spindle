@@ -19,6 +19,11 @@
     "tests"
   ],
   "dependencies": {
+    "angular": "~1.4.5",
+    "angular-animate": "~1.4.5",
+    "angular-aria": "~1.4.5",
+    "angular-bootstrap": "~0.13.4",
+    "angular-route": "~1.4.5",
     "bootstrap-sass": "bootstrap-sass-official#~3.3.5"
   }
 }
