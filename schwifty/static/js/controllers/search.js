@@ -11,10 +11,15 @@ var loadSearchResult = ['$http', '$q', '$route', 'queryState',
 
 }];
 
+
 schwifty.controller('SearchController', ['$scope', '$http', 'results',
   function($scope, $http, results) {
 
   $scope.results = results;
   console.log("Get schwifty!");
+
+  $scope.showDetail = function(result) {
+    $scope.query.set('detail', result.type + '/' + result.id);
+  };
 
 }]);

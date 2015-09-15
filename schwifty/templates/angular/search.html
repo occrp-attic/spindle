@@ -7,14 +7,13 @@
       <form ng-submit="submitSearch()">
         <div class="form-group">
           <!-- label for="q">Search for</label-->
-          <input class="form-control input-md" id="q"
-            ng-model="query.state.q"
-            placeholder="People, companies and other entities...">
+          <input class="form-control" id="q" ng-model="query.state.q" placeholder="People, companies, etc...">
         </div>
       </form>
       <div class="list-group">
-        <a ng-repeat="result in results.results" href="#"
-            class="list-group-item">
+        <a ng-repeat="result in results.results"
+          ng-click="showDetail(result)"
+          class="list-group-item">
           <h4 class="list-group-item-heading">{{result.entity.name}}</h4>
           <p class="list-group-item-text">{{result.source.title}}</p>
         </a>

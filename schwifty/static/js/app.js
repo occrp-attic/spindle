@@ -19,10 +19,11 @@ schwifty.controller('AppController', ['$scope', '$rootScope', '$http', '$locatio
   $scope.query = queryState;
 
   $rootScope.$on("$routeChangeStart", function (event, next, current) {
-    $scope.query.state = queryState.get();
+    queryState.get();
   });
 
   $scope.submitSearch = function(form) {
+    $scope.query.state.detail = null;
     $location.search($scope.query.state);
   };
 

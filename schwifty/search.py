@@ -46,5 +46,7 @@ def query(text):
         'total':  hits.get('total')
     }
     for doc in hits.get('hits', []):
-        output['results'].append(doc.get('_source'))
+        data = doc.get('_source')
+        data['type'] = doc.get('_type')
+        output['results'].append(data)
     return output

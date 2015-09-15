@@ -21,6 +21,12 @@ schwifty.factory('queryState', ['$route', '$location', function($route, $locatio
     return query;
   };
 
+  var set = function(name, val) {
+    query = get();
+    query[name] = val;
+    $location.search(query);
+  }
+
   var clear = function() {
     $location.search({});
     get();
@@ -48,6 +54,7 @@ schwifty.factory('queryState', ['$route', '$location', function($route, $locatio
   return {
       state: query,
       get: get,
+      set: set,
       clear: clear,
       queryString: function() {
         return queryString(query);
