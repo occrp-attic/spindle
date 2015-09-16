@@ -2,8 +2,10 @@ $occrp-red: #982022;
 $occrp-light-green: #00bac1;
 $occrp-dark-green: #3a4953;
 
-// override bootstrap defaults
+// import angular base styles
+@import "bower_components/angular/angular-csp.css";
 
+// override bootstrap defaults
 $brand-primary: $occrp-red;
 $brand-success: $occrp-light-green;
 
@@ -12,6 +14,13 @@ $font-family-serif:       'Bitter', Georgia, "Times New Roman", Times, serif;
 
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
 
+
+// main result list
+.result-list {
+    a {
+        cursor: pointer;
+    }
+}
 
 
 // entity details section (side pane)

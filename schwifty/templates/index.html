@@ -17,6 +17,7 @@
   <div ng-view></div>
 
   {% assets filters="uglifyjs", output="build/deps.js",
+      "bower_components/moment/moment.js",
       "bower_components/angular/angular.js",
       "bower_components/angular-animate/angular-animate.js",
       "bower_components/angular-route/angular-route.js",
@@ -31,6 +32,7 @@
       "js/directives/entity_icon.js",
       "js/directives/entity_detail.js",
       "js/controllers/search.js",
+      "js/filters.js",
       "js/util.js" %}
     <script src='{{ ASSET_URL }}'></script>
   {% endassets %}
