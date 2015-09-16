@@ -13,7 +13,7 @@ schwifty.directive('entityDetail', ['$http', function($http) {
 
       scope.$watch('result', function(res) {
         if (res === null) return;
-        $http.get('/api/entity/' + res.type + '/' + res.id).then(function(res) {
+        $http.get(res.uri).then(function(res) {
           scope.data = res.data.data;
 
           var rows = [];

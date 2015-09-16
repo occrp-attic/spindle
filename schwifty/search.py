@@ -1,3 +1,4 @@
+from flask import url_for
 from schwifty.core import es, es_index
 
 QUERY_FIELDS = ['raw.*']
@@ -47,6 +48,7 @@ def query(text):
     }
     for doc in hits.get('hits', []):
         data = doc.get('_source')
-        data['type'] = doc.get('_type')
+        data['uri'] = url_for('entity', doc_type=doc.get('_type'),
+                              id=doc.get('_id'), _external=True)
         output['results'].append(data)
     return output
