@@ -3,6 +3,7 @@ from elasticsearch import ElasticsearchException
 
 from schwifty.core import app, es, es_index
 from schwifty.search import query
+from schwifty.metadata import get_metadata
 from schwifty.util import angular_templates
 
 # TODO: support OAuth against ID
@@ -26,6 +27,11 @@ def entity(doc_type, id):
 def search():
     result = query(request.args)
     return jsonify(result)
+
+
+@app.route('/api/metadata')
+def metadata():
+    return jsonify(get_metadata())
 
 
 @app.route('/')

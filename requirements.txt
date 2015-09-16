@@ -4,3 +4,4 @@ flask-assets
 elasticsearch
 cssmin
 pycountry
+requests

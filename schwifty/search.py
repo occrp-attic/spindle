@@ -19,7 +19,7 @@ def query(args):
     """ Parse a user query string, compose and execute a query. """
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
-    q = text_query(args.get('q'))
+    q = text_query(args.get('q', ''))
 
     # Extract filters, given in the form: &filter:foo_field=bla_value
     filters = []
