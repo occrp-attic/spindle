@@ -3,7 +3,6 @@ schwifty.directive('entityDetail', ['$http', 'metadataService',
     function($http, metadataService) {
   return {
     restrict: 'E',
-    transclude: true,
     scope: {
       'result': '='
     },
@@ -13,8 +12,23 @@ schwifty.directive('entityDetail', ['$http', 'metadataService',
       scope.source = {};
       scope.rows = []
 
+      var generateRows = function(raw) {
+        var rows = [];
+        angular.forEach(raw, function(value, key) {
+          row = {value: value, header: key.split('.', 2)[1]};
+          if (row.header == 'source_file') {
+            return;
+          }
+          if (value && (value + '').trim().length > 0) {
+            rows.push(row);
+          }
+        });
+        return rows;
+      }
+
       scope.$watch('result', function(res) {
         if (res === null) return;
+
         $http.get(res.uri).then(function(res) {
           scope.data = res.data.data;
 
@@ -22,17 +36,7 @@ schwifty.directive('entityDetail', ['$http', 'metadataService',
               scope.source = meta.sources[scope.data.source];
           });
 
-          var rows = [];
-          angular.forEach(scope.data.raw, function(value, key) {
-            row = {value: value, header: key.split('.', 2)[1]};
-            if (row.header == 'source_file') {
-              return;
-            }
-            if (value && (value + '').trim().length > 0) {
-              rows.push(row);
-            }
-          });
-          scope.rows = rows;
+          scope.rows = generateRows(scope.data.raw);
         });
       });
     }

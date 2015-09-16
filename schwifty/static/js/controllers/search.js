@@ -4,7 +4,9 @@ var loadSearchResult = ['$http', '$q', '$route', 'queryState',
 
   var dfd = $q.defer();
   var query = angular.copy(queryState.get());
+  query['facet'] = ['source', 'schema']
   $http.get('/api/search', {params: query}).then(function(res) {
+    console.log(res.data);
     dfd.resolve(res.data);
   });
   return dfd.promise;

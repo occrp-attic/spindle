@@ -1,7 +1,13 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-3">
-      i am
+      <search-facet results="results" facet="source"
+        type="sources" title="Data sources">
+      </search-facet>
+
+      <search-facet results="results" facet="schema"
+        type="schemas" title="Entity types">
+      </search-facet>
     </div>
     <div class="col-md-3">
       <form ng-submit="submitSearch()">

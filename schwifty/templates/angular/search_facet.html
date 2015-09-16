@@ -1,0 +1,9 @@
+<div class="panel panel-default">
+  <div class="panel-heading">{{title}}</div>
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="value in result.values">
+      <span class="badge">{{value.doc_count}}</span>
+      {{meta[value.key].title}}
+    </li>
+  </ul>
+</div>
