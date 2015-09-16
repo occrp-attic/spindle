@@ -21,12 +21,18 @@ def query(args):
         args = MultiDict(args)
     q = text_query(args.get('q'))
 
-    facets = args.getlist('facet')
-    print 'FACETS', facets
-    # TODO: filters on jurisdiction, source, schema
-    # semantics: source, schema facets are unaffected by source & schema
-    #            filters
+    # Extract filters, given in the form: &filter:foo_field=bla_value
+    filters = []
+    for key, value in args.items():
+        if not key.startswith('filter:'):
+            continue
+        _, field = key.split(':', 1)
+        filters.append((field, value))
 
+    # Generate aggregations. They are a generalized mechanism to do facetting
+    # in ElasticSearch. Anything placed inside the "scoped" sub-aggregation
+    # is made to be ``global``, ie. it'll have to bring it's own filters.
+    facets = args.getlist('facet')
     aggs = {
         'scoped': {
             'global': {},
@@ -37,34 +43,30 @@ def query(args):
         agg = {facet: {'terms': {'field': facet}}}
         if facet in SCOPED_FACETS:
             aggs['scoped']['aggs'][facet] = {
-                'filter': {'query': q},
+                'filter': {
+                    'query': filter_query(q, filters, skip=facet)
+                },
                 'aggs': agg
             }
         else:
             aggs.update(agg)
 
-    # TODO: return facets for the above.
     q = {
-        'query': q,
+        'query': filter_query(q, filters),
         'aggregations': aggs,
         '_source': DEFAULT_FIELDS
     }
-
-    try:
-        q['from'] = max(0, int(args.get('offset')))
-    except (TypeError, ValueError):
-        q['from'] = 0
-    try:
-        q['size'] = min(10000, int(args.get('limit')))
-    except (TypeError, ValueError):
-        q['size'] = 50
-
-    if q['from'] > 0:
-        # When requesting a second page of the results, the client will not
-        # need to be returned facet results a second time.
-        del q['aggregations']
-
+    q = paginate(q, args.get('limit'), args.get('offset'))
     return execute_query(q, facets)
+
+
+def filter_query(q, filters, skip=None):
+    """ Apply a list of filters to the given query. """
+    for field, value in filters:
+        if field == skip:
+            continue
+        q = add_filter(q, {'term': {field: value}})
+    return q
 
 
 def add_filter(q, filter_):
@@ -83,6 +85,24 @@ def add_filter(q, filter_):
     else:
         q['filtered']['filter'] = \
             {'and': [filter_, q['filtered']['filter']]}
+    return q
+
+
+def paginate(q, limit, offset):
+    """ Apply pagination to the query, based on limit and offset. """
+    try:
+        q['from'] = max(0, int(offset))
+    except (TypeError, ValueError):
+        q['from'] = 0
+    try:
+        q['size'] = min(10000, int(limit))
+    except (TypeError, ValueError):
+        q['size'] = 50
+
+    if q['from'] > 0:
+        # When requesting a second page of the results, the client will not
+        # need to be returned facet results a second time.
+        del q['aggregations']
     return q
 
 
@@ -131,6 +151,7 @@ def execute_query(q, facets):
     }
     for doc in hits.get('hits', []):
         data = doc.get('_source')
+        # FIXME: potential layer fuckery
         data['uri'] = url_for('entity', doc_type=doc.get('_type'),
                               id=doc.get('_id'), _external=True)
         output['results'].append(data)
