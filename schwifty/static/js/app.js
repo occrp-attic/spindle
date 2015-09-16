@@ -8,10 +8,12 @@ schwifty.config(['$routeProvider',
       controller: 'SearchController',
       reloadOnSearch: true,
       resolve: {
-        results: loadSearchResult
+        results: loadSearchResult,
+        metadata: loadMetadata
       }
     });
 }]);
+
 
 schwifty.controller('AppController', ['$scope', '$rootScope', '$http', '$location', 'queryState',
   function($scope, $rootScope, $http, $location, queryState) {

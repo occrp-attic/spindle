@@ -12,9 +12,10 @@ var loadSearchResult = ['$http', '$q', '$route', 'queryState',
 }];
 
 
-schwifty.controller('SearchController', ['$scope', '$http', 'results',
-  function($scope, $http, results) {
+schwifty.controller('SearchController', ['$scope', '$http', 'results', 'metadata',
+  function($scope, $http, results, metadata) {
 
+  $scope.metadata = metadata;
   $scope.results = results;
   $scope.detail = null;
 

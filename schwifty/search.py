@@ -159,7 +159,7 @@ def execute_query(q, facets):
     # traverse and get all facets.
     aggs = result.get('aggregations')
     for facet in facets:
-        scoped = aggs.get('scoped', {}).get(facet, {})
+        scoped = aggs.get('scoped').get(facet, {})
         value = aggs.get(facet, scoped.get(facet, {}))
         data = {
             'total': scoped.get('doc_count', hits.get('total')),
