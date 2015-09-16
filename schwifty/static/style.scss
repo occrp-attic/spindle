@@ -11,3 +11,15 @@ $font-family-sans-serif:  'Droid Sans', "Helvetica Neue", Helvetica, Arial, sans
 $font-family-serif:       'Bitter', Georgia, "Times New Roman", Times, serif;
 
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
+
+
+
+// entity details section (side pane)
+.entity-detail {
+    .table {
+        th {
+            max-width: 40%;
+            width: 40%;
+        }
+    }
+}

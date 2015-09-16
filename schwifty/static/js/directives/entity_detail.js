@@ -9,13 +9,24 @@ schwifty.directive('entityDetail', ['$http', function($http) {
     templateUrl: 'entity_detail.html',
     link: function (scope, element, attrs, model) {
       scope.data = {};
+      scope.rows = []
 
       scope.$watch('result', function(res) {
         if (res === null) return;
-        console.log('Result:', res);
-        url = res.type + '/' + res.id;
-        $http.get('/api/entity/' + url).then(function(res) {
+        $http.get('/api/entity/' + res.type + '/' + res.id).then(function(res) {
           scope.data = res.data.data;
+
+          var rows = [];
+          angular.forEach(scope.data.raw, function(value, key) {
+            row = {value: value, header: key.split('.', 2)[1]};
+            if (row.header == 'source_file') {
+              return;
+            }
+            if (value && (value + '').trim().length > 0) {
+              rows.push(row);
+            }
+          });
+          scope.rows = rows;
         });
       });
     }

@@ -11,19 +11,19 @@ schwifty.directive('entityIcon', ['$http', function($http) {
 
       scope.isPerson = function() {
         return scope.schema == 'http://schema.occrp.org/generic/person.json#';
-      }
+      };
 
       scope.isOrganization = function() {
         return scope.schema == 'http://schema.occrp.org/generic/organization.json#';
-      }
+      };
 
       scope.isCompany = function() {
         return scope.schema == 'http://schema.occrp.org/generic/company.json#';
-      }
+      };
 
       scope.isOther = function() {
-        return !scope.isPerson() && !scope.isOrganization() && !isCompany();
-      }
+        return !scope.isPerson() && !scope.isOrganization() && !scope.isCompany();
+      };
     }
   };
 }]);

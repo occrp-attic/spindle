@@ -1,2 +1,18 @@
+<div class="entity-detail" ng-show="data.schema">
+  <h2>
+    <entity-icon schema="data.schema"></entity-icon>
+    {{data.entity.name}}
+  </h2>
 
-Details for: {{data.entity.name}} ({{data.id}}).
+  <table class="table table-condensed">
+    <tr ng-repeat="row in rows | orderBy: 'header'">
+      <th>{{row.header}}</th>
+      <td>{{row.value}}</td>
+    </tr>
+  </table>
+
+  <div class="well well-sm">
+    This record is from <a ng-href="{{data.source.url}}">{{data.source.title}}</a>,
+    and was last updated: {{data.indexed_at}}.
+  </div>
+</div>

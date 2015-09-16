@@ -22,7 +22,6 @@ schwifty.controller('SearchController', ['$scope', '$http', 'results',
 
   $scope.showDetail = function(result) {
     // $scope.query.set('detail', result.type + '/' + result.id);
-    console.log('huhu!', result);
     $scope.detail = result;
     return false;
   };
