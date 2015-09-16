@@ -2,3 +2,5 @@ flask
 flask-script
 flask-assets
 elasticsearch
+cssmin
+pycountry

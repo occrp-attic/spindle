@@ -2,9 +2,6 @@ $occrp-red: #982022;
 $occrp-light-green: #00bac1;
 $occrp-dark-green: #3a4953;
 
-// import angular base styles
-@import "bower_components/angular/angular-csp.css";
-
 // override bootstrap defaults
 $brand-primary: $occrp-red;
 $brand-success: $occrp-light-green;

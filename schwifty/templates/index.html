@@ -7,7 +7,10 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Bitter:400,700' rel='stylesheet' type='text/css'>
 
-  {% assets filters="scss", output="build/style.css", "style.scss" %}
+  {% assets filters="scss,cssmin", output="build/style.css",
+    "bower_components/angular/angular-csp.css",
+    "style.scss"
+  %}
     <link href='{{ ASSET_URL }}' rel='stylesheet' type='text/css'>
   {% endassets %}
 

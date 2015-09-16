@@ -8,21 +8,18 @@ schwifty.directive('entityIcon', ['$http', function($http) {
     },
     templateUrl: 'entity_icon.html',
     link: function (scope, element, attrs, model) {
-
-      scope.isPerson = function() {
-        return scope.schema == 'http://schema.occrp.org/generic/person.json#';
-      };
-
-      scope.isOrganization = function() {
-        return scope.schema == 'http://schema.occrp.org/generic/organization.json#';
-      };
-
-      scope.isCompany = function() {
-        return scope.schema == 'http://schema.occrp.org/generic/company.json#';
-      };
-
-      scope.isOther = function() {
-        return !scope.isPerson() && !scope.isOrganization() && !scope.isCompany();
+      
+      scope.getIcon = function() {
+        if (scope.schema == 'http://schema.occrp.org/generic/person.json#') {
+          return 'fa-user';
+        }
+        if (scope.schema == 'http://schema.occrp.org/generic/organization.json#') {
+          return 'fa-university';
+        }
+        if (scope.schema == 'http://schema.occrp.org/generic/company.json#') {
+          return 'fa-suitcase';
+        }
+        return 'fa-question-circle';
       };
     }
   };
