@@ -24,7 +24,7 @@ def entity(doc_type, id):
 
 @app.route('/api/search')
 def search():
-    result = query(request.args.get('q', ''))
+    result = query(request.args)
     return jsonify(result)
 
 
