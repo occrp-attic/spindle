@@ -14,7 +14,10 @@
         <a ng-repeat="result in results.results"
           ng-click="showDetail(result)"
           class="list-group-item">
-          <h4 class="list-group-item-heading">{{result.entity.name}}</h4>
+          <h4 class="list-group-item-heading">
+            <entity-icon schema="result.schema"></entity-icon>
+            {{result.entity.name}}
+          </h4>
           <p class="list-group-item-text">{{result.source.title}}</p>
         </a>
       </div>
