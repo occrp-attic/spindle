@@ -7,12 +7,12 @@ from werkzeug.datastructures import MultiDict
 from schwifty.core import es, es_index
 
 QUERY_FIELDS = ['raw.*']
-DEFAULT_FIELDS = ['source.*', 'id', 'schema', 'entity.*']
+DEFAULT_FIELDS = ['source', 'id', 'schema', 'entity.*']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
 # used to generate the facet values.
-SCOPED_FACETS = ['schema', 'source.slug']
+SCOPED_FACETS = ['schema', 'source']
 
 
 def query(args):
