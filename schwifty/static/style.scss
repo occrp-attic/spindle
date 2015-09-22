@@ -71,6 +71,10 @@ $font-family-serif:       'Bitter', Georgia, serif;
     color: $text-color;
 }
 
+div[ng-view].ng-enter {
+    animation: fadeIn 0.3s;
+}
+
 h1, h2, h3, h4 {
     @include header-font;
 }

@@ -15,4 +15,8 @@ schwifty.controller('SearchController', ['$scope', '$http', '$location', 'result
     $location.search({});
   };
 
+  $scope.$on('search-result', function(event, res) {
+    $scope.results = res;
+  });
+
 }]);

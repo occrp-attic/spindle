@@ -1,6 +1,6 @@
 
-schwifty.factory('query', ['$route', '$location', '$q', '$http',
-    function($route, $location, $q, $http) {
+schwifty.factory('query', ['$route', '$location', '$q', '$http', '$rootScope',
+    function($route, $location, $q, $http, $rootScope) {
   var query = {};
 
   var ensureArray = function(data) {
@@ -29,10 +29,12 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http',
     query = get();
     query[name] = val;
     $location.search(query);
+    execute();
   }
 
   var clear = function() {
     $location.search({});
+    execute();
   };
 
   var toggleFilter = function(name, val) {
@@ -46,7 +48,7 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http',
       query[name].splice(idx, 1);
     }
     $location.search(query);
-    console.log(query);
+    execute();
   };
 
   var hasFilter = function(name, val) {
@@ -66,6 +68,7 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http',
 
     $http.get('/api/search', {params: q}).then(function(res) {
       dfd.resolve(res.data);
+      $rootScope.$broadcast('search-result', res.data);
     });
     return dfd.promise;
   };

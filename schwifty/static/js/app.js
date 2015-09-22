@@ -4,7 +4,7 @@ schwifty.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/search', {
     templateUrl: 'search.html',
     controller: 'SearchController',
-    reloadOnSearch: true,
+    reloadOnSearch: false,
     resolve: {
       results: loadSearchResult,
       metadata: loadMetadata
@@ -14,6 +14,7 @@ schwifty.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/entity/:type/:id', {
     templateUrl: 'entity.html',
     controller: 'EntityController',
+    reloadOnSearch: false,
     resolve: {
       entity: loadEntity,
       metadata: loadMetadata

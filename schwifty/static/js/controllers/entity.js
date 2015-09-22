@@ -1,6 +1,5 @@
 
 var loadEntity = ['$http', '$q', '$route', function($http, $q, $route) {
-
   var dfd = $q.defer(),
       url = '/api/entity/' + $route.current.params.type + '/' + $route.current.params.id;
   $http.get(url).then(function(res) {
