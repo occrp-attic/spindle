@@ -1,18 +1,6 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-3">
-    </div>
-    <div class="col-md-9">
-    <form ng-submit="submitSearch()">
-      <div class="form-group">
-        <!-- label for="q">Search for</label-->
-        <input class="form-control" id="q" ng-model="query.state.q" placeholder="People, companies, etc...">
-      </div>
-    </form>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-3">
       <search-facet results="results" facet="entity.jurisdiction_code"
         type="countries" title="Jurisdictions">
       </search-facet>

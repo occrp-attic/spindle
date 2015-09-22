@@ -1,5 +1,6 @@
 DEBUG = True
 ASSETS_DEBUG = False
+APP_NAME = 'OCCRP Schwifty'
 
 ELASTICSEARCH_HOST = 'localhost:9200'
 ELASTICSEARCH_INDEX = 'datavault'

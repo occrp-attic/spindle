@@ -3,14 +3,58 @@ $occrp-light-green: #00bac1;
 $occrp-dark-green: #3a4953;
 
 // override bootstrap defaults
+
 $brand-primary: $occrp-red;
 $brand-success: $occrp-light-green;
 
+$border-radius-base: 0px;
+$list-group-border-radius: 0;
+
+$navbar-default-color: #fff;
+$navbar-default-bg: $occrp-dark-green;
+$navbar-default-link-color: #fff;
+$navbar-default-link-hover-color:          #ccc !default;
+$navbar-default-link-active-color:         #eee !default;
+$navbar-default-link-active-bg:            darken($navbar-default-bg, 6.5%) !default;
+$navbar-default-link-disabled-bg:          transparent !default;
+
+
 $font-family-sans-serif:  'Droid Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
-$font-family-serif:       'Bitter', Georgia, "Times New Roman", Times, serif;
+$font-family-serif:       'Bitter', Georgia, serif;
 
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
 
+@mixin header-font {
+    font-family: $font-family-serif;
+    font-weight: 800;
+}
+
+h1, h2, h3, h4 {
+    @include header-font;
+}
+
+// navbar
+.navbar {
+    .navbar-brand {
+        @include header-font;
+        // color: $brand-primary
+    }
+
+    .navbar-form-close {
+        padding-top: 8px;
+        width: 100%;
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        input {
+            background-color: lighten($navbar-default-bg, 5%);
+            color: $navbar-default-link-color;
+            border: 1px solid darken($navbar-default-bg, 5%);
+        }
+    }
+}
 
 // main result list
 .result-list {

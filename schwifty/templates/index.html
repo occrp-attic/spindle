@@ -2,7 +2,7 @@
 <html ng-app="schwifty">
 <head>
   <meta charset="utf-8">
-  <title>OCCRP Data Browser</title>
+  <title>{{config.APP_NAME}}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Bitter:400,700' rel='stylesheet' type='text/css'>
@@ -17,6 +17,27 @@
   <link rel="shortcut icon" href="https://www.occrp.org/templates/occrp/favicon.ico">
 </head>
 <body ng-controller="AppController as app">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/#/">
+              {{config.APP_NAME}}
+            </a>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <form ng-submit="submitSearch()" class="navbar-form-close navbar-left">
+            <div class="form-group">
+              <!-- label for="q">Search for</label-->
+              <input class="form-control" id="q" ng-model="query.state.q" placeholder="People, companies, etc...">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </nav>
   <div ng-view></div>
 
   {% assets filters="uglifyjs", output="build/deps.js",
