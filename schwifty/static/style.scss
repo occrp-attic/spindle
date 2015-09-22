@@ -69,7 +69,6 @@ $font-family-serif:       'Bitter', Georgia, serif;
     font-family: $font-family-serif;
     font-weight: 800;
     color: $text-color;
-
 }
 
 h1, h2, h3, h4 {
@@ -96,7 +95,7 @@ h1, h2, h3, h4 {
             color: $text-color;
             border: 1px solid darken($brand-primary, 5%);
 
-            $placeholder-col: darken($brand-primary, 20%);
+            $placeholder-col: #ddd;
             @include placeholder-color($placeholder-col);
         }
     }
@@ -117,6 +116,10 @@ h1, h2, h3, h4 {
 .panel-facet {
     .panel-heading {
         @include header-font;
+    }
+
+    li.list-group-item {
+        cursor: pointer;
     }
 
     span.badge {

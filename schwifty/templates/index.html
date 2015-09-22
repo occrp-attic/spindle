@@ -9,6 +9,7 @@
 
   {% assets filters="scss,cssmin", output="build/style.css",
     "bower_components/angular/angular-csp.css",
+    "bower_components/animate.css/animate.css",
     "style.scss"
   %}
     <link href='{{ ASSET_URL }}' rel='stylesheet' type='text/css'>
@@ -31,7 +32,7 @@
           <form ng-submit="submitSearch()" class="navbar-form-close navbar-left">
             <div class="form-group">
               <!-- label for="q">Search for</label-->
-              <input class="form-control" id="q" ng-model="query.state.q" placeholder="People, companies, etc...">
+              <input class="form-control" id="q" ng-model="query.state.q" placeholder="Search for people, companies, etc...">
             </div>
           </form>
         </div>
