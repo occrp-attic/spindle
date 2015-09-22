@@ -13,19 +13,16 @@ var loadSearchResult = ['$http', '$q', '$route', 'queryState',
 }];
 
 
-schwifty.controller('SearchController', ['$scope', '$http', 'results', 'metadata',
-  function($scope, $http, results, metadata) {
+schwifty.controller('SearchController', ['$scope', '$http', '$location', 'results', 'metadata',
+  function($scope, $http, $location, results, metadata) {
 
   $scope.metadata = metadata;
   $scope.results = results;
-  $scope.detail = null;
 
   console.log("Get schwifty!");
 
-  $scope.showDetail = function(result) {
-    // $scope.query.set('detail', result.type + '/' + result.id);
-    $scope.detail = result;
-    return false;
+  $scope.showEntity = function(result) {
+    $location.path(result.uri.split('/api', 2)[1]);
   };
 
 }]);

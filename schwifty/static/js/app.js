@@ -1,17 +1,28 @@
-var schwifty = angular.module('schwifty', ['ngRoute', 'ui.bootstrap']);
+var schwifty = angular.module('schwifty', ['ngRoute']);
 
-schwifty.config(['$routeProvider',
-  function($routeProvider) {
-  $routeProvider
-    .when('/', {
-      templateUrl: 'search.html',
-      controller: 'SearchController',
-      reloadOnSearch: true,
-      resolve: {
-        results: loadSearchResult,
-        metadata: loadMetadata
-      }
-    });
+schwifty.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/search', {
+    templateUrl: 'search.html',
+    controller: 'SearchController',
+    reloadOnSearch: true,
+    resolve: {
+      results: loadSearchResult,
+      metadata: loadMetadata
+    }
+  });
+
+  $routeProvider.when('/entity/:type/:id', {
+    templateUrl: 'entity.html',
+    controller: 'EntityController',
+    resolve: {
+      entity: loadEntity,
+      metadata: loadMetadata
+    }
+  });
+
+  $routeProvider.otherwise({
+    redirectTo: '/search'
+  });
 }]);
 
 

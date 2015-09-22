@@ -5,7 +5,7 @@
   </h2>
 
   <table class="table table-condensed">
-    <tr ng-repeat="row in rows | orderBy: 'header'">
+    <tr ng-repeat="row in data.rows | orderBy: 'header'">
       <th>{{row.header}}</th>
       <td>{{row.value}}</td>
     </tr>

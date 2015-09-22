@@ -8,10 +8,10 @@
     </form>
   </div>
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="list-group result-list">
         <a ng-repeat="result in results.results"
-          ng-click="showDetail(result)"
+          ng-click="showEntity(result)"
           class="list-group-item">
           <h4 class="list-group-item-heading">
             <entity-icon schema="result.schema"></entity-icon>
@@ -21,7 +21,7 @@
         </a>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
       <entity-detail result="detail"></entity-detail>
     </div>
     <div class="col-md-3">
