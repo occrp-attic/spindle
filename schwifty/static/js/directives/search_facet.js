@@ -20,7 +20,6 @@ schwifty.directive('searchFacet', ['$http', 'metadataService',
         metadataService.get().then(function(meta) {
           scope.result = res.facets[scope.facet];
           scope.meta = meta[scope.type];
-          console.log(res, scope.facet, scope.type);
         });
       });
     }
