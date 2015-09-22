@@ -1,6 +1,5 @@
 
-var loadEntity = ['$http', '$q', '$route', 'queryState',
-    function($http, $q, $route, queryState) {
+var loadEntity = ['$http', '$q', '$route', function($http, $q, $route) {
 
   var dfd = $q.defer(),
       url = '/api/entity/' + $route.current.params.type + '/' + $route.current.params.id;
@@ -25,7 +24,6 @@ var loadEntity = ['$http', '$q', '$route', 'queryState',
 schwifty.controller('EntityController', ['$scope', '$http', 'entity', 'metadata',
   function($scope, $http, entity, metadata) {
 
-  console.log(metadata, entity);
   $scope.source = metadata.sources[entity.source];
   $scope.data = entity;
   $scope.metadata = metadata;

@@ -1,5 +1,6 @@
 
-schwifty.factory('queryState', ['$route', '$location', function($route, $location) {
+schwifty.factory('query', ['$route', '$location', '$q', '$http',
+    function($route, $location, $q, $http) {
   var query = {};
 
   var ensureArray = function(data) {
@@ -18,6 +19,9 @@ schwifty.factory('queryState', ['$route', '$location', function($route, $locatio
       query[k] = v;
     });
     query.source = ensureArray(query.source);
+    query.schema = ensureArray(query.schema);
+    query['entity.jurisdiction_code'] = ensureArray(query['entity.jurisdiction_code']);
+    query.facet = ensureArray(query.facet);
     return query;
   };
 
@@ -29,7 +33,6 @@ schwifty.factory('queryState', ['$route', '$location', function($route, $locatio
 
   var clear = function() {
     $location.search({});
-    get();
   };
 
   var toggleFilter = function(name, val) {
@@ -43,10 +46,28 @@ schwifty.factory('queryState', ['$route', '$location', function($route, $locatio
       query[name].splice(idx, 1);
     }
     $location.search(query);
+    console.log(query);
   };
 
   var hasFilter = function(name, val) {
     return angular.isArray(query[name]) && query[name].indexOf(val) != -1;
+  };
+
+  var execute = function() {
+    var dfd = $q.defer();
+
+    var q = {
+      'q': query.q,
+      'filter:source': query.source,
+      'filter:schema': query.schema,
+      'filter:entity.jurisdiction_code': query['entity.jurisdiction_code'],
+      'facet': ['source', 'schema', 'entity.jurisdiction_code']
+    };
+
+    $http.get('/api/search', {params: q}).then(function(res) {
+      dfd.resolve(res.data);
+    });
+    return dfd.promise;
   };
 
   get();
@@ -56,9 +77,7 @@ schwifty.factory('queryState', ['$route', '$location', function($route, $locatio
       get: get,
       set: set,
       clear: clear,
-      queryString: function() {
-        return queryString(query);
-      },
+      execute: execute,
       hasFilter: hasFilter,
       toggleFilter: toggleFilter
   };

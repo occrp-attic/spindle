@@ -1,6 +1,6 @@
 
-schwifty.directive('searchFacet', ['$http', 'metadataService',
-    function($http, metadataService) {
+schwifty.directive('searchFacet', ['$http', 'metadataService', 'query',
+    function($http, metadataService, query) {
   return {
     restrict: 'E',
     scope: {
@@ -13,6 +13,7 @@ schwifty.directive('searchFacet', ['$http', 'metadataService',
     link: function (scope, element, attrs, model) {
       scope.result = [];
       scope.meta = {};
+      scope.query = query;
 
       scope.$watch('results', function(res) {
         if (res === null) return;

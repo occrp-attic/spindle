@@ -26,18 +26,17 @@ schwifty.config(['$routeProvider', function($routeProvider) {
 }]);
 
 
-schwifty.controller('AppController', ['$scope', '$rootScope', '$http', '$location', 'queryState',
-  function($scope, $rootScope, $http, $location, queryState) {
+schwifty.controller('AppController', ['$scope', '$rootScope', '$http', '$location', 'query',
+  function($scope, $rootScope, $http, $location, query) {
 
-  $scope.query = queryState;
+  $scope.query = query;
 
   $rootScope.$on("$routeChangeStart", function (event, next, current) {
-    queryState.get();
+    query.get();
   });
 
   $scope.submitSearch = function(form) {
-    $scope.query.state.detail = null;
-    $location.search($scope.query.state);
+    query.set('q', $scope.query.state.q);
   };
 
 }]);

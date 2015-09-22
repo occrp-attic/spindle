@@ -13,10 +13,12 @@
   </div>
   <div class="row">
     <div class="col-md-3">
+      <search-facet results="results" facet="entity.jurisdiction_code"
+        type="countries" title="Jurisdictions">
+      </search-facet>
       <search-facet results="results" facet="source"
         type="sources" title="Data sources">
       </search-facet>
-
       <search-facet results="results" facet="schema"
         type="schemas" title="Entity types">
       </search-facet>
@@ -29,8 +31,8 @@
           <h4 class="list-group-item-heading">
             <entity-icon schema="result.schema"></entity-icon>
             {{result.entity.name}}
+            <small>{{metadata.sources[result.source].title}}</small>
           </h4>
-          <p class="list-group-item-text">{{metadata.sources[result.source].title}}</p>
         </a>
       </div>
     </div>

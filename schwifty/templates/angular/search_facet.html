@@ -1,7 +1,10 @@
 <div class="panel panel-default">
   <div class="panel-heading">{{title}}</div>
   <ul class="list-group">
-    <li class="list-group-item" ng-repeat="value in result.values">
+    <li class="list-group-item" ng-repeat="value in result.values"
+      ng-class="{'active': query.hasFilter(facet, value.key)}"
+      ng-click="query.toggleFilter(facet, value.key)">
+
       <span class="badge">{{value.doc_count}}</span>
       {{meta[value.key].title}}
     </li>
