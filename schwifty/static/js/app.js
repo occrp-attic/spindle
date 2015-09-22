@@ -1,4 +1,4 @@
-var schwifty = angular.module('schwifty', ['ngRoute']);
+var schwifty = angular.module('schwifty', ['ngRoute', 'ngAnimate']);
 
 schwifty.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/search', {
@@ -36,6 +36,7 @@ schwifty.controller('AppController', ['$scope', '$rootScope', '$http', '$locatio
   });
 
   $scope.submitSearch = function(form) {
+    $location.path('/search');
     query.set('q', $scope.query.state.q);
   };
 
