@@ -4,7 +4,7 @@ schwifty.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/search', {
     templateUrl: 'search.html',
     controller: 'SearchController',
-    reloadOnSearch: false,
+    reloadOnSearch: true,
     resolve: {
       results: loadSearchResult,
       metadata: loadMetadata

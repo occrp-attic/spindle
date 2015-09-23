@@ -1,6 +1,6 @@
 
-schwifty.factory('query', ['$route', '$location', '$q', '$http', '$rootScope',
-    function($route, $location, $q, $http, $rootScope) {
+schwifty.factory('query', ['$route', '$location', '$q', '$http',
+    function($route, $location, $q, $http) {
   var query = {};
 
   var ensureArray = function(data) {
@@ -68,7 +68,6 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http', '$rootScope',
 
     $http.get('/api/search', {params: q}).then(function(res) {
       dfd.resolve(res.data);
-      $rootScope.$broadcast('search-result', res.data);
     });
     return dfd.promise;
   };

@@ -1,6 +1,6 @@
 DEBUG = True
 ASSETS_DEBUG = False
-APP_NAME = 'schwif.ty'
+APP_NAME = 'occrp/datavault'
 
 ELASTICSEARCH_HOST = 'localhost:9200'
 ELASTICSEARCH_INDEX = 'datavault'

@@ -14,9 +14,4 @@ schwifty.controller('SearchController', ['$scope', '$http', '$location', 'result
     $location.path(result.uri.split('/api', 2)[1]);
     $location.search({});
   };
-
-  $scope.$on('search-result', function(event, res) {
-    $scope.results = res;
-  });
-
 }]);
