@@ -7,6 +7,7 @@ from schwifty import default_settings
 
 app = Flask(__name__)
 app.config.from_object(default_settings)
+app.config.from_envvar('SCHWIFTY_SETTINGS', silent=True)
 
 es = Elasticsearch(app.config.get('ELASTICSEARCH_HOST'))
 es_index = app.config.get('ELASTICSEARCH_INDEX')
