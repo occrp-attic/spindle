@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
         curl git python2.7 python-pip build-essential python-dev \
         libxml2-dev libxslt1-dev libpq-dev curl apt-utils ca-certificates \
-  && apt-get clean && apt-get autoremove \
+  && apt-get clean && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/*
 
 RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | sh
