@@ -1,6 +1,6 @@
 DEBUG = True
 ASSETS_DEBUG = False
-APP_NAME = 'occrp/datavault'
+APP_NAME = 'search.occrp.org'
 
 ELASTICSEARCH_HOST = 'localhost:9200'
 ELASTICSEARCH_INDEX = 'datavault'
