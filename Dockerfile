@@ -16,9 +16,8 @@ ADD . /schwifty
 WORKDIR /schwifty
 
 ENV SCHWIFTY_SETTINGS /schwifty/contrib/docker_settings.py
-RUN pip install functools32 gunicorn \
-  && pip install -r /schwifty/requirements.txt -e /schwifty
-RUN bower install
+RUN pip install functools32 gunicorn && pip install -r requirements.txt -e .
+RUN bower --allow-root install
 
 EXPOSE 8000
 # ENTRYPOINT gunicorn -w 5 -b 0.0.0.0:8000 --error-logfile - --log-file - schwifty.manage:app
