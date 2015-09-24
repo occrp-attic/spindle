@@ -10,7 +10,7 @@ RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
 
 RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | sh
 RUN apt-get install --yes nodejs && curl -L https://www.npmjs.org/install.sh | sh
-RUN npm install -g bower
+RUN npm install -g bower uglifyjs
 
 COPY . /schwifty
 WORKDIR /schwifty
