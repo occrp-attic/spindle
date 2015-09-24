@@ -12,12 +12,12 @@ RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | sh
 RUN apt-get install --yes nodejs && curl -L https://www.npmjs.org/install.sh | sh
 RUN npm install -g bower
 
-ADD . /schwifty
+COPY . /schwifty
 WORKDIR /schwifty
 
 ENV SCHWIFTY_SETTINGS /schwifty/contrib/docker_settings.py
 RUN pip install functools32 gunicorn && pip install -r requirements.txt -e .
-RUN bower --allow-root install
+RUN rm -rf .git && bower --allow-root install
 
 EXPOSE 8000
 # ENTRYPOINT gunicorn -w 5 -b 0.0.0.0:8000 --error-logfile - --log-file - schwifty.manage:app
