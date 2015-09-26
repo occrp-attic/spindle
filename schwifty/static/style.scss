@@ -28,6 +28,10 @@ h1, h2, h3, h4 {
     @include header-font;
 }
 
+body, html {
+    height: 100%;
+}
+
 // navbar
 .navbar {
     .navbar-brand {
@@ -63,8 +67,9 @@ h1, h2, h3, h4 {
     }
 }
 
-.content {
-    margin-top: 100px;
+#sidebar {
+    background-color: $occrp-navy;
+    min-height: 100vh;
 }
 
 // main result list
