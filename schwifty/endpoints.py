@@ -37,4 +37,4 @@ def metadata():
 @app.route('/')
 def index():
     templates = angular_templates()
-    return render_template(app.config.get('THEME')+'.html', templates=templates)
+    return render_template('index.html', templates=templates)
