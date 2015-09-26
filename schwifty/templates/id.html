@@ -4,32 +4,31 @@
   <meta charset="utf-8">
   <title>{{config.APP_NAME}}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="google" content="notranslate" />
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link href='//fonts.googleapis.com/css?family=Droid+Sans:400,700|Bitter:400,700' rel='stylesheet' type='text/css'>
 
   {% assets filters="scss,cssmin", output="build/style.css",
     "bower_components/angular/angular-csp.css",
     "bower_components/animate.css/animate.css",
-    "style.scss"
+    config.THEME+".scss"
   %}
     <link href='{{ ASSET_URL }}' rel='stylesheet' type='text/css'>
   {% endassets %}
 
-  <link rel="shortcut icon" href="https://www.occrp.org/templates/occrp/favicon.ico">
+  <link rel="shortcut icon" href="https://www.occrp.org/favicon.ico">
 </head>
 <body ng-controller="AppController as app">
-  <nav class="navbar navbar-default">
+  <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
           <div class="navbar-header">
             <a class="navbar-brand" href="/#/">
-              {{config.APP_NAME}}
+              <img src="/static/img/occrp-logo-noexpansion-trans.png"/>
             </a>
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-6">
           <form ng-submit="submitSearch()" class="navbar-form-close navbar-left">
             <div class="form-group">
               <!-- label for="q">Search for</label-->
@@ -37,10 +36,13 @@
             </div>
           </form>
         </div>
+        <div class="col-md-3">
+
+        </div>
       </div>
     </div>
   </nav>
-  <div ng-view></div>
+  <div ng-view class="content"></div>
 
   {% assets filters="uglifyjs", output="build/deps.js",
       "bower_components/moment/moment.js",
