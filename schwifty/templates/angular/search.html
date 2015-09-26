@@ -11,7 +11,7 @@
         type="schemas" title="Entity types">
       </search-facet>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-6">
       <div class="list-group result-list">
         <a ng-repeat="result in results.results"
           ng-click="showEntity(result)"
@@ -19,7 +19,7 @@
           <h4 class="list-group-item-heading">
             <entity-icon schema="result.schema"></entity-icon>
             {{result.entity.name}}
-            <small>{{metadata.sources[result.source].title}}</small>
+            <small class="pull-right">{{metadata.sources[result.source].title}}</small>
           </h4>
         </a>
       </div>
