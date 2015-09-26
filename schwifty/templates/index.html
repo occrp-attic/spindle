@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google" content="notranslate" />
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link href='//fonts.googleapis.com/css?family=Droid+Sans:400,700|Bitter:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800&subset=latin,greek,vietnamese,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
 
   {% assets filters="scss,cssmin", output="build/style.css",
     "bower_components/angular/angular-csp.css",
     "bower_components/animate.css/animate.css",
-    config.THEME+".scss"
+    "style.scss"
   %}
     <link href='{{ ASSET_URL }}' rel='stylesheet' type='text/css'>
   {% endassets %}

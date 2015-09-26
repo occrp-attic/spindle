@@ -2,77 +2,21 @@ $occrp-red: #982022;
 $occrp-black: #180B1A;
 $occrp-navy: #241F38;
 $occrp-green: #27918C;
-$occrp-yellow: #E6C870;
-$occrp-white: #F4F3F3;
-$occrp-light-gray: #D6D6D6;
-$occrp-dark-gray: #ADADAD;
 
 // override bootstrap defaults
 
 $brand-primary: $occrp-red;
 $brand-success: $occrp-green;
 
-$border-radius-base: 0px;
-$list-group-border-radius: 0;
-
-$body-bg: $occrp-white;
-$text-color: $occrp-black;
-
-$navbar-color: $occrp-yellow;
-
-$list-group-bg:                 $occrp-white;
-$list-group-border:             $occrp-light-gray;
-$list-group-hover-bg:           $list-group-border !default;
-$list-group-link-heading-color: $text-color;
-
-$panel-bg:                    $occrp-light-gray !default;
-$panel-body-padding:          10px !default;
-$panel-heading-padding:       10px 15px !default;
-$panel-footer-padding:        $panel-heading-padding !default;
-$panel-border-radius:         $border-radius-base !default;
-
-$panel-inner-border:          #ddd !default;
-$panel-footer-bg:             #f5f5f5 !default;
-
-// $panel-default-text:          $gray-dark !default;
-$panel-default-border:        $body-bg !default;
-$panel-default-heading-bg:    $body-bg !default;
-
-$panel-primary-text:          $occrp-black !default;
-
-$navbar-default-color: #fff;
-$navbar-default-bg: $navbar-color;
-$navbar-default-link-color: #111;
-$navbar-default-link-hover-color:          #333 !default;
-$navbar-default-link-active-color:         #444 !default;
-$navbar-default-link-active-bg:            darken($navbar-default-bg, 6.5%) !default;
-$navbar-default-link-disabled-bg:          transparent !default;
-
-$font-family-sans-serif:  'Droid Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-sans-serif:  'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
+@import "mixins";
 
-@mixin placeholder-color($color) {
-    &::-webkit-input-placeholder {
-       color: $color;
-    }
-
-    &:-moz-placeholder {
-       color: $color;
-    }
-
-    &::-moz-placeholder {
-       color: $color;
-    }
-
-    &:-ms-input-placeholder {
-       color: $color;
-    }
-}
 
 @mixin header-font {
     font-family: $font-family-sans-serif;
-    font-weight: 800;
+    font-weight: 700;
     color: $text-color;
 }
 
@@ -86,14 +30,6 @@ h1, h2, h3, h4 {
 
 // navbar
 .navbar {
-    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.5);
-    .container-fluid {
-        height: 70px;
-        .row {
-            height: 70px;
-        }
-    }
-
     .navbar-brand {
         padding: 4px;
         padding-left: 12px;
@@ -112,14 +48,14 @@ h1, h2, h3, h4 {
         }
 
         input {
-            background-color: $occrp-white;
-            color: $text-color;
-            font-size: 150%;
-            border-radius: 4px;
-            border: 1px solid $occrp-navy;
-
-            $placeholder-col: $occrp-dark-gray;
-            @include placeholder-color($placeholder-col);
+            // background-color: $occrp-white;
+            // color: $text-color;
+            // font-size: 150%;
+            // border-radius: 4px;
+            // border: 1px solid $occrp-navy;
+            //
+            // $placeholder-col: $occrp-dark-gray;
+            // @include placeholder-color($placeholder-col);
             padding: 24px;
             margin: 2px;
 
@@ -137,9 +73,9 @@ h1, h2, h3, h4 {
         cursor: pointer;
     }
 
-    .entity-icon, small {
-        color: darken($text-color, 20%);
-    }
+    // .entity-icon, small {
+    //     color: darken($text-color, 20%);
+    // }
 }
 
 // facets
@@ -153,7 +89,7 @@ h1, h2, h3, h4 {
     }
 
     li.list-group-item:hover {
-        background: $occrp-light-gray;
+        // background: $occrp-light-gray;
     }
 
     span.badge {
@@ -169,7 +105,7 @@ h1, h2, h3, h4 {
             width: 40%;
         }
         th, td {
-            border-top: 1px solid $list-group-border;
+            // border-top: 1px solid $list-group-border;
         }
     }
 }
