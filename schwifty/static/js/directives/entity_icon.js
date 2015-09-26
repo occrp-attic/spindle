@@ -18,6 +18,12 @@ schwifty.directive('entityIcon', ['$http', function($http) {
         if (scope.schema == 'http://schema.occrp.org/generic/company.json#') {
           return 'fa-suitcase';
         }
+        if (scope.schema == 'http://schema.occrp.org/generic/legal_person.json#') {
+          return 'fa-user-secret';
+        }
+        if (scope.schema == 'http://schema.occrp.org/generic/land.json#') {
+          return 'fa-user-map';
+        }
         return 'fa-question-circle';
       };
     }
