@@ -1,25 +1,54 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-9">
-      <form ng-submit="submitSearch()">
-        <div class="form-group">
-          <!-- label for="q">Search for</label-->
-          <input class="form-control input-lg" id="q" ng-model="query.state.q" placeholder="Search for people, companies, etc...">
+<div class="search-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="logo-bar">
+          <a href="/" class="logo">
+            <img src="/static/img/occrp-logo-bg.png">
+          </a>
+          <div class="search-bar">
+            <form ng-submit="submitSearch()">
+              <div class="form-group search-field">
+                <input class="form-control input-lg" id="q" ng-model="query.state.q"
+                  placeholder="Search for people, companies, etc...">
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
-      <div class="list-group result-list">
-        <a ng-repeat="result in results.results"
-          ng-click="showEntity(result)"
-          class="list-group-item">
-          <h4 class="list-group-item-heading">
-            <entity-icon schema="result.schema"></entity-icon>
-            {{result.entity.name}}
-            <small class="pull-right">{{metadata.sources[result.source].title}}</small>
-          </h4>
-        </a>
+      </div>
+      <div class="col-md-4">
       </div>
     </div>
-    <div class="col-md-3" id="sidebar">
+  </div>
+</div>
+<div class="container results-container">
+  <div class="row">
+    <div class="col-md-8">
+      <p class="help-block hit-count">
+        <span ng-show="results.total">
+          Showing {{results.offset+1}} to {{results.offset + results.limit}}
+          of {{results.total}} matches.
+        </span>
+        <span ng-hide="results.total">
+          No results match your search terms. Please try a wider query.
+        </span>
+      </p>
+      <ol class="result-list">
+        <li ng-repeat="result in results.results"
+          class="result">
+
+          <a class="title" ng-click="showEntity(result)">
+            <entity-icon schema="result.schema"></entity-icon> {{result.entity.name}}
+          </a>
+          <div class="summary">
+            {{metadata.schemas[result.schema].title}}
+            &middot;
+            {{metadata.sources[result.source].title}}
+          </div>
+        </li>
+      </ol>
+    </div>
+    <div class="col-md-4" id="sidebar">
       <search-facet results="results" facet="entity.jurisdiction_code"
         type="countries" title="Jurisdictions">
       </search-facet>

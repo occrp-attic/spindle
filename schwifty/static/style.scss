@@ -1,23 +1,26 @@
 $occrp-red: #982022;
-$occrp-black: #180B1A;
-$occrp-navy: #241F38;
+// $occrp-navy: #241F38;
 $occrp-green: #27918C;
+$occrp-dark: #3a4953;
 
 // override bootstrap defaults
 
 $brand-primary: $occrp-red;
 $brand-success: $occrp-green;
+$text-color: #333;
+$text-muted: #999;
+$gray-subtle: #f0f0f0;
+$spacing: 0.5em;
 
 $font-family-sans-serif:  'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+$input-border-focus: $brand-primary;
 
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
 @import "mixins";
 
-
 @mixin header-font {
     font-family: $font-family-sans-serif;
     font-weight: 700;
-    color: $text-color;
 }
 
 div[ng-view].ng-enter {
@@ -32,50 +35,28 @@ body, html {
     height: 100%;
 }
 
-// navbar
-.navbar {
-    .navbar-brand {
-        padding: 4px;
-        padding-left: 12px;
-        @include header-font;
-        img {
-            max-height: 66px;
-        }
-    }
-
-    .navbar-form-close {
-        padding-top: 8px;
-        width: 100%;
-
-        .form-group {
-            margin-bottom: 0;
-        }
-
-        input {
-            // background-color: $occrp-white;
-            // color: $text-color;
-            // font-size: 150%;
-            // border-radius: 4px;
-            // border: 1px solid $occrp-navy;
-            //
-            // $placeholder-col: $occrp-dark-gray;
-            // @include placeholder-color($placeholder-col);
-            padding: 24px;
-            margin: 2px;
-
-        }
-    }
-}
-
-#sidebar {
-    background-color: $occrp-navy;
-    min-height: 100vh;
-}
-
 // main result list
 .result-list {
-    a {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+
+    li {
         cursor: pointer;
+        margin-bottom: $spacing * 4;
+
+        a.title {
+            display: inline-block;
+            font-size: 1.3em;
+            font-weight: 400;
+            color: $brand-primary;
+        }
+
+        .summary {
+            padding-top: $spacing / 2;
+            // color: $text-muted;
+            padding-left: 1.5em;
+        }
     }
 
     // .entity-icon, small {
@@ -83,22 +64,76 @@ body, html {
     // }
 }
 
+.hit-count {
+    color: $text-muted;
+    margin-bottom: $spacing * 4;
+}
+
+.search-container {
+    border-top: $spacing / 2 solid $brand-primary;
+    background-color: $gray-subtle;
+    margin-bottom: $spacing * 4;
+    padding-top: $spacing * 2;
+    padding-bottom: $spacing * 2;
+
+    .logo-bar {
+        display: flex;
+        flex-flow: row nowrap;
+        align-content: flex-start;
+    }
+
+    .logo {
+        flex: 1;
+        display: block;
+        padding-top: 0.4em;
+        img {
+            height: 2.5em;
+            width: 2.5em;
+        }
+    }
+
+    .search-bar {
+        flex: 2;
+        flex-grow: 12;
+    }
+
+    .search-field {
+        input {
+            box-shadow: none;
+        }
+        margin-bottom: 0;
+    }
+
+}
+
+
 // facets
 .panel-facet {
+    border: 0;
+    box-shadow: none;
+    border-radius: 0;
+
     .panel-heading {
-        @include header-font;
+        // @include header-font;
+        background-color: $body-bg;
+        color: $text-muted;
+        text-transform: uppercase;
+        padding-left: $spacing;
+        padding-right: $spacing;
     }
 
     li.list-group-item {
         cursor: pointer;
-    }
-
-    li.list-group-item:hover {
-        // background: $occrp-light-gray;
+        padding-left: $spacing;
+        padding-right: $spacing;
+        padding-top: $spacing;
+        padding-bottom: $spacing;
     }
 
     span.badge {
-        background-color: $occrp-red;
+        background-color: $body-bg;
+        color: $text-muted;
+        font-weight: 300;
     }
 }
 
