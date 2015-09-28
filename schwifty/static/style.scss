@@ -142,6 +142,11 @@ body, html {
 
 // entity details
 .entity-detail {
+    h2 {
+        font-weight: 300;
+        margin-bottom: $spacing * 2;
+    }
+
     .table {
         th {
             max-width: 40%;

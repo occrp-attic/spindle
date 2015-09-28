@@ -1,26 +1,3 @@
-<div class="search-container">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="logo-bar">
-          <a href="/" class="logo">
-            <img src="/static/img/occrp-logo-bg.png">
-          </a>
-          <div class="search-bar">
-            <form ng-submit="submitSearch()">
-              <div class="form-group search-field">
-                <input class="form-control input-lg" id="q" ng-model="query.state.q"
-                  placeholder="Search for people, companies, etc...">
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-      </div>
-    </div>
-  </div>
-</div>
 <div class="container results-container">
   <div class="row">
     <div class="col-md-8">
@@ -49,14 +26,14 @@
       </ol>
     </div>
     <div class="col-md-4" id="sidebar">
-      <search-facet results="results" facet="entity.jurisdiction_code"
-        type="countries" title="Jurisdictions">
-      </search-facet>
       <search-facet results="results" facet="source"
         type="sources" title="Data sources">
       </search-facet>
       <search-facet results="results" facet="schema"
         type="schemas" title="Entity types">
+      </search-facet>
+      <search-facet results="results" facet="entity.jurisdiction_code"
+        type="countries" title="Jurisdictions">
       </search-facet>
     </div>
   </div>

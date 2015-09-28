@@ -20,6 +20,29 @@
   <link rel="shortcut icon" href="/static/img/occrp-logo-bg.png">
 </head>
 <body ng-controller="AppController as app">
+  <div class="search-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="logo-bar">
+            <a href="/" class="logo">
+              <img src="/static/img/occrp-logo-bg.png">
+            </a>
+            <div class="search-bar">
+              <form ng-submit="submitSearch()">
+                <div class="form-group search-field">
+                  <input class="form-control input-lg" id="q" ng-model="query.state.q"
+                    placeholder="Search for people, companies, etc...">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+        </div>
+      </div>
+    </div>
+  </div>
   <div ng-view></div>
 
   {% assets filters="uglifyjs", output="build/deps.js",
