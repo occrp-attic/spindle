@@ -17,6 +17,7 @@ def get_sources():
         cache.set('sources', sources)
     return sources
 
+
 def get_schemas():
     """ Get a list of all JSON schemas used to describe entities in the
     index, then resolve and return them. """
@@ -36,18 +37,25 @@ def get_schemas():
         cache.set('schemas', schemas)
     return schemas
 
+
 def get_countries():
     """ Return a list of all countries, indexed by ISO 2-letter code.
     Includes ``ZZ`` for global scope. """
     from pycountry import countries
     data = {
-        'ZZ': {'title': 'Global'}
+        'ZZ': {'title': 'Global'},
+        'XK': {'title': 'Kosovo'},
+        'GB-SCT': {'title': 'Scotland'},
+        'GB-NIR': {'title': 'Northern Ireland'},
+        'GB-NIR': {'title': 'Wales'},
+        'CY-TRNC': {'title': 'Northern Cyprus'}
     }
     for country in countries:
         data[country.alpha2] = {
             'title': country.name
         }
     return data
+
 
 def get_metadata():
     return {

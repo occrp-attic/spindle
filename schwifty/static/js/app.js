@@ -1,6 +1,8 @@
-var schwifty = angular.module('schwifty', ['ngRoute', 'ngAnimate']);
+var schwifty = angular.module('schwifty', ['ngRoute', 'ngAnimate', 'angulartics', 'angulartics.piwik']);
 
-schwifty.config(['$routeProvider', function($routeProvider) {
+schwifty.config(['$routeProvider', '$analyticsProvider',
+    function($routeProvider, $analyticsProvider) {
+
   $routeProvider.when('/', {
     templateUrl: 'home.html',
     controller: 'HomeController',

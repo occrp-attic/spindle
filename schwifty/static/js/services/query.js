@@ -1,6 +1,6 @@
 
-schwifty.factory('query', ['$route', '$location', '$q', '$http',
-    function($route, $location, $q, $http) {
+schwifty.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
+    function($route, $location, $q, $http, $analytics) {
   var query = {};
 
   var ensureArray = function(data) {
@@ -63,6 +63,10 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http',
       'filter:entity.jurisdiction_code': query['entity.jurisdiction_code'],
       'facet': ['source', 'schema', 'entity.jurisdiction_code']
     };
+    $analytics.eventTrack('search', {
+      'category': 'search',
+      'label': JSON.stringify(q)
+    });
 
     $http.get('/api/search', {params: q}).then(function(res) {
       dfd.resolve(res.data);

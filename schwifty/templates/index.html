@@ -45,11 +45,29 @@
   </div>
   <div ng-view></div>
 
+  <!-- Piwik -->
+  <script type="text/javascript">
+    var _paq = _paq || [];
+    // _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="https://piwik.occrp.org/";
+      _paq.push(['setTrackerUrl', u+'piwik.php']);
+      _paq.push(['setSiteId', 10]);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <noscript><p><img src="//piwik.occrp.org/piwik.php?idsite=10" style="border:0;" alt="" /></p></noscript>
+  <!-- End Piwik Code -->
+
   {% assets filters="uglifyjs", output="build/deps.js",
       "bower_components/moment/moment.js",
       "bower_components/angular/angular.js",
       "bower_components/angular-animate/angular-animate.js",
-      "bower_components/angular-route/angular-route.js" %}
+      "bower_components/angular-route/angular-route.js",
+      "bower_components/angulartics/src/angulartics.js",
+      "bower_components/angulartics/src/angulartics-piwik.js" %}
     <script src='{{ ASSET_URL }}'></script>
   {% endassets %}
 
