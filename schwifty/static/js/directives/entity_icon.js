@@ -22,7 +22,7 @@ schwifty.directive('entityIcon', ['$http', function($http) {
           return 'fa-user-secret';
         }
         if (scope.schema == 'http://schema.occrp.org/generic/land.json#') {
-          return 'fa-user-map';
+          return 'fa-map';
         }
         return 'fa-question-circle';
       };
