@@ -25,7 +25,7 @@
       <div class="row">
         <div class="col-md-8">
           <div class="logo-bar">
-            <a href="/" class="logo">
+            <a href="/#/" class="logo">
               <img src="/static/img/occrp-logo-bg.png">
             </a>
             <div class="search-bar">
@@ -53,20 +53,13 @@
     <script src='{{ ASSET_URL }}'></script>
   {% endassets %}
 
-  <!--
-  {% assets filters="uglifyjs", output="build/bsui.js",
-      "bower_components/angular-bootstrap/ui-bootstrap.js",
-      "bower_components/angular-bootstrap/ui-bootstrap-tpls.js" %}
-    <script src='{{ ASSET_URL }}'></script>
-  {% endassets %}
-  -->
-
   {% assets filters="uglifyjs", output="build/app.js",
       "js/app.js",
       "js/services/metadata.js",
       "js/services/query.js",
       "js/directives/entity_icon.js",
       "js/directives/search_facet.js",
+      "js/controllers/home.js",
       "js/controllers/search.js",
       "js/controllers/entity.js",
       "js/filters.js",

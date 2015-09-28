@@ -28,13 +28,12 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http',
   var set = function(name, val) {
     query = get();
     query[name] = val;
-    $location.search(query);
+    $location.path('/search').search(query);
     execute();
   }
 
   var clear = function() {
     $location.search({});
-    execute();
   };
 
   var toggleFilter = function(name, val) {
@@ -47,8 +46,7 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http',
     } else {
       query[name].splice(idx, 1);
     }
-    $location.search(query);
-    execute();
+    $location.path('/search').search(query);
   };
 
   var hasFilter = function(name, val) {

@@ -1,6 +1,15 @@
 var schwifty = angular.module('schwifty', ['ngRoute', 'ngAnimate']);
 
 schwifty.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/', {
+    templateUrl: 'home.html',
+    controller: 'HomeController',
+    resolve: {
+      metadata: loadMetadata,
+      summary: loadSummary
+    }
+  });
+
   $routeProvider.when('/search', {
     templateUrl: 'search.html',
     controller: 'SearchController',
@@ -22,7 +31,7 @@ schwifty.config(['$routeProvider', function($routeProvider) {
   });
 
   $routeProvider.otherwise({
-    redirectTo: '/search'
+    redirectTo: '/'
   });
 }]);
 
@@ -37,7 +46,6 @@ schwifty.controller('AppController', ['$scope', '$rootScope', '$http', '$locatio
   });
 
   $scope.submitSearch = function(form) {
-    $location.path('/search');
     query.set('q', $scope.query.state.q);
   };
 

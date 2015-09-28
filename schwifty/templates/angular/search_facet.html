@@ -1,5 +1,5 @@
 <div class="panel panel-default panel-facet" ng-show="result.values.length">
-  <div class="panel-heading">Filter by {{title}}</div>
+  <div class="panel-heading">{{title}}</div>
   <ul class="list-group">
     <li class="list-group-item" ng-repeat="value in result.values"
       ng-class="{'active': query.hasFilter(facet, value.key)}"

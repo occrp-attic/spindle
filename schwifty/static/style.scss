@@ -36,6 +36,10 @@ body, html {
     height: 100%;
 }
 
+.jumbotron {
+    background-color: $gray-subtle;
+}
+
 // main result list
 .result-list {
     padding: 0;
