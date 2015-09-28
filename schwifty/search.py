@@ -1,5 +1,6 @@
 from copy import deepcopy
 from pprint import pprint  # noqa
+from collections import defaultdict
 
 from flask import url_for
 from werkzeug.datastructures import MultiDict
@@ -12,7 +13,7 @@ DEFAULT_FIELDS = ['source', 'id', 'schema', 'entity.*']
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
 # used to generate the facet values.
-SCOPED_FACETS = ['schema', 'source']
+OR_FIELDS = ['schema', 'source']
 
 
 def query(args):
@@ -23,11 +24,12 @@ def query(args):
 
     # Extract filters, given in the form: &filter:foo_field=bla_value
     filters = []
-    for key, value in args.items():
-        if not key.startswith('filter:'):
-            continue
-        _, field = key.split(':', 1)
-        filters.append((field, value))
+    for key in args.keys():
+        for value in args.getlist(key):
+            if not key.startswith('filter:'):
+                continue
+            _, field = key.split(':', 1)
+            filters.append((field, value))
 
     # Generate aggregations. They are a generalized mechanism to do facetting
     # in ElasticSearch. Anything placed inside the "scoped" sub-aggregation
@@ -40,8 +42,8 @@ def query(args):
         }
     }
     for facet in facets:
-        agg = {facet: {'terms': {'field': facet}}}
-        if facet in SCOPED_FACETS:
+        agg = {facet: {'terms': {'field': facet, 'size': 200}}}
+        if facet in OR_FIELDS:
             aggs['scoped']['aggs'][facet] = {
                 'filter': {
                     'query': filter_query(q, filters, skip=facet)
@@ -62,10 +64,17 @@ def query(args):
 
 def filter_query(q, filters, skip=None):
     """ Apply a list of filters to the given query. """
+    or_filters = defaultdict(list)
     for field, value in filters:
         if field == skip:
             continue
-        q = add_filter(q, {'term': {field: value}})
+        if field in OR_FIELDS:
+            or_filters[field].append(value)
+        else:
+            q = add_filter(q, {'term': {field: value}})
+    for field, value in or_filters.items():
+        q = add_filter(q, {'terms': {field: value}})
+    print q
     return q
 
 
@@ -97,7 +106,7 @@ def paginate(q, limit, offset):
     try:
         q['size'] = min(10000, int(limit))
     except (TypeError, ValueError):
-        q['size'] = 50
+        q['size'] = 75
 
     if q['from'] > 0:
         # When requesting a second page of the results, the client will not
