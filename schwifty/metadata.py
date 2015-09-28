@@ -47,7 +47,7 @@ def get_countries():
         'XK': {'title': 'Kosovo'},
         'GB-SCT': {'title': 'Scotland'},
         'GB-NIR': {'title': 'Northern Ireland'},
-        'GB-NIR': {'title': 'Wales'},
+        'GB-WLS': {'title': 'Wales'},
         'CY-TRNC': {'title': 'Northern Cyprus'}
     }
     for country in countries:

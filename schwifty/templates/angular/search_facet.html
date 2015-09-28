@@ -5,7 +5,7 @@
       ng-class="{'active': query.hasFilter(facet, value.key)}"
       ng-click="query.toggleFilter(facet, value.key)">
 
-      <span class="badge">{{value.doc_count}}</span>
+      <span class="badge">{{value.doc_count | number}}</span>
       {{meta[value.key].title}}
     </li>
   </ul>
