@@ -1,4 +1,5 @@
 *.pyc
+.env
 .DS_Store
 *.egg-info
 schwifty/static/bower_components/

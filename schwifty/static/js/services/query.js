@@ -20,7 +20,7 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
     });
     query.source = ensureArray(query.source);
     query.schema = ensureArray(query.schema);
-    query['entity.jurisdiction_code'] = ensureArray(query['entity.jurisdiction_code']);
+    query['jurisdiction_code'] = ensureArray(query['jurisdiction_code']);
     query.facet = ensureArray(query.facet);
     return query;
   };
@@ -58,10 +58,10 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
 
     var q = {
       'q': query.q,
-      'filter:source': query.source,
-      'filter:schema': query.schema,
-      'filter:entity.jurisdiction_code': query['entity.jurisdiction_code'],
-      'facet': ['source', 'schema', 'entity.jurisdiction_code']
+      'filter:$sources': query.source,
+      'filter:$schema': query.schema,
+      'filter:jurisdiction_code': query['jurisdiction_code'],
+      'facet': ['$sources', '$schema', 'jurisdiction_code']
     };
     $analytics.eventTrack('search', {
       'category': 'search',

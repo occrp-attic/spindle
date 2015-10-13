@@ -10,8 +10,4 @@ schwifty.controller('SearchController', ['$scope', '$http', '$location', 'result
   $scope.metadata = metadata;
   $scope.results = results;
 
-  $scope.showEntity = function(result) {
-    $location.path(result.uri.split('/api', 2)[1]);
-    $location.search({});
-  };
 }]);

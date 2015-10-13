@@ -1,14 +1,14 @@
 <div class="container entity-detail">
   <div class="row">
-    <div class="col-md-12" ng-show="data.schema">
+    <div class="col-md-12" ng-show="data.$schema">
       <h2>
-        <entity-icon schema="data.schema"></entity-icon>
-        {{data.entity.name}}
+        <entity-icon schema="data.$schema"></entity-icon>
+        {{data.name}}
       </h2>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-8" ng-show="data.schema">
+    <div class="col-md-8" ng-show="data.$schema">
       <table class="table table-condensed">
         <tr ng-repeat="row in data.rows | orderBy: 'header'">
           <th>{{row.header}}</th>

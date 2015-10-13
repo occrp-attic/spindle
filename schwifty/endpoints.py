@@ -17,9 +17,9 @@ def handle_error(err):
     return res
 
 
-@app.route('/api/entity/<doc_type>/<path:id>')
-def entity(doc_type, id):
-    data = es.get(index=es_index, doc_type=doc_type, id=id)
+@app.route('/api/entity/<path:id>')
+def entity(id):
+    data = es.get(index=es_index, id=id)
     return jsonify({'status': 'ok', 'data': data.get('_source')})
 
 

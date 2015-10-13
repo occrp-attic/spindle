@@ -26,7 +26,7 @@ def get_schemas():
         q = {
             'size': 0,
             'aggregations': {
-                'schema': {'terms': {'field': 'schema'}}
+                'schema': {'terms': {'field': '$schema'}}
             }
         }
         res = es.search(index=es_index, body=q)

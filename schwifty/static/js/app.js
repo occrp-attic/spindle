@@ -22,7 +22,7 @@ schwifty.config(['$routeProvider', '$analyticsProvider',
     }
   });
 
-  $routeProvider.when('/entity/:type/:id', {
+  $routeProvider.when('/entity/:id', {
     templateUrl: 'entity.html',
     controller: 'EntityController',
     reloadOnSearch: false,

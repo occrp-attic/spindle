@@ -4,7 +4,7 @@ var loadSummary = ['$http', '$q', function($http, $q) {
 
   var q = {
     'limit': 0,
-    'facet': ['source', 'schema']
+    'facet': ['$sources', '$schema']
   };
 
   $http.get('/api/search', {params: q}).then(function(res) {
