@@ -13,9 +13,10 @@ var loadEntity = ['$http', '$q', '$route', function($http, $q, $route) {
 schwifty.controller('EntityController', ['$scope', '$http', 'entity', 'metadata',
   function($scope, $http, entity, metadata) {
 
-  $scope.source = metadata.sources[entity.source];
+  // $scope.source = metadata.sources[entity.source];
   $scope.data = entity;
   $scope.metadata = metadata;
 
+  $scope.jsontext = JSON.stringify(entity, null, 2);
 
 }]);

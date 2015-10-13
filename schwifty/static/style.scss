@@ -72,6 +72,19 @@ body, html {
 .hit-count {
     color: $text-muted;
     margin-bottom: $spacing * 4;
+
+    .sorting a {
+        //color: $text-muted;
+        cursor: pointer;
+
+        &.hover {
+            text-decoration: none;
+        }
+
+        &.active {
+            font-weight: bold;
+        }
+    }
 }
 
 .search-container {

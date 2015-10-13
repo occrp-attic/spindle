@@ -1,7 +1,15 @@
 <div class="container results-container">
   <div class="row">
     <div class="col-md-8">
-      <p class="help-block hit-count">
+      <div class="help-block hit-count">
+        <div class="pull-right sorting" ng-show="results.total">
+          Sort by
+          <a ng-click="query.set('sort', 'score')"
+            ng-class="{'active': query.get().sort == 'score'}">relevance</a>
+          &middot;
+          <a ng-click="query.set('sort', 'linkcount')"
+            ng-class="{'active': query.get().sort == 'linkcount'}">relationships</a>
+        </div>
         <span ng-show="results.total">
           Showing {{ results.offset+1  | number }} to {{ results.offset + results.limit  | number }}
           of {{ results.total | number }} matches.
@@ -9,7 +17,7 @@
         <span ng-hide="results.total">
           No results match your search terms. Please try a wider query.
         </span>
-      </p>
+      </div>
       <ol class="result-list">
         <li ng-repeat="result in results.results"
           class="result">
@@ -25,6 +33,16 @@
               <span ng-if="!$last">
                 &middot;
               </span>
+            </span>
+            &middot;
+            <span ng-if="result.$linkcount == 0">
+              no relationships
+            </span>
+            <span ng-if="result.$linkcount == 1">
+              one relationship
+            </span>
+            <span ng-if="result.$linkcount > 1">
+              {{result.$linkcount}} relationships
             </span>
           </div>
         </li>

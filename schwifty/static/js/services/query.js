@@ -18,6 +18,7 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
       }
       query[k] = v;
     });
+    query.sort = query.sort || 'score';
     query.source = ensureArray(query.source);
     query.schema = ensureArray(query.schema);
     query['jurisdiction_code'] = ensureArray(query['jurisdiction_code']);
@@ -29,7 +30,6 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
     query = get();
     query[name] = val;
     $location.path('/search').search(query);
-    execute();
   }
 
   var clear = function() {
@@ -58,6 +58,7 @@ schwifty.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
 
     var q = {
       'q': query.q,
+      'sort': query.sort,
       'filter:$sources': query.source,
       'filter:$schema': query.schema,
       'filter:jurisdiction_code': query['jurisdiction_code'],

@@ -8,7 +8,8 @@ from werkzeug.datastructures import MultiDict
 from schwifty.core import es, es_index
 
 QUERY_FIELDS = ['name', '$text', '$latin']
-DEFAULT_FIELDS = ['$sources', 'id', '$schema', 'name']
+DEFAULT_FIELDS = ['$sources', 'id', '$schema', '$attrcount',
+                  '$linkcount', 'name']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
@@ -53,7 +54,12 @@ def query(args):
         else:
             aggs.update(agg)
 
+    sort = ['_score']
+    if args.get('sort') == 'linkcount':
+        sort.insert(0, {'$linkcount': 'desc'})
+
     q = {
+        'sort': sort,
         'query': filter_query(q, filters),
         'aggregations': aggs,
         '_source': DEFAULT_FIELDS
