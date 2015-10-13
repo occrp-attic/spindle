@@ -20,7 +20,12 @@
           <div class="summary">
             {{metadata.schemas[result.$schema].title}}
             &middot;
-            {{result.$sources.join(', ')}}
+            <span ng-repeat="source in result.$sources">
+              {{metadata.sources[source].title}}
+              <span ng-if="!$last">
+                &middot;
+              </span>
+            </span>
           </div>
         </li>
       </ol>

@@ -1,6 +1,7 @@
 import requests
 
-from schwifty.core import app, es, es_index, cache
+from schwifty.core import cache, es, es_index
+from schwifty.model import db, Source
 
 
 def get_sources():
@@ -8,12 +9,9 @@ def get_sources():
     return them. """
     sources = cache.get('sources')
     if sources is None:
-        doc_type = app.config.get('SOURCE_DOC_TYPE')
-        res = es.search(index=es_index, doc_type=doc_type)
         sources = {}
-        for hit in res.get('hits', {}).get('hits'):
-            data = hit.get('_source')
-            sources[data['slug']] = data
+        for source in db.session.query(Source):
+            sources[source.slug] = source.to_dict()
         cache.set('sources', sources)
     return sources
 
