@@ -5,23 +5,27 @@
         <div class="pull-right sorting" ng-show="results.total">
           Sort by
           <a ng-click="query.set('sort', 'score')"
-            ng-class="{'active': query.state.sort == 'score'}">relevance</a>
+            ng-class="{'active': query.state.sort == 'score'}">
+            relevance
+          </a>
           &middot;
           <a ng-click="query.set('sort', 'linkcount')"
-            ng-class="{'active': query.state.sort == 'linkcount'}">relationships</a>
+            ng-class="{'active': query.state.sort == 'linkcount'}">
+            relationships
+          </a>
         </div>
         <span ng-show="results.total">
-          Showing {{ results.offset+1  | number }} to {{ results.offset + results.limit  | number }}
+          Showing {{ results.offset+1  | number }} to {{ shown  | number }}
           of {{ results.total | number }} matches.
         </span>
         <span ng-hide="results.total">
           No results match your search terms. Please try a wider query.
         </span>
       </div>
-      <ol class="result-list" infinite-scroll="loadNext()" infinite-scroll-distance="2" infinite-scroll-disabled="loading">
+      <ol class="result-list" infinite-scroll="loadNext()"
+        infinite-scroll-distance="2" infinite-scroll-disabled="loading">
         <li ng-repeat="result in results.results"
           class="result">
-
           <a class="title" href="#/entity/{{result.id}}">
             <entity-icon schema="result.$schema"></entity-icon> {{result.name}}
           </a>
