@@ -62,10 +62,12 @@
   <!-- End Piwik Code -->
 
   {% assets filters="uglifyjs", output="build/deps.js",
+      "bower_components/jquery/dist/jquery.js",
       "bower_components/moment/moment.js",
       "bower_components/angular/angular.js",
       "bower_components/angular-animate/angular-animate.js",
       "bower_components/angular-route/angular-route.js",
+      "bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js",
       "bower_components/angulartics/src/angulartics.js",
       "bower_components/angulartics/src/angulartics-piwik.js" %}
     <script src='{{ ASSET_URL }}'></script>

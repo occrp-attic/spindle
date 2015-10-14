@@ -27,6 +27,7 @@
     "animate.css": "~3.4.0",
     "bootstrap-sass": "bootstrap-sass-official#~3.3.5",
     "moment": "~2.10.6",
-    "angulartics": "~0.20.1"
+    "angulartics": "~0.20.1",
+    "ngInfiniteScroll": "~1.2.1"
   }
 }

@@ -1,4 +1,5 @@
-var schwifty = angular.module('schwifty', ['ngRoute', 'ngAnimate', 'angulartics', 'angulartics.piwik']);
+var schwifty = angular.module('schwifty', ['ngRoute', 'ngAnimate',
+  'angulartics', 'angulartics.piwik', 'infinite-scroll']);
 
 schwifty.config(['$routeProvider', '$analyticsProvider',
     function($routeProvider, $analyticsProvider) {
@@ -43,8 +44,8 @@ schwifty.controller('AppController', ['$scope', '$rootScope', '$http', '$locatio
 
   $scope.query = query;
 
-  $rootScope.$on("$routeChangeStart", function (event, next, current) {
-    query.get();
+  $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
+    $scope.query.state = query.get();
   });
 
   $scope.submitSearch = function(form) {

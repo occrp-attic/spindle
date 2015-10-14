@@ -2,10 +2,10 @@ from copy import deepcopy
 from pprint import pprint  # noqa
 from collections import defaultdict
 
-from flask import url_for
 from werkzeug.datastructures import MultiDict
 
 from schwifty.core import es, es_index
+from schwifty.util import url_for
 
 QUERY_FIELDS = ['name', '$text', '$latin']
 DEFAULT_FIELDS = ['$sources', 'id', '$schema', '$attrcount',
@@ -14,7 +14,7 @@ DEFAULT_FIELDS = ['$sources', 'id', '$schema', '$attrcount',
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
 # used to generate the facet values.
-OR_FIELDS = ['schema', 'source']
+OR_FIELDS = ['$schema', '$sources']
 
 
 def query(args):
@@ -65,7 +65,7 @@ def query(args):
         '_source': DEFAULT_FIELDS
     }
     q = paginate(q, args.get('limit'), args.get('offset'))
-    return execute_query(q, facets)
+    return execute_query(args, q, facets)
 
 
 def filter_query(q, filters, skip=None):
@@ -111,7 +111,7 @@ def paginate(q, limit, offset):
     try:
         q['size'] = min(10000, int(limit))
     except (TypeError, ValueError):
-        q['size'] = 75
+        q['size'] = 30
 
     if q['from'] > 0:
         # When requesting a second page of the results, the client will not
@@ -150,7 +150,7 @@ def text_query(text):
     return q
 
 
-def execute_query(q, facets):
+def execute_query(args, q, facets):
     """ Execute the query and return a set of results. """
     result = es.search(index=es_index, body=q)
     hits = result.get('hits', {})
@@ -161,13 +161,22 @@ def execute_query(q, facets):
         'limit': q['size'],
         'took': result.get('took'),
         'total': hits.get('total'),
+        'next': None,
         'facets': {}
     }
+    next_offset = output['offset'] + output['limit']
+    if output['total'] > next_offset:
+        params = {'offset': next_offset}
+        for k, v in args.iterlists():
+            if k in ['facet', 'offset']:
+                continue
+            params[k] = v
+        output['next'] = url_for('search', **params)
+
     for doc in hits.get('hits', []):
         data = doc.get('_source')
         # FIXME: potential layer fuckery
-        data['uri'] = url_for('entity', doc_type=doc.get('_type'),
-                              id=doc.get('_id'), _external=True)
+        data['$uri'] = url_for('entity', id=doc.get('_id'))
         output['results'].append(data)
 
     # traverse and get all facets.

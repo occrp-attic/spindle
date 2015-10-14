@@ -1,4 +1,5 @@
 import os
+from flask import url_for as flask_url_for
 
 from schwifty.core import app
 
@@ -12,3 +13,12 @@ def angular_templates():
             with open(file_path, 'rb') as fh:
                 file_name = file_path[len(partials_dir) + 1:]
                 yield (file_name, fh.read().decode('utf-8'))
+
+
+def url_for(*a, **kw):
+    """ Always generate external URLs. """
+    try:
+        kw['_external'] = True
+        return flask_url_for(*a, **kw)
+    except RuntimeError:
+        return None
