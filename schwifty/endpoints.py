@@ -23,6 +23,16 @@ def entity(id):
     return jsonify({'status': 'ok', 'data': data.get('_source')})
 
 
+@app.route('/api/like/<path:id>')
+def like(id):
+    ent = es.get(index=es_index, id=id, _source=False)
+    docs = es.mlt(index=es_index, doc_type=ent.get('_type'), id=id,
+                  mlt_fields=['name', '$text'], max_query_terms=500,
+                  max_doc_freq=1000)
+    # print ent
+    return jsonify(docs)
+
+
 @app.route('/api/search')
 def search():
     result = query(request.args)
