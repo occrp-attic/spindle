@@ -13,14 +13,14 @@ var loadEntity = ['$http', '$q', '$route', function($http, $q, $route, schema) {
 schwifty.controller('EntityController', ['$scope', '$http', 'entity', 'metadata', 'schema',
   function($scope, $http, entity, metadata, schema) {
 
-  $scope.bind = schema.getBind(entity);
+
   $scope.data = entity;
   $scope.metadata = metadata;
   $scope.jsontext = JSON.stringify(entity, null, 2);
 
   // test
-  $scope.bind.getChildren().then(function(schemas) {
-    console.log('Loaded:', schemas);
-
+  schema.getBind(entity).then(function(bind) {
+    $scope.bind = bind;
+    console.log(bind);
   });
 }]);

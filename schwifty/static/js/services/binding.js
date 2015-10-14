@@ -1,6 +1,10 @@
 
 schwifty.factory('schema', ['$http', '$q', function($http, $q) {
-  var schemaCache = {};
+  var schemaCache = {}, schemata = {};
+  /* JSON schema has a somewhat weird definition of inheritance which is most
+  suitable to validation but is a bit off when doing data modelling. See:
+  https://github.com/json-schema/json-schema/wiki/anyOf,-allOf,-oneOf,-not */
+  var HIERARCHIES = ['anyOf', 'oneOf', 'allOf'];
 
   var loadSchema = function(uri, schema) {
     /* Fetch or cache. If a second argument is given, it will be cached
@@ -8,6 +12,12 @@ schwifty.factory('schema', ['$http', '$q', function($http, $q) {
     if (!schemaCache[uri]) {
       var dfd = $q.defer()
           schemaCache[uri] = dfd.promise;
+
+      // cache the actual schema as well:
+      dfd.promise.then(function(schema) {
+        schemata[uri] = schema;
+      });
+
       if (schema && schema.id) {
         dfd.resolve(schema);
       } else {
@@ -19,182 +29,196 @@ schwifty.factory('schema', ['$http', '$q', function($http, $q) {
     return schemaCache[uri]
   };
 
-  function Visitor(schema, name) {
-    /* The visitor helps to determine all properties that are available as
+  var hasSchema = function(uri) {
+    /* Check if a given schema is already cached locally. */
+    return angular.isDefined(schemata[uri]);
+  };
+
+  var getSchema = function(uri) {
+    // WARNING: this is unsafe because it assumes the schema has already
+    // been fetched.
+    return schemata[uri];
+  };
+
+  var reflectSchema = function(schema, parents) {
+    /* Given a particular schema, this will recursively go through all
+    sub-schemas defined in properties and schema inheritance and make sure
+    that all of them are loaded into the local cache. */
+    var dfd = $q.defer(), deps = [];
+
+    // avoid circular recursion.
+    parents = parents || new Array();
+    if (schema.id) {
+      if (parents.indexOf(schema.id) != -1) {
+        dfd.resolve(getSchema(schema.id));
+        return dfd.promise;
+      } else {
+        parents.push(schema.id);
+      }
+    }
+
+    // the schema is a reference, fetch it and then process that instead.
+    if (schema.$ref) {
+      loadSchema(schema.$ref).then(function(schema) {
+        reflectSchema(schema, parents).then(function(schema) {
+          dfd.resolve(schema);
+        });
+      });
+      return dfd.promise;
+    }
+
+    // if the schema inherits from other schemas, process those.
+    for (var k in HIERARCHIES) {
+      prop = schema[HIERARCHIES[k]] || [];
+      for (var i in prop) {
+        deps.push(reflectSchema(prop[i], parents));
+      }
+    }
+
+    // check if this is an array object with a defined item type.
+    if (schema.items) {
+      deps.push(reflectSchema(schema.items, parents));
+    }
+
+    // process the local properties.
+    if (angular.isObject(schema.properties)) {
+      for (var name in schema.properties) {
+        var prop = schema.properties[name];
+        deps.push(reflectSchema(prop, parents));
+      }
+    }
+
+    // wait for all sub-schema to be processed before resolving.
+    $q.all(deps).then(function() {
+      dfd.resolve(schema);
+    });
+    return dfd.promise;
+  };
+
+  function Model(schema, name) {
+    /* The model helps to determine all properties that are available as
     children of a specific schema. */
     var self = this;
     self.schema = schema;
     self.name = name;
 
-    self.getSchema = function() {
-      /* Resolve the schema of the current visitor, by either downloading it
-      or using a copy from a local resolver cache. */
-      if (angular.isUndefined(self.schemaDfd)) {
-          self.schemaDfd = $q.defer();
-          if (self.schema.$ref) {
-            loadSchema(self.schema.$ref).then(function(schema) {
-              delete self.schema.$ref;
-              angular.extend(self.schema, schema)
-              self.schemaDfd.resolve(self.schema);
-            });
-          } else {
-            self.schemaDfd.resolve(self.schema);
-          }
-      }
-      return self.schemaDfd.promise;
-    };
+    if (self.schema.$ref) {
+      // this is not conformant to JSON schema spec but needed for some
+      // weird graph reverse traversal code. JSON schema would just replace
+      // the $ref object with the schema object.
+      angular.extend(self.schema, getSchema(self.schema.$ref));
+      delete self.schema.$ref;
+    }
 
-    self.getSchemaSet = function() {
-      /* Resolve the full hierarchy of JSON schemas referred to by the current
-      schema. This is essentially a class hierarchy which is necessary in order
-      to determine all available properties. */
-      if (angular.isUndefined(self.schemaSetDfd)) {
-        self.schemaSetDfd = $q.defer();
-        self.getSchema().then(function(schema) {
-          // cf. https://github.com/json-schema/json-schema/wiki/anyOf,-allOf,-oneOf,-not
-          var parents = [], hierarchyProps = ['anyOf', 'oneOf', 'allOf'];
-          for (var k in hierarchyProps) {
-            prop = schema[hierarchyProps[k]];
-            if (angular.isArray(prop)) {
-              for (var i in prop) {
-                var parent = prop[i],
-                    visitor = new Visitor(parent, self.name);
-                parents.push(visitor.getSchemaSet());
-              }
-            }
-          }
+    // utility functions for traversal.
+    self.types = angular.isArray(schema.type) ? schema.type : [schema.type];
+    self.isObject = self.types.indexOf('object') != -1;
+    self.isArray = self.types.indexOf('array') != -1;
+    self.isValue = !self.isObject && !self.isArray;
 
-          if (parents.length > 0) {
-            $q.all(parents).then(function(set) {
-              var schemata = [schema];
-              for (var i in set) {
-                schemata = schemata.concat(set[i]);
-              }
-              self.schemaSetDfd.resolve(schemata);
-            });
-          } else {
-            self.schemaSetDfd.resolve([schema]);
-          }
-        });
+    /* Resolve the full hierarchy of JSON schemas referred to by the current
+    schema. This is essentially a class hierarchy which is necessary in order
+    to determine all available properties. */
+    self.parents = [self];
+    for (var k in HIERARCHIES) {
+      prop = schema[HIERARCHIES[k]] || [];
+      for (var i in prop) {
+        var model = new Model(prop[i], self.name);
+        self.parents = self.parents.concat(model.parents);
       }
-      return self.schemaSetDfd.promise;
-    };
+    }
+
+    self._properties = null;
+    self._prop_models = null;
+    self._items_model = null;
 
     self.getProperties = function() {
       /* A list of all properties available for the object-types schema that
       is being visited. */
-      var dfd = $q.defer();
-      self.getSchemaSet().then(function(schemas) {
-        var properties = {};
-        for (var i in schemas) {
-          var schema = schemas[i];
+      if (!self.isObject) {
+        throw new Error("Cannot get properties on non-object.");
+      }
+      if (self._properties === null) {
+        self._properties = {};
+        for (var i in self.parents) {
+          var schema = self.parents[i].schema;
           if (schema.properties) {
-            for (var j in schema.properties) {
-              if (angular.isUndefined(properties[j])) {
-                properties[j] = schema.properties[j];
+            for (var name in schema.properties) {
+              if (angular.isUndefined(self._properties[name])) {
+                var prop = schema.properties[name];
+                self._properties[name] = prop;
               }
             }
           }
         }
-        dfd.resolve(properties);
-      });
-      return dfd.promise;
+      }
+      return self._properties;
     };
 
-    self.getType = function() {
-      // Get the data type of the current element in the visitor.
-      var dfd = $q.defer();
-      self.getSchema().then(function(schema) {
-        var types = schema.type;
-        types.isObject = false;
-        types.isArray = false;
-        types.isValue = false;
-        if (!angular.isArray(types)) {
-          types = [types];
+    self.getPropertyModels = function() {
+      /* Get a model for each property on the local object. */
+      if (self._prop_models === null) {
+        self._prop_models = [];
+        var properties = self.getProperties();
+        for (var name in properties) {
+          var prop = properties[name];
+          self._prop_models.push(new Model(prop, name));
         }
-        if (types.indexOf('object') != -1) {
-          types.isObject = true;
-        } else if (types.indexOf('array') != -1) {
-          types.isArray = true;
-        } else {
-          types.isValue = true;
-        }
-        dfd.resolve(types);
-      });
-      return dfd.promise;
+      }
+      return self._prop_models;
     };
 
-    self.getChildren = function() {
-      var dfd = $q.defer();
-      self.getType().then(function(type) {
-        if (type.isArray) {
-          self.getSchema().then(function(schema) {
-            var visitor = new Visitor(schema.items, self.name);
-            dfd.resolve([visitor]);
-          });
-        } else if (type.isObject) {
-          self.getProperties().then(function(properties) {
-            var children = [];
-            for (var name in properties) {
-              var schema = properties[name];
-              children.push(new Visitor(schema, name));
-            }
-            dfd.resolve(children);
-          });
-        } else {
-          dfd.resolve([]);
-        }
-      });
-      return dfd.promise;
-    };
+    self.getItemsModel = function() {
+      /* Create a model for array items. */
+      if (!self.isArray) {
+        throw new Error("Cannot get items on non-array.");
+      }
+      if (self._items_model === null) {
+        self._items_model = new Model(self.schema.items, self.name);
+      }
+      return self._items_model;
+    }
 
-    // end visitor
+    // end model
   };
 
-  function Bind(data, schema, visitor) {
-    /* A bind combines a visitor (which describes the schema) with a concrete
+  function Bind(data, model) {
+    /* A bind combines a model (which describes the schema) with a concrete
     instance of the data and allows for simultaneous traversal of both. */
     var self = this;
     self.data = data;
-    self.visitor = visitor
-    if (!self.visitor) {
-      schema = schema || data.$schema;
-      self.visitor = new Visitor({$ref: schema});
+    self.model = model;
+    self.binds = [];
+
+    /* Get all descendant objects or array elements which occur in both the
+    data and the schema. */
+    if (self.model.isArray) {
+      for (var i in self.data) {
+        self.binds.push(new Bind(self.data[i], self.model.getItemsModel()));
+      }
+    } else if (self.model.isObject) {
+      var models = self.model.getPropertyModels();
+      for (var i in models) {
+        var model = models[i],
+            val = self.data[model.name];
+        if (angular.isDefined(val)) {
+          self.binds.push(new Bind(val, model));
+        }
+      }
     }
 
-    self.getChildren = function() {
-      /* Get all descendant objects or array elements which occur in both the
-      data and the schema. */
-      var dfd = $q.defer();
-      self.visitor.getType().then(function(type) {
-        self.visitor.getChildren().then(function(children) {
-          var binds = [];
-          if (type.isArray) {
-            for (var i in self.data) {
-              var item = self.data[i];
-              binds.push(new Bind(item, null, children[0]));
-            }
-          } else if (type.isObject) {
-            for (var i in children) {
-              var child = children[i],
-                  val = self.data[child.name];
-              if (angular.isDefined(val)) {
-                binds.push(new Bind(val, null, child));
-              }
-            }
-          }
-          dfd.resolve(binds);
-        });
-      });
-      return dfd.promise;
-    };
-
+    // end bind
   }
 
   return {
     loadSchema: loadSchema,
-    getBind: function(obj, schema_uri) {
-      return new Bind(obj, schema_uri);
+    getBind: function(obj) {
+      var dfd = $q.defer();
+      reflectSchema({$ref: obj.$schema}).then(function(schema) {
+        var model = new Model(schema);
+        dfd.resolve(new Bind(obj, model));
+      });
+      return dfd.promise;
     }
   }
 }]);
