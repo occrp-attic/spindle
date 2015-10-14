@@ -19,11 +19,12 @@ schwifty.factory('schema', ['$http', '$q', function($http, $q) {
     return schemaCache[uri]
   };
 
-  function Visitor(schema) {
+  function Visitor(schema, name) {
     /* The visitor helps to determine all properties that are available as
     children of a specific schema. */
     var self = this;
     self.schema = schema;
+    self.name = name;
 
     self.getSchema = function() {
       /* Resolve the schema of the current visitor, by either downloading it
@@ -57,7 +58,7 @@ schwifty.factory('schema', ['$http', '$q', function($http, $q) {
             if (angular.isArray(prop)) {
               for (var i in prop) {
                 var parent = prop[i],
-                    visitor = new Visitor(parent);
+                    visitor = new Visitor(parent, self.name);
                 parents.push(visitor.getSchemaSet());
               }
             }
@@ -79,14 +80,115 @@ schwifty.factory('schema', ['$http', '$q', function($http, $q) {
       return self.schemaSetDfd.promise;
     };
 
+    self.getProperties = function() {
+      /* A list of all properties available for the object-types schema that
+      is being visited. */
+      var dfd = $q.defer();
+      self.getSchemaSet().then(function(schemas) {
+        var properties = {};
+        for (var i in schemas) {
+          var schema = schemas[i];
+          if (schema.properties) {
+            for (var j in schema.properties) {
+              if (angular.isUndefined(properties[j])) {
+                properties[j] = schema.properties[j];
+              }
+            }
+          }
+        }
+        dfd.resolve(properties);
+      });
+      return dfd.promise;
+    };
+
+    self.getType = function() {
+      // Get the data type of the current element in the visitor.
+      var dfd = $q.defer();
+      self.getSchema().then(function(schema) {
+        var types = schema.type;
+        types.isObject = false;
+        types.isArray = false;
+        types.isValue = false;
+        if (!angular.isArray(types)) {
+          types = [types];
+        }
+        if (types.indexOf('object') != -1) {
+          types.isObject = true;
+        } else if (types.indexOf('array') != -1) {
+          types.isArray = true;
+        } else {
+          types.isValue = true;
+        }
+        dfd.resolve(types);
+      });
+      return dfd.promise;
+    };
+
+    self.getChildren = function() {
+      var dfd = $q.defer();
+      self.getType().then(function(type) {
+        if (type.isArray) {
+          self.getSchema().then(function(schema) {
+            var visitor = new Visitor(schema.items, self.name);
+            dfd.resolve([visitor]);
+          });
+        } else if (type.isObject) {
+          self.getProperties().then(function(properties) {
+            var children = [];
+            for (var name in properties) {
+              var schema = properties[name];
+              children.push(new Visitor(schema, name));
+            }
+            dfd.resolve(children);
+          });
+        } else {
+          dfd.resolve([]);
+        }
+      });
+      return dfd.promise;
+    };
+
     // end visitor
   };
 
-  function Bind(obj, schema_uri) {
+  function Bind(data, schema, visitor) {
+    /* A bind combines a visitor (which describes the schema) with a concrete
+    instance of the data and allows for simultaneous traversal of both. */
     var self = this;
-    self.obj = obj;
-    schema_uri = schema_uri || obj.$schema;
-    self.visitor = new Visitor({$ref: schema_uri});
+    self.data = data;
+    self.visitor = visitor
+    if (!self.visitor) {
+      schema = schema || data.$schema;
+      self.visitor = new Visitor({$ref: schema});
+    }
+
+    self.getChildren = function() {
+      /* Get all descendant objects or array elements which occur in both the
+      data and the schema. */
+      var dfd = $q.defer();
+      self.visitor.getType().then(function(type) {
+        self.visitor.getChildren().then(function(children) {
+          var binds = [];
+          if (type.isArray) {
+            for (var i in self.data) {
+              var item = self.data[i];
+              binds.push(new Bind(item, null, children[0]));
+            }
+          } else if (type.isObject) {
+            for (var i in children) {
+              var child = children[i],
+                  val = self.data[child.name];
+              if (angular.isDefined(val)) {
+                binds.push(new Bind(val, null, child));
+              }
+            }
+          }
+          dfd.resolve(binds);
+        });
+      });
+      return dfd.promise;
+    };
+
   }
 
   return {

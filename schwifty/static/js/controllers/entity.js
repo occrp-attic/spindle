@@ -19,7 +19,7 @@ schwifty.controller('EntityController', ['$scope', '$http', 'entity', 'metadata'
   $scope.jsontext = JSON.stringify(entity, null, 2);
 
   // test
-  $scope.bind.visitor.getSchemaSet().then(function(schemas) {
+  $scope.bind.getChildren().then(function(schemas) {
     console.log('Loaded:', schemas);
 
   });
