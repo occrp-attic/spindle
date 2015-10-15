@@ -7,7 +7,7 @@ from werkzeug.datastructures import MultiDict
 from spindle.core import es, es_index
 from spindle.util import url_for, result_entity
 
-QUERY_FIELDS = ['name', '$text', '$latin']
+QUERY_FIELDS = ['name^10', '$text^3', '$latin']
 DEFAULT_FIELDS = ['$sources', 'id', '$schema', '$attrcount',
                   '$linkcount', 'name']
 
@@ -131,7 +131,7 @@ def text_query(text):
                     "multi_match": {
                         "query": text,
                         "fields": QUERY_FIELDS,
-                        "type": "best_fields",
+                        "type": "most_fields",
                         "cutoff_frequency": 0.0007,
                         "operator": "and",
                     },
@@ -174,10 +174,7 @@ def execute_query(args, q, facets):
         output['next'] = url_for('search', **params)
 
     for doc in hits.get('hits', []):
-        data = doc.get('_source')
-        # FIXME: potential layer fuckery
-        data['$uri'] = url_for('entity', id=doc.get('_id'))
-        output['results'].append(data)
+        output['results'].append(result_entity(doc))
 
     # traverse and get all facets.
     aggs = result.get('aggregations')
