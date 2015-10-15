@@ -4,7 +4,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
 from werkzeug.contrib.cache import SimpleCache
 
-from schwifty import default_settings
+from spindle import default_settings
 
 app = Flask(__name__)
 app.config.from_object(default_settings)

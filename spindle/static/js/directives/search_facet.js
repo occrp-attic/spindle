@@ -1,5 +1,5 @@
 
-schwifty.directive('searchFacet', ['$http', 'metadataService', 'query',
+spindle.directive('searchFacet', ['$http', 'metadataService', 'query',
     function($http, metadataService, query) {
   return {
     restrict: 'E',

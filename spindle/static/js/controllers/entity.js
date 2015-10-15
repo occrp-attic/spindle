@@ -10,7 +10,7 @@ var loadEntity = ['$http', '$q', '$route', function($http, $q, $route, schema) {
 }];
 
 
-schwifty.controller('EntityController', ['$scope', '$http', 'entity', 'metadata', 'schema',
+spindle.controller('EntityController', ['$scope', '$http', 'entity', 'metadata', 'schema',
   function($scope, $http, entity, metadata, schema) {
 
 

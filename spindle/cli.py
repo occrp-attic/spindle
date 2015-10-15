@@ -1,8 +1,8 @@
 from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 
-from schwifty.core import assets
-from schwifty.endpoints import app
+from spindle.core import assets
+from spindle.endpoints import app
 
 
 manager = Manager(app)

@@ -2,6 +2,6 @@
 .env
 .DS_Store
 *.egg-info
-schwifty/static/bower_components/
-schwifty/static/.webassets-cache/
-schwifty/static/build/
+spindle/static/bower_components/
+spindle/static/.webassets-cache/
+spindle/static/build/

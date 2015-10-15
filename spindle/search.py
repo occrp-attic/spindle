@@ -4,8 +4,8 @@ from collections import defaultdict
 
 from werkzeug.datastructures import MultiDict
 
-from schwifty.core import es, es_index
-from schwifty.util import url_for, result_entity
+from spindle.core import es, es_index
+from spindle.util import url_for, result_entity
 
 QUERY_FIELDS = ['name', '$text', '$latin']
 DEFAULT_FIELDS = ['$sources', 'id', '$schema', '$attrcount',

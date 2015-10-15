@@ -1,5 +1,5 @@
 
-schwifty.factory('schema', ['$http', '$q', function($http, $q) {
+spindle.factory('schema', ['$http', '$q', function($http, $q) {
   var schemaCache = {}, schemata = {};
   /* JSON schema has a somewhat weird definition of inheritance which is most
   suitable to validation but is a bit off when doing data modelling. See:

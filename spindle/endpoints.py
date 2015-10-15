@@ -1,11 +1,11 @@
 from flask import render_template, jsonify, request
 from elasticsearch import ElasticsearchException
 
-from schwifty.core import app, es, es_index
-from schwifty.search import query
-from schwifty.metadata import get_metadata
-from schwifty.mlt import more_like_this
-from schwifty.util import angular_templates, result_entity
+from spindle.core import app, es, es_index
+from spindle.search import query
+from spindle.metadata import get_metadata
+from spindle.mlt import more_like_this
+from spindle.util import angular_templates, result_entity
 
 # TODO: support OAuth against ID
 # TODO: make notes, bookmarks, links

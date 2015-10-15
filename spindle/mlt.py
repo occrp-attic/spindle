@@ -1,5 +1,5 @@
-from schwifty.core import es, es_index
-from schwifty.util import result_entity
+from spindle.core import es, es_index
+from spindle.util import result_entity
 
 
 def more_like_this(entity):

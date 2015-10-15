@@ -1,5 +1,5 @@
 
-schwifty.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
+spindle.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
     function($route, $location, $q, $http, $analytics) {
   var query = {};
 

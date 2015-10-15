@@ -1,7 +1,7 @@
 import requests
 
-from schwifty.core import cache, es, es_index
-from schwifty.model import db, Source
+from spindle.core import cache, es, es_index
+from spindle.model import db, Source
 
 
 def get_sources():

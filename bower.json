@@ -1,12 +1,12 @@
 {
-  "name": "schwifty",
+  "name": "spindle",
   "version": "0.0.0",
-  "homepage": "https://github.com/occrp/schwifty",
+  "homepage": "https://github.com/occrp/spindle",
   "authors": [
     "OCCRP <tech@occrp.org>"
   ],
   "description": "Show us what you got.",
-  "main": "schwifty/static/app.js",
+  "main": "spindle/static/app.js",
   "moduleType": [
     "globals"
   ],

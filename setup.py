@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='schwifty',
+    name='spindle',
     version='0.1',
-    description="Show us what you got.",
+    description="Front-end for the loom investigative graph.",
     long_description="",
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -17,7 +17,7 @@ setup(
     keywords='search browser',
     author='OCCRP',
     author_email='tech@occrp.org',
-    url='http://github.com/occrp/schwifty',
+    url='http://github.com/occrp/spindle',
     license='AGPLv3',
     packages=find_packages(exclude=['ez_setup', 'examples', 'test']),
     namespace_packages=[],
@@ -33,7 +33,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'getschwifty = schwifty.cli:main'
+            'spindle = spindle.cli:main'
         ]
     }
 )

@@ -1,5 +1,5 @@
 
-schwifty.factory('metadataService', ['$http', '$q', function($http, $q) {
+spindle.factory('metadataService', ['$http', '$q', function($http, $q) {
   var dfd = $q.defer();
 
   $http.get('/api/metadata').then(function(res) {

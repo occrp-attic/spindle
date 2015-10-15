@@ -14,7 +14,7 @@ var loadSummary = ['$http', '$q', function($http, $q) {
 }];
 
 
-schwifty.controller('HomeController', ['$scope', '$http', '$location', 'summary',
+spindle.controller('HomeController', ['$scope', '$http', '$location', 'summary',
   function($scope, $http, $location, summary) {
 
   $scope.summary = summary;

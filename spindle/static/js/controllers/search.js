@@ -4,7 +4,7 @@ var loadSearchResult = ['query', function(query) {
 }];
 
 
-schwifty.controller('SearchController', ['$scope', '$http', '$location', 'results', 'metadata',
+spindle.controller('SearchController', ['$scope', '$http', '$location', 'results', 'metadata',
   function($scope, $http, $location, results, metadata) {
 
   $scope.loading = false;

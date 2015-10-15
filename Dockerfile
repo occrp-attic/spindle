@@ -12,10 +12,10 @@ RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | sh
 RUN apt-get install --yes nodejs && curl -L https://www.npmjs.org/install.sh | sh
 RUN npm install -g bower uglifyjs
 
-COPY . /schwifty
-WORKDIR /schwifty
+COPY . /spindle
+WORKDIR /spindle
 
-ENV SCHWIFTY_SETTINGS /schwifty/contrib/docker_settings.py
+ENV SCHWIFTY_SETTINGS /spindle/contrib/docker_settings.py
 RUN pip install functools32 gunicorn && pip install -r requirements.txt -e .
 RUN rm -rf .git && bower --allow-root install
 

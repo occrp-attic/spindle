@@ -1,7 +1,7 @@
 import os
 from flask import url_for as flask_url_for
 
-from schwifty.core import app
+from spindle.core import app
 
 
 def angular_templates():

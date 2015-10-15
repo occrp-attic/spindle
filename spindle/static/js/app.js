@@ -1,7 +1,7 @@
-var schwifty = angular.module('schwifty', ['ngRoute', 'ngAnimate',
+var spindle = angular.module('spindle', ['ngRoute', 'ngAnimate',
   'angulartics', 'angulartics.piwik', 'infinite-scroll']);
 
-schwifty.config(['$routeProvider', '$analyticsProvider',
+spindle.config(['$routeProvider', '$analyticsProvider',
     function($routeProvider, $analyticsProvider) {
 
   $routeProvider.when('/', {
@@ -39,7 +39,7 @@ schwifty.config(['$routeProvider', '$analyticsProvider',
 }]);
 
 
-schwifty.controller('AppController', ['$scope', '$rootScope', '$http', '$location', 'query',
+spindle.controller('AppController', ['$scope', '$rootScope', '$http', '$location', 'query',
   function($scope, $rootScope, $http, $location, query) {
 
   $scope.query = query;

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from schwifty.core import db
+from spindle.core import db
 
 
 class Source(db.Model):

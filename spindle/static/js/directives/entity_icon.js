@@ -1,5 +1,5 @@
 
-schwifty.directive('entityIcon', ['$http', function($http) {
+spindle.directive('entityIcon', ['$http', function($http) {
   return {
     restrict: 'E',
     scope: {
