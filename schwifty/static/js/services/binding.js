@@ -188,6 +188,7 @@ schwifty.factory('schema', ['$http', '$q', function($http, $q) {
     var self = this;
     self.data = data;
     self.model = model;
+    self.schema = model.schema;
     self.binds = [];
 
     /* Get all descendant objects or array elements which occur in both the
