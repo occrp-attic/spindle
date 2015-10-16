@@ -1,5 +1,5 @@
 
-var loadEntity = ['$http', '$q', '$route', 'schema', function($http, $q, $route, schema) {
+var loadEntityBind = ['$http', '$q', '$route', 'schema', function($http, $q, $route, schema) {
   var dfd = $q.defer(),
       url = '/api/entity/' + $route.current.params.id;
   $http.get(url).then(function(res) {
@@ -11,14 +11,13 @@ var loadEntity = ['$http', '$q', '$route', 'schema', function($http, $q, $route,
 }];
 
 
-spindle.controller('EntityController', ['$scope', '$http', 'entity', 'metadata',
-  function($scope, $http, entity, metadata) {
+spindle.controller('EntityController', ['$scope', '$http', 'bind', 'metadata',
+  function($scope, $http, bind, metadata) {
 
-  console.log(entity);
+  console.log(bind);
 
-  $scope.bind = entity;
-  $scope.data = entity.data;
+  $scope.bind = bind;
+  $scope.data = bind.data;
   $scope.metadata = metadata;
-  $scope.jsontext = JSON.stringify(entity.data, null, 2);
 
 }]);

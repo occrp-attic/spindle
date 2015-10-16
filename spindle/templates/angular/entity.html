@@ -8,14 +8,9 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-8">
-      <pre>{{jsontext}}</pre>
-    </div>
-    <div class="col-md-4">
-      <p class="help-block">
-        This record is from <a ng-href="{{source.url}}">{{source.title}}</a>,
-        and was last updated: {{data.indexed_at | date}}.
-      </p>
+    <div class="col-md-12">
+      <entity-bind bind="bind" root="data.id" metadata="metadata">
+      </entity-bind>
     </div>
   </div>
 </div>

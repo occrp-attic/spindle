@@ -1,5 +1,6 @@
 var spindle = angular.module('spindle', ['ngRoute', 'ngAnimate',
-  'angulartics', 'angulartics.piwik', 'infinite-scroll']);
+  'angulartics', 'angulartics.piwik', 'infinite-scroll',
+  'RecursionHelper']);
 
 spindle.config(['$routeProvider', '$analyticsProvider',
     function($routeProvider, $analyticsProvider) {
@@ -28,7 +29,7 @@ spindle.config(['$routeProvider', '$analyticsProvider',
     controller: 'EntityController',
     reloadOnSearch: false,
     resolve: {
-      entity: loadEntity,
+      bind: loadEntityBind,
       metadata: loadMetadata
     }
   });

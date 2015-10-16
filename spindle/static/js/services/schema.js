@@ -106,12 +106,13 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
       // this is not conformant to JSON schema spec but needed for some
       // weird graph reverse traversal code. JSON schema would just replace
       // the $ref object with the schema object.
-      angular.extend(self.schema, getSchema(self.schema.$ref));
+      self.schema = angular.extend({}, getSchema(self.schema.$ref),
+                                   self.schema);
       delete self.schema.$ref;
     }
 
     // utility functions for traversal.
-    self.types = angular.isArray(schema.type) ? schema.type : [schema.type];
+    self.types = angular.isArray(self.schema.type) ? self.schema.type : [self.schema.type];
     self.isObject = self.types.indexOf('object') != -1;
     self.isArray = self.types.indexOf('array') != -1;
     self.isValue = !self.isObject && !self.isArray;
@@ -119,12 +120,12 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
     /* Resolve the full hierarchy of JSON schemas referred to by the current
     schema. This is essentially a class hierarchy which is necessary in order
     to determine all available properties. */
-    self.parents = [self];
+    self.inherits = [self];
     for (var k in HIERARCHIES) {
-      prop = schema[HIERARCHIES[k]] || [];
+      prop = self.schema[HIERARCHIES[k]] || [];
       for (var i in prop) {
         var model = new Model(prop[i], self.name);
-        self.parents = self.parents.concat(model.parents);
+        self.inherits = self.inherits.concat(model.inherits);
       }
     }
 
@@ -140,8 +141,8 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
       }
       if (self._properties === null) {
         self._properties = {};
-        for (var i in self.parents) {
-          var schema = self.parents[i].schema;
+        for (var i in self.inherits) {
+          var schema = self.inherits[i].schema;
           if (schema.properties) {
             for (var name in schema.properties) {
               if (angular.isUndefined(self._properties[name])) {

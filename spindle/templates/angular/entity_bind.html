@@ -1,0 +1,43 @@
+
+<div ng-if="bind.model.isObject" class="panel panel-default">
+  <div class="panel-heading" ng-if="!isRoot() && !bind.schema.inline">
+    <div class="pull-right">
+      {{ bind.schema.title }}
+    </div>
+    <span ng-if="!isRoot()">
+      <entity-icon schema="bind.data.$schema"></entity-icon>
+      <a  href="#/entity/{{bind.data.id}}">{{ bind.data.name }}</a>
+    </span>
+    &nbsp;
+  </div>
+  <table class="table">
+    <tr ng-repeat="child in bind.binds" ng-hide="child.schema.hidden">
+      <th>
+        {{child.schema.title || child.model.name}}
+      </th>
+      <td>
+        <entity-bind bind="child" root="root" metadata="metadata"></entity-bind>
+      </td>
+    </tr>
+  </table>
+  <div class="panel-footer" ng-if="!bind.schema.inline">
+    &nbsp;
+    <div class="pull-right">
+      Source:
+      <span ng-repeat="source in bind.data.$sources">
+        {{metadata.sources[source].title}}
+        <span ng-if="!$last">
+          &middot;
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div ng-if="bind.model.isArray" ng-repeat="child in getChildren()">
+  <entity-bind bind="child" root="root" metadata="metadata"></entity-bind>
+</div>
+
+<span ng-if="bind.model.isValue">
+  {{getValue()}}
+</span>

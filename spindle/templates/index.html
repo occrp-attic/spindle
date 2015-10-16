@@ -45,21 +45,23 @@
   </div>
   <div ng-view></div>
 
-  <!-- Piwik -->
-  <script type="text/javascript">
-    var _paq = _paq || [];
-    // _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-      var u="https://piwik.occrp.org/";
-      _paq.push(['setTrackerUrl', u+'piwik.php']);
-      _paq.push(['setSiteId', 10]);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-    })();
-  </script>
-  <noscript><p><img src="//piwik.occrp.org/piwik.php?idsite=10" style="border:0;" alt="" /></p></noscript>
-  <!-- End Piwik Code -->
+  {% if not config.DEBUG %}
+    <!-- Piwik -->
+    <script type="text/javascript">
+      var _paq = _paq || [];
+      // _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="https://piwik.occrp.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 10]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+      })();
+    </script>
+    <noscript><p><img src="//piwik.occrp.org/piwik.php?idsite=10" style="border:0;" alt="" /></p></noscript>
+    <!-- End Piwik Code -->
+  {% endif %}
 
   {% assets filters="uglifyjs", output="build/deps.js",
       "bower_components/jquery/dist/jquery.js",
@@ -68,6 +70,7 @@
       "bower_components/angular-animate/angular-animate.js",
       "bower_components/angular-route/angular-route.js",
       "bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js",
+      "bower_components/angular-recursion/angular-recursion.js",
       "bower_components/angulartics/src/angulartics.js",
       "bower_components/angulartics/src/angulartics-piwik.js" %}
     <script src='{{ ASSET_URL }}'></script>
@@ -79,6 +82,7 @@
       "js/services/query.js",
       "js/services/schema.js",
       "js/directives/entity_icon.js",
+      "js/directives/entity_bind.js",
       "js/directives/search_facet.js",
       "js/controllers/home.js",
       "js/controllers/search.js",
