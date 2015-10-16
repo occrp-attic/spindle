@@ -27,6 +27,10 @@ to separate it's dependencies from the system Python. In that case, you can
 install ``spindle`` and it's dependencies like this:
 
 ```bash
+# If you haven't yet:
+$ sudo npm install -g bower uglifyjs
+$ sudo apt-get install ruby-sass
+# Then, the application itself:
 $ git clone git@github.com:occrp/spindle.git
 $ cd spindle
 $ virtualenv pyenv
