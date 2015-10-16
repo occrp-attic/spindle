@@ -15,7 +15,7 @@ RUN npm install -g bower uglifyjs
 COPY . /spindle
 WORKDIR /spindle
 
-ENV SCHWIFTY_SETTINGS /spindle/contrib/docker_settings.py
+ENV SPINDLE_SETTINGS /spindle/contrib/docker_settings.py
 RUN pip install functools32 gunicorn && pip install -r requirements.txt -e .
 RUN rm -rf .git && bower --allow-root install
 
