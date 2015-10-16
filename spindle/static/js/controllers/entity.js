@@ -1,26 +1,24 @@
 
-var loadEntity = ['$http', '$q', '$route', function($http, $q, $route, schema) {
+var loadEntity = ['$http', '$q', '$route', 'schema', function($http, $q, $route, schema) {
   var dfd = $q.defer(),
       url = '/api/entity/' + $route.current.params.id;
   $http.get(url).then(function(res) {
-    var entity = res.data.data;
-    dfd.resolve(entity);
+    schema.getBind(res.data.data).then(function(bind) {
+      dfd.resolve(bind);
+    });
   });
   return dfd.promise;
 }];
 
 
-spindle.controller('EntityController', ['$scope', '$http', 'entity', 'metadata', 'schema',
-  function($scope, $http, entity, metadata, schema) {
+spindle.controller('EntityController', ['$scope', '$http', 'entity', 'metadata',
+  function($scope, $http, entity, metadata) {
 
+  console.log(entity);
 
-  $scope.data = entity;
+  $scope.bind = entity;
+  $scope.data = entity.data;
   $scope.metadata = metadata;
-  $scope.jsontext = JSON.stringify(entity, null, 2);
+  $scope.jsontext = JSON.stringify(entity.data, null, 2);
 
-  // test
-  schema.getBind(entity).then(function(bind) {
-    $scope.bind = bind;
-    console.log(bind);
-  });
 }]);

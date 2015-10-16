@@ -1,4 +1,5 @@
 import requests
+from pycountry import countries
 
 from spindle.core import cache, es, es_index
 from spindle.model import db, Source
@@ -28,10 +29,9 @@ def get_schemas():
             }
         }
         res = es.search(index=es_index, body=q)
-        schemas = {}
+        schemas = []
         for agg in res.get('aggregations').get('schema').get('buckets'):
-            url = agg.get('key')
-            schemas[url] = requests.get(url).json()
+            schemas.append(agg.get('key'))
         cache.set('schemas', schemas)
     return schemas
 
@@ -39,13 +39,14 @@ def get_schemas():
 def get_countries():
     """ Return a list of all countries, indexed by ISO 2-letter code.
     Includes ``ZZ`` for global scope. """
-    from pycountry import countries
+    # These are local overrides. May want to drop pycountry at some point and
+    # just use our own fixture.
     data = {
         'ZZ': {'title': 'Global'},
         'XK': {'title': 'Kosovo'},
-        'GB-SCT': {'title': 'Scotland'},
-        'GB-NIR': {'title': 'Northern Ireland'},
-        'GB-WLS': {'title': 'Wales'},
+        'GB-SCT': {'title': 'Scotland (UK)'},
+        'GB-NIR': {'title': 'Northern Ireland (UK)'},
+        'GB-WLS': {'title': 'Wales (UK)'},
         'CY-TRNC': {'title': 'Northern Cyprus'}
     }
     for country in countries:
