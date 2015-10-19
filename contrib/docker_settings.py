@@ -1,5 +1,9 @@
+import os
+
 DEBUG = False
 ASSETS_DEBUG = False
 
 ELASTICSEARCH_HOST = 'elasticsearch:9200'
 ELASTICSEARCH_INDEX = 'graph'
+
+SQLALCHEMY_DATABASE_URI = os.environ.get('SPINDLE_DATABASE_URI')

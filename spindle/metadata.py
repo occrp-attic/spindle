@@ -1,4 +1,3 @@
-import requests
 from pycountry import countries
 
 from spindle.core import cache, es, es_index
