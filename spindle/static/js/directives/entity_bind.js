@@ -28,17 +28,6 @@ spindle.directive('entityBind', ['RecursionHelper', function(RecursionHelper) {
           });
         }
 
-        scope.getValue = function() {
-          var schema = scope.bind.schema;
-          if (schema.format && schema.format == 'country-code') {
-            var country = scope.metadata.countries[scope.bind.data];
-            if (country) {
-                return country.title;
-            }
-          }
-          return scope.bind.data;
-        }
-
       });
     }
   };
