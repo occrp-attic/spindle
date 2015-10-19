@@ -8,9 +8,140 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-md-3">
+
+      <dl>
+        <dt>Entity type:</dt>
+        <dd>{{metadata.schemas[data.$schema].title}}</dd>
+      </dl>
+      <dl ng-repeat="property in properties">
+        <dt>{{property.schema.title || property.model.name}}:</dt>
+        <dd><bind-value bind="property"></bind-value></dd>
+      </dl>
+      <dl>
+        <dt>Data sources:</dt>
+        <dd>
+          <span ng-repeat="source in data.$sources">
+            <a href="{{metadata.sources[source].url}}">
+              {{metadata.sources[source].title}}
+            </a>
+            <span ng-if="!$last">
+              &middot;
+            </span>
+          </span>
+        </dd>
+      </dl>
+
+    </div>
+    <div class="col-md-9">
+
+      <div ng-if="bind.has('members')">
+        <table class="table table-striped">
+          <tr>
+            <th colspan="5">Board members, employees and associated persons</th>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Nationality</th>
+            <th>Start</th>
+            <th>End</th>
+          </tr>
+          <tr ng-repeat="member in bind.p.members.binds">
+            <td width="40%">
+              <entity-icon schema="member.p.person.schema.id"></entity-icon>
+              <bind-value bind="member.p.person.p.name"
+                link="member.p.person.data.id" />
+            </td>
+            <td><bind-value bind="member.p.role" /></td>
+            <td><bind-value bind="member.p.person.p.jurisdiction_code" /></td>
+            <td width="5%"><bind-value bind="member.p.start_date" /></td>
+            <td width="5%"><bind-value bind="member.p.end_date" /></td>
+          </tr>
+        </table>
+      </div>
+
+      <div ng-if="bind.has('memberships')">
+        <table class="table table-striped">
+          <tr>
+            <th colspan="5">Board seats and organisational memberships</th>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Jurisdiction</th>
+            <th>Start</th>
+            <th>End</th>
+          </tr>
+          <tr ng-repeat="membership in bind.p.memberships.binds">
+            <td width="40%">
+              <entity-icon schema="membership.p.organization.schema.id"></entity-icon>
+              <bind-value bind="membership.p.organization.p.name"
+                link="membership.p.organization.data.id" />
+            </td>
+            <td><bind-value bind="membership.p.role" /></td>
+            <td><bind-value bind="membership.p.organization.p.jurisdiction_code" /></td>
+            <td width="5%"><bind-value bind="membership.p.start_date" /></td>
+            <td width="5%"><bind-value bind="membership.p.end_date" /></td>
+          </tr>
+        </table>
+      </div>
+
+      <div ng-if="bind.has('parents')">
+        <table class="table table-striped">
+          <tr>
+            <th colspan="4">Parent companies</th>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <th>Jurisdiction</th>
+            <th>Founded</th>
+            <th>Dissolved</th>
+          </tr>
+          <tr ng-repeat="parent in bind.p.parents.binds">
+            <td width="40%">
+              <entity-icon schema="parent.schema.id"></entity-icon>
+              <bind-value bind="parent.p.name" link="parent.data.id" />
+            </td>
+            <td><bind-value bind="parent.p.jurisdiction_code" /></td>
+            <td width="5%"><bind-value bind="parent.p.founding_date" /></td>
+            <td width="5%"><bind-value bind="parent.p.dissolution_date" /></td>
+          </tr>
+        </table>
+      </div>
+
+      <div ng-if="bind.has('children')">
+        <table class="table table-striped">
+          <tr>
+            <th colspan="4">Subsidiary companies</th>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <th>Jurisdiction</th>
+            <th>Founded</th>
+            <th>Dissolved</th>
+          </tr>
+          <tr ng-repeat="child in bind.p.children.binds">
+            <td width="40%">
+              <entity-icon schema="child.schema.id"></entity-icon>
+              <bind-value bind="child.p.name" link="child.data.id" />
+            </td>
+            <td><bind-value bind="child.p.jurisdiction_code" /></td>
+            <td width="5%"><bind-value bind="child.p.founding_date" /></td>
+            <td width="5%"><bind-value bind="child.p.dissolution_date" /></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- TODO: lands, owners, .... -->
+
+      <!-- end main area -->
+    </div>
+  </div>
+  <div class="row">
     <div class="col-md-12">
-      <entity-bind bind="bind" root="data.id" metadata="metadata">
-      </entity-bind>
+      <!-- entity-bind bind="bind" root="data.id" metadata="metadata">
+      </entity-bind -->
     </div>
   </div>
 </div>

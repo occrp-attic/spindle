@@ -21,7 +21,7 @@ $input-border-focus: $brand-primary;
 
 @mixin header-font {
     font-family: $font-family-sans-serif;
-    font-weight: 700;
+    font-weight: 300;
 }
 
 div[ng-view].ng-enter {
@@ -34,6 +34,10 @@ h1, h2, h3, h4 {
 
 body, html {
     height: 100%;
+}
+
+.empty-value {
+    color: $text-muted;
 }
 
 .jumbotron {

@@ -191,6 +191,7 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
     self.model = model;
     self.schema = model.schema;
     self.binds = [];
+    self.p = {};
 
     /* Get all descendant objects or array elements which occur in both the
     data and the schema. */
@@ -204,9 +205,18 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
         var model = models[i],
             val = self.data[model.name];
         if (angular.isDefined(val)) {
-          self.binds.push(new Bind(val, model));
+          var bind = new Bind(val, model);
+          self.binds.push(bind);
+          self.p[model.name] = bind;
         }
       }
+    }
+
+    self.has = function(name) {
+      if (angular.isDefined(self.p[name]) && self.p[name].data) {
+        return true;
+      }
+      return false;
     }
 
     // end bind
