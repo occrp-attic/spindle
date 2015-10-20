@@ -6,27 +6,19 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
   https://github.com/json-schema/json-schema/wiki/anyOf,-allOf,-oneOf,-not */
   var HIERARCHIES = ['anyOf', 'oneOf', 'allOf'];
 
-  var loadSchema = function(uri, schema) {
-    /* Fetch or cache. If a second argument is given, it will be cached
-    under the given schema URI (this can be used to seed the cache). */
+  var loadSchema = function(uri) {
+    /* Fetch the schema from a remote location. */
     if (!schemaCache[uri]) {
       var dfd = $q.defer()
           schemaCache[uri] = dfd.promise;
 
-      // cache the actual schema as well:
-      dfd.promise.then(function(schema) {
-        schemata[uri] = schema;
+      $http.get(uri).then(function(res) {
+        // cache the actual schema as well:
+        schemata[uri] = res.data;
+        dfd.resolve(res.data);
+      }, function(err) {
+        dfd.reject(err);
       });
-
-      if (schema && schema.id) {
-        dfd.resolve(schema);
-      } else {
-        $http.get(uri).then(function(res) {
-          dfd.resolve(res.data);
-        }, function(err) {
-          dfd.reject(err);
-        });
-      }
     }
     return schemaCache[uri]
   };
@@ -54,9 +46,8 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
       if (parents.indexOf(schema.id) != -1) {
         dfd.resolve(getSchema(schema.id));
         return dfd.promise;
-      } else {
-        parents.push(schema.id);
       }
+      parents.push(schema.id);
     }
 
     // the schema is a reference, fetch it and then process that instead.

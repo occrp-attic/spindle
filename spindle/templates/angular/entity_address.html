@@ -4,20 +4,22 @@
     <bind-value bind="bind.p.text">
   </dd>
   <dd ng-if="!bind.has('text')">
-    <span ng-if="bind.has('street_address')">
-      <bind-value bind="bind.p.street_address"><br/>
-    </span>
-    <span ng-if="bind.has('locality')">
-      <bind-value bind="bind.p.locality"><br/>
-    </span>
-    <span ng-if="bind.has('region')">
-      <bind-value bind="bind.p.region"><br/>
-    </span>
-    <span ng-if="bind.has('postal_code')">
-      <bind-value bind="bind.p.postal_code"><br/>
-    </span>
-    <span ng-if="bind.has('country')">
-      <bind-value bind="bind.p.country"><br/>
-    </span>
+    <address>
+      <span ng-if="bind.has('street_address')">
+        <bind-value bind="bind.p.street_address"><br/>
+      </span>
+      <span ng-if="bind.has('locality')">
+        <bind-value bind="bind.p.locality"><br/>
+      </span>
+      <span ng-if="bind.has('region')">
+        <bind-value bind="bind.p.region"><br/>
+      </span>
+      <span ng-if="bind.has('postal_code')">
+        <bind-value bind="bind.p.postal_code"><br/>
+      </span>
+      <span ng-if="bind.has('country')">
+        <bind-value bind="bind.p.country"><br/>
+      </span>
+    </address>
   </dd>
 </dl>

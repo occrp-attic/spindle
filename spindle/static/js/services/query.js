@@ -21,7 +21,7 @@ spindle.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
     query.sort = query.sort || 'score';
     query.$sources = ensureArray(query.$sources);
     query.$schema = ensureArray(query.$schema);
-    query['jurisdiction_code'] = ensureArray(query['jurisdiction_code']);
+    query.jurisdiction_code = ensureArray(query.jurisdiction_code);
     query.facet = ensureArray(query.facet);
     return query;
   };
