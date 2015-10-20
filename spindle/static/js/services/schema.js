@@ -23,6 +23,8 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
       } else {
         $http.get(uri).then(function(res) {
           dfd.resolve(res.data);
+        }, function(err) {
+          dfd.reject(err);
         });
       }
     }
@@ -62,7 +64,11 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
       loadSchema(schema.$ref).then(function(schema) {
         reflectSchema(schema, parents).then(function(schema) {
           dfd.resolve(schema);
+        }, function(err) {
+          dfd.reject(err);
         });
+      }, function(err) {
+        dfd.reject(err);
       });
       return dfd.promise;
     }
@@ -91,6 +97,8 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
     // wait for all sub-schema to be processed before resolving.
     $q.all(deps).then(function() {
       dfd.resolve(schema);
+    }, function(err) {
+      dfd.reject(err);
     });
     return dfd.promise;
   };
@@ -229,6 +237,8 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
       reflectSchema({$ref: obj.$schema}).then(function(schema) {
         var model = new Model(schema);
         dfd.resolve(new Bind(obj, model));
+      }, function(err) {
+        dfd.reject(err);
       });
       return dfd.promise;
     }

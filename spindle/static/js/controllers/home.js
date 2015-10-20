@@ -9,6 +9,8 @@ var loadSummary = ['$http', '$q', function($http, $q) {
 
   $http.get('/api/search', {params: q}).then(function(res) {
     dfd.resolve(res.data);
+  }, function(err) {
+    dfd.reject(err);
   });
   return dfd.promise;
 }];

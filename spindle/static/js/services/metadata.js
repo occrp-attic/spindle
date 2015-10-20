@@ -19,7 +19,11 @@ spindle.factory('metadataService', ['$http', '$q', 'schema',
         metadata.schemas[obj.id] = obj;
       }
       dfd.resolve(metadata);
+    }, function(err) {
+      dfd.reject(err);
     });
+  }, function(err) {
+    dfd.reject(err);
   });
 
   return {

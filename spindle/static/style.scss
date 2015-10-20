@@ -11,6 +11,7 @@ $brand-success: $occrp-green;
 $text-color: #333;
 $text-muted: #999;
 $gray-subtle: #f0f0f0;
+$page-bg: #fff;
 $spacing: 0.5em;
 
 $font-family-sans-serif:  'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -34,6 +35,7 @@ h1, h2, h3, h4 {
 
 body, html {
     height: 100%;
+    background-color: $page-bg;
 }
 
 .empty-value {
@@ -43,6 +45,35 @@ body, html {
 .jumbotron {
     background-color: $gray-subtle;
 }
+
+// page and spinner
+#page {
+    position: relative;
+    min-height: 80%;
+}
+
+#spinner-overlay {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 30em;
+    height: 100%;
+    background-color: $page-bg;
+
+    .spinner {
+        margin-top: 1em;
+        text-align: center;
+        font-size: 4em;
+        color: $text-muted;
+
+        &.failed {
+            color: $brand-primary;
+        }
+    }
+}
+
 
 // main result list
 .result-list {

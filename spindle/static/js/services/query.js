@@ -64,6 +64,7 @@ spindle.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
       'filter:jurisdiction_code': query.jurisdiction_code,
       'facet': ['$sources', '$schema', 'jurisdiction_code']
     };
+
     $analytics.eventTrack('search', {
       'category': 'search',
       'label': JSON.stringify(q)
@@ -71,6 +72,8 @@ spindle.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
 
     $http.get('/api/search', {params: q}).then(function(res) {
       dfd.resolve(res.data);
+    }, function(err) {
+      dfd.reject(err);
     });
     return dfd.promise;
   };

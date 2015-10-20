@@ -43,7 +43,17 @@
       </div>
     </div>
   </div>
-  <div ng-view></div>
+  <div id="page">
+    <div id="spinner-overlay" ng-hide="routeLoaded">
+      <div class="spinner" ng-hide="routeFailed">
+        <i class="fa fa-spinner fa-pulse"></i>
+      </div>
+      <div class="spinner failed" ng-show="routeFailed">
+        <i class="fa fa-exclamation-triangle"></i>
+      </div>
+    </div>
+    <div ng-cloak ng-view></div>
+  </div>
 
   {% if not config.DEBUG %}
     <!-- Piwik -->

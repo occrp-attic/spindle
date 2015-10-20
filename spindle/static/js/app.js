@@ -44,9 +44,21 @@ spindle.controller('AppController', ['$scope', '$rootScope', '$http', '$location
   function($scope, $rootScope, $http, $location, query) {
 
   $scope.query = query;
+  $scope.routeLoaded = false;
+  $scope.routeFailed = false;
+
+  $rootScope.$on("$routeChangeStart", function (event, next, current) {
+    $scope.routeLoaded = false;
+    $scope.routeFailed = false;
+  });
 
   $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
     $scope.query.state = query.get();
+    $scope.routeLoaded = true;
+  });
+
+  $rootScope.$on("$routeChangeError", function (event, next, current) {
+    $scope.routeFailed = true;
   });
 
   $scope.submitSearch = function(form) {

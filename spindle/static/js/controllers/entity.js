@@ -5,7 +5,11 @@ var loadEntityBind = ['$http', '$q', '$route', 'schema', function($http, $q, $ro
   $http.get(url).then(function(res) {
     schema.getBind(res.data.data).then(function(bind) {
       dfd.resolve(bind);
+    }, function(err) {
+      dfd.reject(err);
     });
+  }, function(err) {
+    dfd.reject(err);
   });
   return dfd.promise;
 }];
