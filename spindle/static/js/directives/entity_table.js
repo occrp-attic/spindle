@@ -17,7 +17,6 @@ spindle.directive('entityTable', [function() {
       $scope.$watch('bind', function(bind) {
         if (bind && bind.has($scope.collection)) {
           $scope.rows = bind.p[$scope.collection].binds;
-          self.sample = $scope.rows[0];
         }
       });
 
