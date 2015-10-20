@@ -1,23 +1,26 @@
 
 spindle.directive('entityIcon', ['schema', function(schema) {
+  var icons = {};
   return {
     restrict: 'E',
     scope: {
       'schema': '='
     },
+    replace: true,
     templateUrl: 'entity_icon.html',
     link: function (scope, element, attrs, model) {
       scope.icon = 'fa-question-circle';
-
-      scope.$watch('schema', function(uri) {
-        if (uri) {
-          schema.loadSchema(uri).then(function(data) {
-            if (data.faIcon) {
-              scope.icon = data.faIcon;
-            }
-          })
+      if (scope.schema) {
+        if (icons[scope.schema]) {
+          scope.icon = icons[scope.schema];
         }
-      });
+        schema.loadSchema(scope.schema).then(function(data) {
+          if (data.faIcon) {
+            icons[scope.schema] = data.faIcon;
+            scope.icon = data.faIcon;
+          }
+        })
+      }
     }
   };
 }]);
