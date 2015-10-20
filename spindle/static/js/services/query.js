@@ -54,7 +54,8 @@ spindle.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
   };
 
   var execute = function() {
-    var dfd = $q.defer();
+    var dfd = $q.defer(),
+        query = get();
 
     var q = {
       'q': query.q,
