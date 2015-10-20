@@ -12,7 +12,6 @@ spindle.directive('entityIcon', ['schema', function(schema) {
       scope.$watch('schema', function(uri) {
         if (uri) {
           schema.loadSchema(uri).then(function(data) {
-            console.log(uri, data);
             if (data.faIcon) {
               scope.icon = data.faIcon;
             }
