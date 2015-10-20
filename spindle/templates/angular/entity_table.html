@@ -15,6 +15,9 @@
           <entity-icon schema="cell.schema.id"></entity-icon>
           <bind-value bind="cell.p.name" link="cell.data.id" />
         </span>
+        <span ng-if="!cell" class="empty-value">
+          &mdash;
+        </span>
       </td>
     </tr>
   </table>
