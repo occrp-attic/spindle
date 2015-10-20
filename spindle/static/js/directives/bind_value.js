@@ -10,6 +10,7 @@ spindle.directive('bindValue', ['metadataService', function(metadataService) {
     link: function (scope, element, attrs, model) {
       scope.value = null;
       scope.url = false;
+      scope.format = '';
 
       scope.$watch('bind', function(bind) {
         if (!bind) {
@@ -20,6 +21,7 @@ spindle.directive('bindValue', ['metadataService', function(metadataService) {
         scope.value = bind.data;
 
         if (schema.format) {
+          scope.format = schema.format;
           if (schema.format == 'country-code') {
             metadataService.get().then(function(metadata) {
               var country = metadata.countries[bind.data];

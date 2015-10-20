@@ -1,6 +1,5 @@
 var spindle = angular.module('spindle', ['ngRoute', 'ngAnimate',
-  'angulartics', 'angulartics.piwik', 'infinite-scroll',
-  'RecursionHelper']);
+  'angulartics', 'angulartics.piwik', 'infinite-scroll']);
 
 spindle.config(['$routeProvider', '$analyticsProvider',
     function($routeProvider, $analyticsProvider) {

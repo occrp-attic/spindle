@@ -63,13 +63,17 @@ body, html {
     background-color: $page-bg;
 
     .spinner {
-        margin-top: 1em;
+        margin-top: 3em;
         text-align: center;
-        font-size: 4em;
         color: $text-muted;
 
         &.failed {
             color: $brand-primary;
+        }
+
+        i {
+            font-size: 4em;
+            margin: 0.5em;
         }
     }
 }
@@ -207,5 +211,21 @@ body, html {
         th, td {
             // border-top: 1px solid $list-group-border;
         }
+    }
+}
+
+.bind-value {
+    &.format-date-time, &.format-date {
+        white-space: nowrap;
+    }
+}
+
+.table-entity-collection {
+    th {
+        white-space: nowrap;
+    }
+
+    .object {
+        width: 40%;
     }
 }

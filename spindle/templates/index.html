@@ -50,6 +50,9 @@
       </div>
       <div class="spinner failed" ng-show="routeFailed">
         <i class="fa fa-exclamation-triangle"></i>
+        <div class="failure-note">
+          He's dead, Jim.
+        </div>
       </div>
     </div>
     <div ng-cloak ng-view></div>
@@ -80,7 +83,6 @@
       "bower_components/angular-animate/angular-animate.js",
       "bower_components/angular-route/angular-route.js",
       "bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js",
-      "bower_components/angular-recursion/angular-recursion.js",
       "bower_components/angulartics/src/angulartics.js",
       "bower_components/angulartics/src/angulartics-piwik.js" %}
     <script src='{{ ASSET_URL }}'></script>
@@ -91,9 +93,11 @@
       "js/services/metadata.js",
       "js/services/query.js",
       "js/services/schema.js",
-      "js/directives/entity_icon.js",
       "js/directives/bind_value.js",
-      "js/directives/entity_bind.js",
+      "js/directives/entity_icon.js",
+      "js/directives/entity_table.js",
+      "js/directives/entity_table_column.js",
+      "js/directives/entity_address.js",
       "js/directives/search_facet.js",
       "js/controllers/home.js",
       "js/controllers/search.js",

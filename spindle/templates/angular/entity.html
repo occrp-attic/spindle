@@ -9,7 +9,6 @@
   </div>
   <div class="row">
     <div class="col-md-3">
-
       <dl>
         <dt>Entity type:</dt>
         <dd>{{metadata.schemas[data.$schema].title}}</dd>
@@ -18,6 +17,10 @@
         <dt>{{property.schema.title || property.model.name}}:</dt>
         <dd><bind-value bind="property"></bind-value></dd>
       </dl>
+      <entity-address bind="bind.p.residential_address"></entity-address>
+      <entity-address bind="bind.p.registered_address"></entity-address>
+      <entity-address bind="bind.p.headquarters_address"></entity-address>
+      <entity-address bind="bind.p.postal_address"></entity-address>
       <dl>
         <dt>Data sources:</dt>
         <dd>
@@ -35,105 +38,77 @@
     </div>
     <div class="col-md-9">
 
-      <div ng-if="bind.has('members')">
-        <table class="table table-striped">
-          <tr>
-            <th colspan="5">Board members, employees and associated persons</th>
-          </tr>
-          <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Nationality</th>
-            <th>Start</th>
-            <th>End</th>
-          </tr>
-          <tr ng-repeat="member in bind.p.members.binds">
-            <td width="40%">
-              <entity-icon schema="member.p.person.schema.id"></entity-icon>
-              <bind-value bind="member.p.person.p.name"
-                link="member.p.person.data.id" />
-            </td>
-            <td><bind-value bind="member.p.role" /></td>
-            <td><bind-value bind="member.p.person.p.jurisdiction_code" /></td>
-            <td width="5%"><bind-value bind="member.p.start_date" /></td>
-            <td width="5%"><bind-value bind="member.p.end_date" /></td>
-          </tr>
-        </table>
-      </div>
+      <entity-table bind="bind" collection="members"
+        title="Board members, employees and associated persons">
+        <entity-table-column path="person" title="Name">
+        </entity-table-column>
+        <entity-table-column path="role" title="Role">
+        </entity-table-column>
+        <entity-table-column path="person.jurisdiction_code" title="Jurisdiction">
+        </entity-table-column>
+        <entity-table-column path="start_date" title="Start date">
+        </entity-table-column>
+        <entity-table-column path="end_date" title="End date">
+        </entity-table-column>
+      </entity-table>
 
-      <div ng-if="bind.has('memberships')">
-        <table class="table table-striped">
-          <tr>
-            <th colspan="5">Board seats and organisational memberships</th>
-          </tr>
-          <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Jurisdiction</th>
-            <th>Start</th>
-            <th>End</th>
-          </tr>
-          <tr ng-repeat="membership in bind.p.memberships.binds">
-            <td width="40%">
-              <entity-icon schema="membership.p.organization.schema.id"></entity-icon>
-              <bind-value bind="membership.p.organization.p.name"
-                link="membership.p.organization.data.id" />
-            </td>
-            <td><bind-value bind="membership.p.role" /></td>
-            <td><bind-value bind="membership.p.organization.p.jurisdiction_code" /></td>
-            <td width="5%"><bind-value bind="membership.p.start_date" /></td>
-            <td width="5%"><bind-value bind="membership.p.end_date" /></td>
-          </tr>
-        </table>
-      </div>
+      <entity-table bind="bind" collection="memberships"
+        title="Board seats and organisational memberships">
+        <entity-table-column path="organization" title="Name">
+        </entity-table-column>
+        <entity-table-column path="role" title="Role">
+        </entity-table-column>
+        <entity-table-column path="organization.jurisdiction_code" title="Jurisdiction">
+        </entity-table-column>
+        <entity-table-column path="start_date" title="Start date">
+        </entity-table-column>
+        <entity-table-column path="end_date" title="End date">
+        </entity-table-column>
+      </entity-table>
 
-      <div ng-if="bind.has('parents')">
-        <table class="table table-striped">
-          <tr>
-            <th colspan="4">Parent companies</th>
-          </tr>
-          <tr>
-            <th>Name</th>
-            <th>Jurisdiction</th>
-            <th>Founded</th>
-            <th>Dissolved</th>
-          </tr>
-          <tr ng-repeat="parent in bind.p.parents.binds">
-            <td width="40%">
-              <entity-icon schema="parent.schema.id"></entity-icon>
-              <bind-value bind="parent.p.name" link="parent.data.id" />
-            </td>
-            <td><bind-value bind="parent.p.jurisdiction_code" /></td>
-            <td width="5%"><bind-value bind="parent.p.founding_date" /></td>
-            <td width="5%"><bind-value bind="parent.p.dissolution_date" /></td>
-          </tr>
-        </table>
-      </div>
+      <entity-table bind="bind" collection="parents"
+        title="Parent companies">
+        <entity-table-column path="organization" title="Name">
+        </entity-table-column>
+        <entity-table-column path="organization.jurisdiction_code" title="Jurisdiction">
+        </entity-table-column>
+        <entity-table-column path="founding_date" title="Founding">
+        </entity-table-column>
+        <entity-table-column path="dissolution_date" title="Dissolution">
+        </entity-table-column>
+      </entity-table>
 
-      <div ng-if="bind.has('children')">
-        <table class="table table-striped">
-          <tr>
-            <th colspan="4">Subsidiary companies</th>
-          </tr>
-          <tr>
-            <th>Name</th>
-            <th>Jurisdiction</th>
-            <th>Founded</th>
-            <th>Dissolved</th>
-          </tr>
-          <tr ng-repeat="child in bind.p.children.binds">
-            <td width="40%">
-              <entity-icon schema="child.schema.id"></entity-icon>
-              <bind-value bind="child.p.name" link="child.data.id" />
-            </td>
-            <td><bind-value bind="child.p.jurisdiction_code" /></td>
-            <td width="5%"><bind-value bind="child.p.founding_date" /></td>
-            <td width="5%"><bind-value bind="child.p.dissolution_date" /></td>
-          </tr>
-        </table>
-      </div>
+      <entity-table bind="bind" collection="children"
+        title="Subsidiary companies">
+        <entity-table-column path="organization" title="Name">
+        </entity-table-column>
+        <entity-table-column path="organization.jurisdiction_code" title="Jurisdiction">
+        </entity-table-column>
+        <entity-table-column path="founding_date" title="Founding">
+        </entity-table-column>
+        <entity-table-column path="dissolution_date" title="Dissolution">
+        </entity-table-column>
+      </entity-table>
 
-      <!-- TODO: lands, owners, .... -->
+      <entity-table bind="bind" collection="lands"
+        title="Asset ownership">
+        <entity-table-column path="" title="Name">
+        </entity-table-column>
+        <entity-table-column path="jurisdiction_code" title="Jurisdiction">
+        </entity-table-column>
+        <entity-table-column path="parcel_number" title="Parcel number">
+        </entity-table-column>
+        <entity-table-column path="valuation" title="Valuation">
+        </entity-table-column>
+      </entity-table>
+
+      <entity-table bind="bind" collection="owners"
+        title="Owners">
+        <entity-table-column path="" title="Name">
+        </entity-table-column>
+        <entity-table-column path="jurisdiction_code" title="Jurisdiction">
+        </entity-table-column>
+      </entity-table>
 
       <!-- end main area -->
     </div>

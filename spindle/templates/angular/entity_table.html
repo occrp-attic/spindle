@@ -1,0 +1,21 @@
+<div ng-if="bind.has(collection)">
+  <table class="table table-striped table-entity-collection">
+    <tr>
+      <th colspan="{{columns.length}}">{{title}}</th>
+    </tr>
+    <tr ng-transclude>
+    </tr>
+    <tr ng-repeat="row in rows">
+      <td ng-repeat="cell in getColumnBinds(row) track by $index"
+        ng-class="{'object': cell.model.isObject}">
+        <span ng-if="cell.model.isValue">
+          <bind-value bind="cell" />
+        </span>
+        <span ng-if="cell.model.isObject">
+          <entity-icon schema="cell.schema.id"></entity-icon>
+          <bind-value bind="cell.p.name" link="cell.data.id" />
+        </span>
+      </td>
+    </tr>
+  </table>
+</div>

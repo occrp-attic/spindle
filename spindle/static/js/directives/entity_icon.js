@@ -1,5 +1,5 @@
 
-spindle.directive('entityIcon', ['$http', function($http) {
+spindle.directive('entityIcon', ['schema', function(schema) {
   return {
     restrict: 'E',
     scope: {
@@ -7,25 +7,18 @@ spindle.directive('entityIcon', ['$http', function($http) {
     },
     templateUrl: 'entity_icon.html',
     link: function (scope, element, attrs, model) {
+      scope.icon = 'fa-question-circle';
 
-      scope.getIcon = function() {
-        if (scope.schema == 'https://schema.occrp.org/generic/person.json#') {
-          return 'fa-user';
+      scope.$watch('schema', function(uri) {
+        if (uri) {
+          schema.loadSchema(uri).then(function(data) {
+            console.log(uri, data);
+            if (data.faIcon) {
+              scope.icon = data.faIcon;
+            }
+          })
         }
-        if (scope.schema == 'https://schema.occrp.org/generic/organization.json#') {
-          return 'fa-university';
-        }
-        if (scope.schema == 'https://schema.occrp.org/generic/company.json#') {
-          return 'fa-suitcase';
-        }
-        if (scope.schema == 'https://schema.occrp.org/generic/legal_person.json#') {
-          return 'fa-user-secret';
-        }
-        if (scope.schema == 'https://schema.occrp.org/generic/land.json#') {
-          return 'fa-map';
-        }
-        return 'fa-question-circle';
-      };
+      });
     }
   };
 }]);

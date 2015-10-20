@@ -1,15 +1,16 @@
-
-<span ng-if="!url && !link">
-  <span ng-if="!value" class="empty-value">
-    &mdash;
+<span class="bind-value format-{{format}}">
+  <span ng-if="!url && !link">
+    <span ng-if="!value" class="empty-value">
+      &mdash;
+    </span>
+    {{value}}
   </span>
-  {{value}}
-</span>
 
-<span ng-if="link">
-  <a href="#/entity/{{link}}">{{value}}</a>
-</span>
+  <span ng-if="link">
+    <a href="#/entity/{{link}}">{{value}}</a>
+  </span>
 
-<span ng-if="url">
-  <a href="{{value}}">{{value}}</a>
+  <span ng-if="url">
+    <a href="{{value}}">{{value}}</a>
+  </span>
 </span>
