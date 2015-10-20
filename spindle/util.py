@@ -1,5 +1,6 @@
 import os
 from flask import url_for as flask_url_for
+from flask import current_app
 
 from spindle.core import app
 
@@ -19,6 +20,8 @@ def url_for(*a, **kw):
     """ Always generate external URLs. """
     try:
         kw['_external'] = True
+        if current_app.config.get('PREFERRED_URL_SCHEME'):
+            kw['_scheme'] = current_app.config.get('PREFERRED_URL_SCHEME')
         return flask_url_for(*a, **kw)
     except RuntimeError:
         return None
