@@ -1,8 +1,8 @@
 var spindle = angular.module('spindle', ['ngRoute', 'ngAnimate',
   'angulartics', 'angulartics.piwik', 'infinite-scroll']);
 
-spindle.config(['$routeProvider', '$analyticsProvider',
-    function($routeProvider, $analyticsProvider) {
+spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
+    function($routeProvider, $analyticsProvider, $compileProvider) {
 
   $routeProvider.when('/', {
     templateUrl: 'home.html',
@@ -36,6 +36,8 @@ spindle.config(['$routeProvider', '$analyticsProvider',
   $routeProvider.otherwise({
     redirectTo: '/'
   });
+
+  $compileProvider.debugInfoEnabled(false);
 }]);
 
 
@@ -49,11 +51,14 @@ spindle.controller('AppController', ['$scope', '$rootScope', '$http', '$location
   $rootScope.$on("$routeChangeStart", function (event, next, current) {
     $scope.routeLoaded = false;
     $scope.routeFailed = false;
+    $scope.routeLoadTime = new Date();
   });
 
   $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
     $scope.query.state = query.get();
     $scope.routeLoaded = true;
+    var loadTime = new Date() - $scope.routeLoadTime;
+    console.log('Loaded route, took:', loadTime, 'ms');
   });
 
   $rootScope.$on("$routeChangeError", function (event, next, current) {
