@@ -1,47 +1,51 @@
 
-spindle.directive('bindValue', ['metadataService', function(metadataService) {
+spindle.directive('bindValue', ['$sce', 'metadataService', function($sce, metadataService) {
+  var countries = {};
+  metadataService.get().then(function(metadata) {
+    countries = metadata.countries;
+  });
   return {
     restrict: 'E',
+    replace: false,
     scope: {
       'bind': '=',
       'link': '='
     },
-    templateUrl: 'bind_value.html',
+    template: '<span ng-bind-html="::html"></span>',
     link: function (scope, element, attrs, model) {
-      scope.value = null;
-      scope.url = false;
-      scope.format = '';
-
-      scope.$watch('bind', function(bind) {
-        if (!bind) {
-          return;
-        }
-
-        var schema = bind.schema;
-        scope.value = bind.data;
-
-        if (schema.format) {
-          scope.format = schema.format;
+      var bind = scope.bind,
+          html = '<span class="empty-value">&mdash;</span>';
+      if (bind && bind.model && bind.data) {
+        var schema = bind.schema, value = bind.data, url = false, classes = false;
+        if (bind.model.isObject) {
+          url = '#/entity/' + bind.data.id;
+          value = bind.data.name;
+        } else if (schema.format) {
           if (schema.format == 'country-code') {
-            metadataService.get().then(function(metadata) {
-              var country = metadata.countries[bind.data];
-              if (country) {
-                  scope.value = country.title;
-              }
-            });
+            value = countries[value] ? countries[value].title : value;
           }
           if (schema.format == 'uri') {
-            scope.url = true;
+            url = value;
           }
           if (schema.format == 'date-time') {
-            scope.value = moment(bind.data).format('LLL');
+            value = moment(value).format('LLL');
+            classes = 'date-time';
           }
           if (schema.format == 'date') {
-            scope.value = moment(bind.data).format('LL');
+            value = moment(value).format('LL');
+            classes = 'date-time';
           }
         }
-      })
 
+        if (url) {
+          html = '<a href="' + url + '">' + value + '</a>';
+        } else if (classes) {
+          html = '<span class="' + classes + '">' + value + '</span>';
+        } else {
+          html = value
+        }
+      }
+      scope.html = $sce.trustAsHtml(html);
     }
   };
 }]);

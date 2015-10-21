@@ -8,16 +8,8 @@
     <tr ng-repeat="row in rows track by row.serial">
       <td ng-repeat="cell in row track by cell.serial"
         ng-class="{'object': cell.model.isObject}">
-        <span ng-if="cell.model.isValue">
-          <bind-value bind="cell" />
-        </span>
-        <span ng-if="cell.model.isObject">
-          <entity-icon schema="cell.schema.id"></entity-icon>
-          <bind-value bind="cell.p.name" link="cell.data.id" />
-        </span>
-        <span ng-if="!cell.data" class="empty-value">
-          &mdash;
-        </span>
+        <entity-icon ng-if="cell.model.isObject" schema="cell.schema.id"></entity-icon>
+        <bind-value bind="cell" />
       </td>
     </tr>
   </table>
