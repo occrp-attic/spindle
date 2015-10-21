@@ -220,12 +220,21 @@ body, html {
     }
 }
 
-.table-entity-collection {
-    th {
-        white-space: nowrap;
+.entity-table {
+    .table-entity-collection {
+        th {
+            white-space: nowrap;
+        }
+
+        .object {
+            width: 40%;
+        }
     }
 
-    .object {
-        width: 40%;
+    .pagination {
+        margin-top: 0;
+        a {
+            cursor: pointer;
+        }
     }
 }

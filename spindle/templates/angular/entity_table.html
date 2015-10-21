@@ -1,11 +1,11 @@
-<div ng-if="bind.has(collection)">
+<div ng-if="bind.has(collection)" class="entity-table">
   <table class="table table-striped table-entity-collection">
     <tr>
-      <th colspan="{{columns}}">{{title}}</th>
+      <th colspan="{{columns}}">{{title}} ({{rows.length}})</th>
     </tr>
     <tr ng-transclude>
     </tr>
-    <tr ng-repeat="row in rows track by row.serial">
+    <tr ng-repeat="row in rows | limitTo:limit:(page-1)*limit track by row.serial">
       <td ng-repeat="cell in row track by cell.serial"
         ng-class="{'object': cell.model.isObject}">
         <entity-icon ng-if="cell.model.isObject" schema="cell.schema.id"></entity-icon>
@@ -13,4 +13,20 @@
       </td>
     </tr>
   </table>
+
+  <ul class="pagination" ng-show="pageCount() > 1">
+    <li ng-if="prevPage()">
+      <a ng-click="setPage(prevPage())" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li ng-repeat="pg in pages()" ng-class="{'active': pg == page}">
+      <a ng-click="setPage(pg)">{{pg}}</a>
+    </li>
+    <li ng-if="nextPage()">
+      <a ng-click="setPage(nextPage())" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
 </div>
