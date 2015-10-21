@@ -1,6 +1,6 @@
 
 spindle.factory('schema', ['$http', '$q', function($http, $q) {
-  var schemaCache = {}, schemata = {};
+  var schemaCache = {}, schemata = {}, bindSerial = 1;
   /* JSON schema has a somewhat weird definition of inheritance which is most
   suitable to validation but is a bit off when doing data modelling. See:
   https://github.com/json-schema/json-schema/wiki/anyOf,-allOf,-oneOf,-not */
@@ -186,6 +186,7 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
     /* A bind combines a model (which describes the schema) with a concrete
     instance of the data and allows for simultaneous traversal of both. */
     var self = this;
+    self.serial = 'b' + ++bindSerial;
     self.data = data;
     self.model = model;
     self.schema = model.schema;
@@ -217,6 +218,18 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
       }
       return false;
     }
+
+    self.getPath = function(path) {
+      var next = path.shift();
+      if (!next || !next.length) {
+        return self;
+      }
+      var next_bind = self.p[next];
+      if (!path.length || !next_bind) {
+        return next_bind;
+      }
+      return next_bind.getPath(path)
+    };
 
     // end bind
   }

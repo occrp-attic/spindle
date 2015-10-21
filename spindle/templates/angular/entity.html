@@ -38,7 +38,7 @@
     </div>
     <div class="col-md-9">
 
-      <entity-table bind="bind" collection="members"
+      <entity-table bind="bind" collection="members" columns="5"
         title="Board members, employees and associated persons">
         <entity-table-column path="person" title="Name">
         </entity-table-column>
@@ -52,7 +52,7 @@
         </entity-table-column>
       </entity-table>
 
-      <entity-table bind="bind" collection="memberships"
+      <entity-table bind="bind" collection="memberships" columns="5"
         title="Board seats and organisational memberships">
         <entity-table-column path="organization" title="Name">
         </entity-table-column>
@@ -66,7 +66,7 @@
         </entity-table-column>
       </entity-table>
 
-      <entity-table bind="bind" collection="parents"
+      <entity-table bind="bind" collection="parents" columns="4"
         title="Parent companies">
         <entity-table-column path="" title="Name">
         </entity-table-column>
@@ -78,7 +78,7 @@
         </entity-table-column>
       </entity-table>
 
-      <entity-table bind="bind" collection="children"
+      <entity-table bind="bind" collection="children" columns="4"
         title="Subsidiary companies">
         <entity-table-column path="" title="Name">
         </entity-table-column>
@@ -90,7 +90,7 @@
         </entity-table-column>
       </entity-table>
 
-      <entity-table bind="bind" collection="assets"
+      <entity-table bind="bind" collection="assets" columns="4"
         title="Asset ownership, land and buildings">
         <entity-table-column path="" title="Name">
         </entity-table-column>
@@ -102,7 +102,7 @@
         </entity-table-column>
       </entity-table>
 
-      <entity-table bind="bind" collection="owners"
+      <entity-table bind="bind" collection="owners" columns="2"
         title="Owners of the asset">
         <entity-table-column path="" title="Name">
         </entity-table-column>

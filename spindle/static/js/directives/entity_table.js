@@ -6,44 +6,41 @@ spindle.directive('entityTable', [function() {
     scope: {
       'bind': '=',
       'collection': '@',
+      'columns': '@',
       'title': '@'
     },
     templateUrl: 'entity_table.html',
     controller: ['$scope', function($scope) {
-      var self = this;
+      var self = this,
+          columns = [];
+      $scope.rows = [];
 
-      $scope.columns = [];
-
-      $scope.$watch('bind', function(bind) {
-        if (bind && bind.has($scope.collection)) {
-          $scope.rows = bind.p[$scope.collection].binds;
-        }
-      });
-
-      $scope.getColumnBinds = function(row) {
+      self.getColumnBinds = function(row) {
         var binds = [];
-        for (var i in $scope.columns) {
-          var column = $scope.columns[i],
-              path = column.split('.');
-          binds.push(self.getBindPath(row, path));
+        for (var i in columns) {
+          var bind = row.getPath(columns[i].split('.'));
+          if (!bind) {
+            bind = {serial: i};
+          }
+          binds.push(bind);
         }
+        binds.serial = row.serial;
         return binds;
       };
 
-      self.getBindPath = function(bind, path) {
-        var next = path.shift();
-        if (!next || !next.length) {
-          return bind;
-        }
-        var next_bind = bind.p[next];
-        if (!path.length || !next_bind) {
-          return next_bind;
-        }
-        return self.getBindPath(next_bind, path)
-      };
-
       self.addColumn = function(column) {
-        $scope.columns.push(column);
+        columns.push(column);
+
+        if (columns.length == parseInt($scope.columns, 10)) {
+          if ($scope.bind && $scope.bind.has($scope.collection)) {
+            var rows = $scope.bind.p[$scope.collection].binds,
+                boundRows = [];
+            for (var i in rows) {
+              boundRows.push(self.getColumnBinds(rows[i]));
+            }
+            $scope.rows = boundRows;
+          }
+        }
       };
     }]
   };
