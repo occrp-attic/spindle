@@ -3,6 +3,7 @@ flask-script
 flask-assets
 flask-sqlalchemy
 flask-testing
+flask-oauthlib
 elasticsearch
 cssmin
 pycountry

@@ -7,13 +7,12 @@ from spindle.metadata import get_metadata
 from spindle.mlt import more_like_this
 from spindle.util import angular_templates, result_entity
 
-# TODO: support OAuth against ID
 # TODO: make notes, bookmarks, links
 
 base_api = Blueprint('base', __name__)
 
 
-@base_api.errorhandler(ElasticsearchException)
+@base_api.app_errorhandler(ElasticsearchException)
 def handle_error(err):
     res = jsonify({'status': 'error', 'message': unicode(err)})
     res.status_code = 500

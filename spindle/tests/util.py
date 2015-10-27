@@ -1,6 +1,6 @@
 from flask.ext.testing import TestCase as FlaskTestCase
 
-from spindle.core import get_es, get_es_index, db
+from spindle.core import get_es, db
 from spindle.cli import configure_app
 
 
@@ -19,6 +19,14 @@ class TestCase(FlaskTestCase):
         })
         return app
 
+    def login(self, id='tester', name=None, email=None):
+        with self.client.session_transaction() as session:
+            session['user_id'] = 'test:%s' % id
+            session['user'] = {
+                'name': name or id.capitalize(),
+                'email': email or id + '@example.com'
+            }
+
     def setUp(self):
         self.es = get_es()
         self.es.indices.create(index=self.ES_INDEX, ignore=400)
@@ -26,4 +34,5 @@ class TestCase(FlaskTestCase):
 
     def tearDown(self):
         self.es.indices.delete(index=self.ES_INDEX, ignore=[400, 404])
+        db.session.remove()
         db.drop_all()
