@@ -1,6 +1,6 @@
 from flask.ext.testing import TestCase as FlaskTestCase
 
-from spindle.core import get_es, get_es_index
+from spindle.core import get_es, get_es_index, db
 from spindle.cli import configure_app
 
 
@@ -22,6 +22,8 @@ class TestCase(FlaskTestCase):
     def setUp(self):
         self.es = get_es()
         self.es.indices.create(index=self.ES_INDEX, ignore=400)
+        db.create_all()
 
     def tearDown(self):
         self.es.indices.delete(index=self.ES_INDEX, ignore=[400, 404])
+        db.drop_all()

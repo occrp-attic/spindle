@@ -6,3 +6,4 @@ spindle/static/bower_components/
 spindle/static/.webassets-cache/
 spindle/static/build/
 settings.py
+.coverage
