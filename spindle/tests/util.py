@@ -21,8 +21,8 @@ class TestCase(FlaskTestCase):
 
     def login(self, id='tester', name=None, email=None):
         with self.client.session_transaction() as session:
-            session['user_id'] = 'test:%s' % id
             session['user'] = {
+                'id': 'test:%s' % id,
                 'name': name or id.capitalize(),
                 'email': email or id + '@example.com'
             }

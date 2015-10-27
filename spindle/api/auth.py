@@ -3,6 +3,7 @@ from flask import session, redirect
 
 from spindle.core import oauth_provider
 from spindle.util import url_for
+from spindle.authz import GROUP_GUEST, GROUP_USER
 
 # TODO: support OAuth against ID
 auth_api = Blueprint('auth', __name__)
@@ -17,17 +18,20 @@ def get_oauth_token():
 
 @auth_api.before_app_request
 def load_user():
-    request.user_id = session.get('user_id')
-    request.logged_in = request.user_id is not None
+    request.authz_groups = set([GROUP_GUEST])
     request.user = session.get('user', {})
+    request.user_id = request.user.get('id')
+    request.logged_in = request.user_id is not None
+    if request.logged_in:
+        request.authz_groups = set([GROUP_USER])
 
 
 @auth_api.route('/api/session')
 def get_session():
     return jsonify({
         'logged_in': request.logged_in,
-        'user_id': request.user_id,
         'user': request.user,
+        'groups': list(request.authz_groups),
         'login_uri': url_for('auth.authorize')
     })
 
@@ -47,5 +51,5 @@ def callback():
     session['oauth'] = resp
     me = oauth_provider.get('userinfo')
     session['user'] = me.data
-    session['user_id'] = 'google:%s' % me.data.get('id')
+    session['user']['id'] = 'google:%s' % me.data.get('id')
     return redirect(next_url)

@@ -28,7 +28,7 @@ def url_for(*a, **kw):
 def result_entity(entity):
     if '_source' in entity and '_id' in entity:
         entity = entity['_source']
-    entity['$uri'] = url_for('entity', id=entity.get('id'))
+    entity['$uri'] = url_for('entities.view', id=entity.get('id'))
     entity.pop('$text', None)
     entity.pop('$latin', None)
     for k, v in entity.items():

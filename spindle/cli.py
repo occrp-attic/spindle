@@ -4,12 +4,14 @@ from flask.ext.assets import ManageAssets
 from spindle.core import assets, create_app
 from spindle.api.base import base_api
 from spindle.api.auth import auth_api
+from spindle.api.entities import entities_api
 
 
 def configure_app(config={}):
     app = create_app(config)
     app.register_blueprint(base_api)
     app.register_blueprint(auth_api)
+    app.register_blueprint(entities_api)
     return app
 
 

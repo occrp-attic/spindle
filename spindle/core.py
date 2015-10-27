@@ -1,4 +1,4 @@
-from flask import Flask, g, current_app
+from flask import Flask, current_app
 from flask.ext.assets import Environment
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_oauthlib.client import OAuth
@@ -27,10 +27,10 @@ def create_app(config={}):
 
 
 def get_es():
-    if not hasattr(g, 'spindle_es'):
+    if not hasattr(current_app, '_spindle_es'):
         host = current_app.config.get('ELASTICSEARCH_HOST')
-        g.spindle_es = Elasticsearch(host)
-    return g.spindle_es
+        current_app._spindle_es = Elasticsearch(host)
+    return current_app._spindle_es
 
 
 def get_es_index():

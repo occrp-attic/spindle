@@ -41,10 +41,11 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
 }]);
 
 
-spindle.controller('AppController', ['$scope', '$rootScope', '$http', '$location', 'query',
-  function($scope, $rootScope, $http, $location, query) {
+spindle.controller('AppController', ['$scope', '$rootScope', '$http', '$location', 'query', 'sessionService',
+  function($scope, $rootScope, $http, $location, query, sessionService) {
 
   $scope.query = query;
+  $scope.session = {'logged_in': false, 'user': {}};
   $scope.routeLoaded = false;
   $scope.routeFailed = false;
 
@@ -63,6 +64,10 @@ spindle.controller('AppController', ['$scope', '$rootScope', '$http', '$location
 
   $rootScope.$on("$routeChangeError", function (event, next, current) {
     $scope.routeFailed = true;
+  });
+
+  sessionService.get().then(function(session) {
+    $scope.session = session;
   });
 
   $scope.submitSearch = function(form) {
