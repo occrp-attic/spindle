@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from werkzeug.datastructures import MultiDict
 
-from spindle.core import es, es_index
+from spindle.core import get_es, get_es_index
 from spindle.util import url_for, result_entity
 
 QUERY_FIELDS = ['name^10', '$text^3', '$latin']
@@ -152,7 +152,7 @@ def text_query(text):
 
 def execute_query(args, q, facets):
     """ Execute the query and return a set of results. """
-    result = es.search(index=es_index, body=q)
+    result = get_es().search(index=get_es_index(), body=q)
     hits = result.get('hits', {})
     output = {
         'status': 'ok',
@@ -171,7 +171,7 @@ def execute_query(args, q, facets):
             if k in ['facet', 'offset']:
                 continue
             params[k] = v
-        output['next'] = url_for('search', **params)
+        output['next'] = url_for('base.search', **params)
 
     for doc in hits.get('hits', []):
         output['results'].append(result_entity(doc))

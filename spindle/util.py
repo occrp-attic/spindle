@@ -1,12 +1,10 @@
 import os
-from flask import url_for as flask_url_for
 from flask import current_app
-
-from spindle.core import app
+from flask import url_for as flask_url_for
 
 
 def angular_templates():
-    partials_dir = os.path.join(app.static_folder, '..')
+    partials_dir = os.path.join(current_app.static_folder, '..')
     partials_dir = os.path.join(partials_dir, 'templates', 'angular')
     for (root, dirs, files) in os.walk(partials_dir):
         for file_name in files:

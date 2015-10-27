@@ -2,6 +2,7 @@ flask
 flask-script
 flask-assets
 flask-sqlalchemy
+flask-testing
 elasticsearch
 cssmin
 pycountry
