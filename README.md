@@ -44,7 +44,7 @@ You also need to create configuration file to define local settings, such as
 database access and the location of the ElasticSearch index:
 
 ```bash
-$ cp settings.tmpl settings.py
+$ cp settings.tmpl.py settings.py
 # Now edit the settings.py and replace any configuration variables to match
 # your local environment.
 ```
@@ -63,6 +63,19 @@ $ spindle runserver
 When using ``spindle`` in production, consider using a proper WSGI web server
 such as ``gunicorn`` instead of the built-in development server. A
 ``Dockerfile`` is provided for containerized deployment.
+
+## Running the tests
+
+In order to run the tests, you need to have an instance of ElasticSearch
+running and configured in the current spindle configuration. The tests will
+create their own index (``spindle_test_idx_``) and destroy it automatically
+upon teardown.
+
+Run tests like this:
+```bash
+$ pip install nose coverage
+$ nosetests --with-coverage --cover-package=spindle --cover-erase
+```
 
 ## License
 
