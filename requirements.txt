@@ -9,3 +9,5 @@ cssmin
 pycountry
 requests
 psycopg2
+
+git+https://github.com/occrp/loom
