@@ -2,9 +2,8 @@ from flask import render_template, jsonify, request, Blueprint
 from elasticsearch import ElasticsearchException
 
 from spindle.core import get_es, get_es_index
-from spindle.search import query
+from spindle.search import query, more_like_this
 from spindle.metadata import get_metadata
-from spindle.mlt import more_like_this
 from spindle.util import angular_templates, result_entity
 
 # TODO: make notes, bookmarks, links

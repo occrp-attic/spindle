@@ -1,6 +1,7 @@
+from flask import current_app
 from pycountry import countries
 
-from spindle.core import cache, get_es, get_es_index
+from spindle.core import cache
 from spindle.model import db, Source
 
 
@@ -19,20 +20,7 @@ def get_sources():
 def get_schemas():
     """ Get a list of all JSON schemas used to describe entities in the
     index, then resolve and return them. """
-    schemas = cache.get('schemas')
-    if schemas is None:
-        q = {
-            'size': 0,
-            'aggregations': {
-                'schema': {'terms': {'field': '$schema'}}
-            }
-        }
-        res = get_es().search(index=get_es_index(), body=q)
-        schemas = []
-        for agg in res.get('aggregations').get('schema').get('buckets'):
-            schemas.append(agg.get('key'))
-        cache.set('schemas', schemas)
-    return schemas
+    return current_app.config.get('SCHEMAS', {})
 
 
 def get_countries():
