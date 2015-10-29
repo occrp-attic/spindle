@@ -1,22 +1,31 @@
 import os
 import yaml
+import logging
 import unicodecsv
 
 from flask.ext.testing import TestCase as FlaskTestCase
 from jsonmapping import Mapper
 
-from spindle.core import get_es, get_loom_config, db
+from spindle.core import get_es, get_loom_config, get_loom_indexer, db
 from spindle.cli import configure_app
 
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
+BA_SOURCE = 'ba_parliament'
 BA_FIXTURES = {'entities': [], 'resolver': None}
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('requests').setLevel(logging.WARNING)
+logging.getLogger('urllib3').setLevel(logging.WARNING)
+logging.getLogger('elasticsearch').setLevel(logging.WARNING)
 
 
 def load_ba_fixtures(app):
+    # This is messy. Would be cool to do it more cleanly, but how?
     config = get_loom_config()
     if not BA_FIXTURES['resolver']:
         BA_FIXTURES['resolver'] = config.resolver
     config._resolver = BA_FIXTURES['resolver']
+
     if not len(BA_FIXTURES['entities']):
         with open(os.path.join(FIXTURES, 'ba.mapping.yaml'), 'rb') as fh:
             mapping = yaml.load(fh)
@@ -25,9 +34,16 @@ def load_ba_fixtures(app):
             reader = unicodecsv.DictReader(csvfh)
             for row in reader:
                 _, data = mapper.apply(row)
-                BA_FIXTURES['entities'].append(data)
+            BA_FIXTURES['entities'].append(data)
+
+    config.sources.upsert({
+        'slug': BA_SOURCE,
+        'title': 'BiH Parliament',
+        'url': 'http://foo.ba/'
+    })
     for entity in BA_FIXTURES['entities']:
-        config.entities.save(entity['$schema'], entity, 'fixture')
+        config.entities.save(entity['$schema'], entity, BA_SOURCE)
+    get_loom_indexer().index(source=BA_SOURCE)
 
 
 class TestCase(FlaskTestCase):
@@ -57,9 +73,11 @@ class TestCase(FlaskTestCase):
         self.es = get_es()
         self.es.indices.create(index=self.ES_INDEX, ignore=400)
         db.create_all()
+
+    def setUpFixtures(self):
         load_ba_fixtures(self.app)
 
     def tearDown(self):
-        self.es.indices.delete(index=self.ES_INDEX, ignore=[400, 404])
+        # self.es.indices.delete(index=self.ES_INDEX, ignore=[400, 404])
         db.session.remove()
         db.drop_all()

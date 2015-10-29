@@ -1,4 +1,4 @@
-from spindle.tests.util import TestCase
+from spindle.tests.util import TestCase, BA_SOURCE
 
 
 class BaseApiTestCase(TestCase):
@@ -22,8 +22,9 @@ class BaseApiTestCase(TestCase):
         assert 'AR' in countries, countries
         assert countries['AR']['title'] == 'Argentina', countries
 
-    def test_search(self):
-        res = self.client.get('/api/search')
+    def test_metadata_sources(self):
+        self.setUpFixtures()
+        res = self.client.get('/api/metadata')
         assert res.status_code == 200, res
-        assert 'status' in res.json, res.json
-        assert 'results' in res.json, res.json
+        sources = res.json['sources']
+        assert BA_SOURCE in sources, sources

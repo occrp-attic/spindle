@@ -6,6 +6,7 @@ from elasticsearch import Elasticsearch
 from werkzeug.contrib.cache import SimpleCache
 
 from loom.config import Config
+from loom.indexer import Indexer
 from spindle import default_settings
 
 db = SQLAlchemy()
@@ -48,3 +49,9 @@ def get_loom_config():
         current_app._loom_config._elastic_client = get_es()
         current_app._loom_config._elastic_index = get_es_index()
     return current_app._loom_config
+
+
+def get_loom_indexer():
+    if not hasattr(current_app, '_loom_indexer'):
+        current_app._loom_indexer = Indexer(get_loom_config())
+    return current_app._loom_indexer

@@ -1,19 +1,15 @@
 from flask import current_app
 from pycountry import countries
 
-from spindle.core import cache
 from spindle.model import db, Source
 
 
 def get_sources():
     """ Get a list of all sources stored in the index, then resolve and
     return them. """
-    sources = cache.get('sources')
-    if sources is None:
-        sources = {}
-        for source in db.session.query(Source):
-            sources[source.slug] = source.to_dict()
-        cache.set('sources', sources)
+    sources = {}
+    for source in db.session.query(Source):
+        sources[source.slug] = source.to_dict()
     return sources
 
 

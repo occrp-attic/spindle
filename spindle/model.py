@@ -6,7 +6,8 @@ from spindle.core import db
 class Source(db.Model):
     __tablename__ = 'source'
 
-    slug = db.Column(db.Unicode(1024), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    slug = db.Column(db.Unicode(1024))
     title = db.Column(db.Unicode(1024))
     url = db.Column(db.Unicode())
 
