@@ -1,7 +1,33 @@
-from flask.ext.testing import TestCase as FlaskTestCase
+import os
+import yaml
+import unicodecsv
 
-from spindle.core import get_es, db
+from flask.ext.testing import TestCase as FlaskTestCase
+from jsonmapping import Mapper
+
+from spindle.core import get_es, get_loom_config, db
 from spindle.cli import configure_app
+
+FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
+BA_FIXTURES = {'entities': [], 'resolver': None}
+
+
+def load_ba_fixtures(app):
+    config = get_loom_config()
+    if not BA_FIXTURES['resolver']:
+        BA_FIXTURES['resolver'] = config.resolver
+    config._resolver = BA_FIXTURES['resolver']
+    if not len(BA_FIXTURES['entities']):
+        with open(os.path.join(FIXTURES, 'ba.mapping.yaml'), 'rb') as fh:
+            mapping = yaml.load(fh)
+        mapper = Mapper(mapping, config.resolver, scope=config.base_uri)
+        with open(os.path.join(FIXTURES, 'ba.csv'), 'rb') as csvfh:
+            reader = unicodecsv.DictReader(csvfh)
+            for row in reader:
+                _, data = mapper.apply(row)
+                BA_FIXTURES['entities'].append(data)
+    for entity in BA_FIXTURES['entities']:
+        config.entities.save(entity['$schema'], entity, 'fixture')
 
 
 class TestCase(FlaskTestCase):
@@ -31,6 +57,7 @@ class TestCase(FlaskTestCase):
         self.es = get_es()
         self.es.indices.create(index=self.ES_INDEX, ignore=400)
         db.create_all()
+        load_ba_fixtures(self.app)
 
     def tearDown(self):
         self.es.indices.delete(index=self.ES_INDEX, ignore=[400, 404])

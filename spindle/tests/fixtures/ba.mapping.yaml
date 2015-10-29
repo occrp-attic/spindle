@@ -1,0 +1,49 @@
+schema:
+    $ref: https://schema.occrp.org/generic/person.json#
+mapping:
+    id:
+        columns:
+            - id
+        transforms:
+            - slugify
+        format: "ba:person:%s"
+    name:
+        column: name
+    gender:
+        column: gender
+        optional: true
+    jurisdiction_code:
+        default: BA
+    image:
+        column: image
+        optional: true
+    contact_details:
+        - optional: true
+          mapping:
+              value:
+                  column: email
+              type:
+                  default: email
+        - optional: true
+          mapping:
+              value:
+                  column: twitter
+              type:
+                  default: twitter
+    memberships:
+        - optional: true
+          mapping:
+            role:
+                default: Member
+            organization:
+                mapping:
+                    id:
+                        columns:
+                            - group_id
+                        transforms:
+                            - slugify
+                        format: "ba:party:%s"
+                    jurisdiction_code:
+                        default: BA
+                    name:
+                        column: group

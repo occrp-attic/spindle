@@ -41,6 +41,12 @@ def authorize():
     return oauth_provider.authorize(callback=url_for('auth.callback'))
 
 
+@auth_api.route('/auth/reset')
+def reset():
+    session.clear()
+    return redirect(url_for('base.index'))
+
+
 @auth_api.route('/auth/callback')
 def callback():
     next_url = url_for('base.index')

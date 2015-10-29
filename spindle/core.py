@@ -44,7 +44,7 @@ def get_loom_config():
             'schemas': current_app.config.get('SCHEMAS')
         }
         current_app._loom_config = Config(config)
-        current_app._loom_config._engine = db.session.engine
+        current_app._loom_config._engine = db.engine
         current_app._loom_config._elastic_client = get_es()
         current_app._loom_config._elastic_index = get_es_index()
     return current_app._loom_config
