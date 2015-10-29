@@ -1,3 +1,4 @@
+from spindle.core import get_loom_config
 from spindle.tests.util import TestCase
 
 
@@ -5,11 +6,14 @@ class SearchApiTestCase(TestCase):
 
     def setUp(self):
         super(SearchApiTestCase, self).setUp()
-        self.setUpFixtures()
 
     def test_basic_search(self):
+        self.setUpFixtures()
+        config = get_loom_config()
+        assert len(config.types), len(config.types)
+
         res = self.client.get('/api/search')
-        assert res.json['total'] == 50, res.json['total']
+        assert res.json['total'] == 50, res.json
 
         res = self.client.get('/api/search?limit=4')
         assert len(res.json['results']) == 4, res.json

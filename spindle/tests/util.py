@@ -19,7 +19,7 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 logging.getLogger('elasticsearch').setLevel(logging.WARNING)
 
 
-def load_ba_fixtures(app):
+def load_ba_fixtures():
     # This is messy. Would be cool to do it more cleanly, but how?
     config = get_loom_config()
     if not BA_FIXTURES['resolver']:
@@ -34,7 +34,7 @@ def load_ba_fixtures(app):
             reader = unicodecsv.DictReader(csvfh)
             for row in reader:
                 _, data = mapper.apply(row)
-            BA_FIXTURES['entities'].append(data)
+                BA_FIXTURES['entities'].append(data)
 
     config.sources.upsert({
         'slug': BA_SOURCE,
@@ -75,9 +75,9 @@ class TestCase(FlaskTestCase):
         db.create_all()
 
     def setUpFixtures(self):
-        load_ba_fixtures(self.app)
+        load_ba_fixtures()
 
     def tearDown(self):
-        # self.es.indices.delete(index=self.ES_INDEX, ignore=[400, 404])
+        self.es.indices.delete(index=self.ES_INDEX, ignore=[400, 404])
         db.session.remove()
         db.drop_all()
