@@ -26,7 +26,6 @@ spindle.controller('SearchController', ['$scope', '$http', '$location', '$sce', 
   $scope.results = processResults(results);
   $scope.shown = Math.min(results.total, results.limit + results.offset);
 
-
   $scope.loadNext = function() {
     if ($scope.loading || !$scope.results.next) {
       return;
@@ -34,10 +33,10 @@ spindle.controller('SearchController', ['$scope', '$http', '$location', '$sce', 
     $scope.loading = true;
     $http.get($scope.results.next).then(function(res) {
       var results = processResults(res.data);
-      $scope.results.next = res.data.next;
+      $scope.results.next = results.next;
       $scope.shown = Math.min(results.total, results.limit + results.offset);
       $scope.loading = false;
-      $scope.results.results = $scope.results.results.concat(results);
+      $scope.results.results = $scope.results.results.concat(results.results);
     });
   };
 
