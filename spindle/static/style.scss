@@ -97,6 +97,18 @@ body, html {
         }
 
         .summary {
+            .highlight {
+                // font-size: 0.8em;
+                padding-top: $spacing;
+                color: $text-muted;
+
+                em {
+                    // color: $brand-primary;
+                    font-weight: bold;
+                    font-style: normal;
+                }
+            }
+
             padding-top: $spacing / 2;
             // color: $text-muted;
             padding-left: 1.5em;

@@ -59,6 +59,7 @@ spindle.factory('query', ['$route', '$location', '$q', '$http', '$analytics',
 
     var q = {
       'q': query.q,
+      'hl': true,
       'sort': query.sort,
       'filter:$sources': query.$sources,
       'filter:$schema': query.$schema,

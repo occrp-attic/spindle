@@ -48,6 +48,9 @@
             <span ng-if="result.$linkcount > 1">
               {{result.$linkcount}} relationships
             </span>
+            <div class="highlight" ng-if="result.$highlight">
+              <span ng-repeat="hlt in result.$hltHtml" ng-bind-html="hlt"></span>
+            </div>
           </div>
         </li>
       </ol>

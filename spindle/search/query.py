@@ -7,7 +7,7 @@ from werkzeug.datastructures import MultiDict
 from spindle.core import get_es, get_es_index
 from spindle.util import url_for, result_entity
 
-QUERY_FIELDS = ['name^100', '$text^3', '$latin']
+QUERY_FIELDS = ['name^100', '$text^10', '$latin^2']
 DEFAULT_FIELDS = ['$sources', 'id', '$schema', '$attrcount',
                   '$linkcount', 'name']
 
@@ -64,6 +64,16 @@ def query(args):
         'aggregations': aggs,
         '_source': DEFAULT_FIELDS
     }
+
+    if args.get('hl'):
+        q["highlight"] = {
+            "pre_tags": ["<em>"],
+            "post_tags": ["</em>"],
+            "fields": {
+                "$text": {}
+            }
+        }
+
     q = paginate(q, args.get('limit'), args.get('offset'))
     return execute_query(args, q, facets)
 
@@ -174,7 +184,11 @@ def execute_query(args, q, facets):
         output['next'] = url_for('base.search', **params)
 
     for doc in hits.get('hits', []):
-        output['results'].append(result_entity(doc))
+        hlt = doc.get('highlight', {}).get('$text', None)
+        doc = result_entity(doc)
+        if hlt is not None:
+            doc['$highlight'] = hlt
+        output['results'].append(doc)
 
     # traverse and get all facets.
     aggs = result.get('aggregations')
