@@ -1,0 +1,20 @@
+#topnav {
+    background-color: $gray-subtle;
+    border-top: $spacing / 2 solid $brand-primary;
+
+    // margin-bottom: $spacing * 4;
+    padding-top: $spacing;
+    padding-bottom: $spacing;
+
+    .navbar-brand {
+        img {
+            height: 2em;
+            width: 2em;
+            margin-top: -1 * $spacing;
+        }
+    }
+
+    input {
+        box-shadow: none;
+    }
+}

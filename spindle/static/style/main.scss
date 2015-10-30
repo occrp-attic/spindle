@@ -1,0 +1,82 @@
+$occrp-red: #982022;
+// $occrp-red: #f31d35;
+// $occrp-navy: #241F38;
+$occrp-green: #27918C;
+$occrp-dark: #3a4953;
+
+// override bootstrap defaults
+$brand-primary: $occrp-red;
+$brand-success: $occrp-green;
+$text-color: #333;
+$text-muted: #999;
+$gray-subtle: #f0f0f0;
+$page-bg: #fff;
+$spacing: 0.5em;
+
+$font-family-sans-serif:  'Open Sans', sans-serif;
+$input-border-focus: $brand-primary;
+
+@import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
+@import "mixins";
+
+@mixin header-font {
+    font-family: $font-family-sans-serif;
+    font-weight: 300;
+}
+
+div[ng-view].ng-enter {
+    animation: fadeIn 0.3s;
+}
+
+h1, h2, h3, h4 {
+    @include header-font;
+}
+
+body, html {
+    height: 100%;
+    background-color: $page-bg;
+}
+
+.empty-value {
+    color: $text-muted;
+}
+
+.jumbotron {
+    background-color: $gray-subtle;
+}
+
+// page and spinner
+#page {
+    position: relative;
+    min-height: 80%;
+}
+
+#spinner-overlay {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 30em;
+    height: 100%;
+    background-color: $page-bg;
+
+    .spinner {
+        margin-top: 3em;
+        text-align: center;
+        color: $text-muted;
+
+        &.failed {
+            color: $brand-primary;
+        }
+
+        i {
+            font-size: 4em;
+            margin: 0.5em;
+        }
+    }
+}
+
+@import "navbar";
+@import "search";
+@import "entity";

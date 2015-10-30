@@ -1,0 +1,43 @@
+
+// entity details
+.entity-detail {
+    h2 {
+        font-weight: 300;
+        margin-bottom: $spacing * 2;
+    }
+
+    .table {
+        th {
+            // max-width: 20%;
+            width: 20%;
+        }
+        th, td {
+            // border-top: 1px solid $list-group-border;
+        }
+    }
+}
+
+.bind-value {
+    &.format-date-time, &.format-date {
+        white-space: nowrap;
+    }
+}
+
+.entity-table {
+    .table-entity-collection {
+        th {
+            white-space: nowrap;
+        }
+
+        .object {
+            width: 40%;
+        }
+    }
+
+    .pagination {
+        margin-top: 0;
+        a {
+            cursor: pointer;
+        }
+    }
+}

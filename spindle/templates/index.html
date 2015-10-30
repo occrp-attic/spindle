@@ -11,38 +11,50 @@
   {% assets filters="scss,cssmin", output="build/style.css",
     "bower_components/angular/angular-csp.css",
     "bower_components/animate.css/animate.css",
-    "style.scss"
+    "style/main.scss"
   %}
     <link href='{{ ASSET_URL }}' rel='stylesheet' type='text/css'>
   {% endassets %}
 
-  <!-- link rel="shortcut icon" href="https://www.occrp.org/templates/occrp/favicon.ico" -->
   <link rel="shortcut icon" href="/static/img/occrp-logo-bg.png">
 </head>
 <body ng-controller="AppController as app">
-  <div class="search-container">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8">
-          <div class="logo-bar">
-            <a href="/#/" class="logo">
-              <img src="/static/img/occrp-logo-bg.png">
-            </a>
-            <div class="search-bar">
-              <form ng-submit="submitSearch()">
-                <div class="form-group search-field">
-                  <input class="form-control input-lg" id="q" ng-model="query.state.q"
-                    placeholder="Search for people, companies, etc...">
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4" ng-bind="session.user.name">
-        </div>
+  <nav class="navbar navbar-default" id="topnav">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/#/">
+          <img src="/static/img/occrp-logo-bg.png">
+        </a>
       </div>
-    </div>
-  </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse">
+        <form class="navbar-form navbar-left" role="search" ng-submit="submitSearch()">
+          <div class="form-group">
+            <input type="text" class="form-control" ng-model="query.state.q"
+              placeholder="Search for people, companies, etc...">
+          </div>
+        </form>
+        <ul class="nav navbar-nav navbar-right" ng-cloak>
+          <li ng-show="session.logged_in">
+            <a href="/auth/reset" target="_self">
+              Logout
+            </a>
+          </li>
+          <li ng-hide="session.logged_in">
+            <a href="/auth/authorize" target="_self">
+              Sign in
+            </a>
+          </li>
+        </ul>
+        <p class="navbar-text navbar-right" ng-cloak ng-show="session.logged_in">
+          Signed in as <span ng-bind="session.user.name"></span>
+        </p>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
   <div id="page">
     <div id="spinner-overlay" ng-hide="routeLoaded">
       <div class="spinner" ng-hide="routeFailed">
@@ -55,26 +67,12 @@
         </div>
       </div>
     </div>
-    <div ng-cloak ng-view autoscroll="true"></div>
+    <div class="container-fluid">
+      <div ng-cloak ng-view autoscroll="true"></div>
+    </div>
   </div>
 
-  {% if not config.DEBUG %}
-    <!-- Piwik -->
-    <script type="text/javascript">
-      var _paq = _paq || [];
-      // _paq.push(['trackPageView']);
-      _paq.push(['enableLinkTracking']);
-      (function() {
-        var u="https://piwik.occrp.org/";
-        _paq.push(['setTrackerUrl', u+'piwik.php']);
-        _paq.push(['setSiteId', 10]);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-      })();
-    </script>
-    <noscript><p><img src="//piwik.occrp.org/piwik.php?idsite=10" style="border:0;" alt="" /></p></noscript>
-    <!-- End Piwik Code -->
-  {% endif %}
+  {% include "analytics.html" %}
 
   {% assets filters="uglifyjs", output="build/deps.js",
       "bower_components/jquery/dist/jquery.js",
