@@ -7,7 +7,7 @@ from werkzeug.datastructures import MultiDict
 from spindle.core import get_es, get_es_index
 from spindle.util import url_for, result_entity
 
-QUERY_FIELDS = ['name^10', '$text^3', '$latin']
+QUERY_FIELDS = ['name^100', '$text^3', '$latin']
 DEFAULT_FIELDS = ['$sources', 'id', '$schema', '$attrcount',
                   '$linkcount', 'name']
 

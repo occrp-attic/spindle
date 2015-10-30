@@ -4,7 +4,7 @@ from elasticsearch import ElasticsearchException
 from spindle.core import get_es, get_es_index
 from spindle.search import query, more_like_this
 from spindle.metadata import get_metadata
-from spindle.util import angular_templates, result_entity
+from spindle.util import angular_templates
 
 # TODO: make notes, bookmarks, links
 
@@ -16,13 +16,6 @@ def handle_error(err):
     res = jsonify({'status': 'error', 'message': unicode(err)})
     res.status_code = 500
     return res
-
-
-@base_api.route('/api/entity/<path:id>')
-def entity(id):
-    data = get_es().get(index=get_es_index(), id=id,
-                        _source_exclude=['$text', '$latin'])
-    return jsonify({'status': 'ok', 'data': result_entity(data)})
 
 
 @base_api.route('/api/like/<path:id>')

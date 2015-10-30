@@ -22,7 +22,7 @@ class SearchApiTestCase(TestCase):
         assert len(res.json['results']) == 4, res.json
 
         res = self.client.get('/api/search?q=Hazim')
-        assert res.json['total'] == 2, res.json['total']
+        assert res.json['total'] == 1, res.json['total']
         assert not res.json['facets'], res.json['total']
 
         res = self.client.get('/api/search?facet=jurisdiction_code')
