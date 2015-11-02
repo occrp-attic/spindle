@@ -1,13 +1,14 @@
 
 ## Next Steps
 
-* Result highlights
-* No nested indexing
+* Result highlights -- done
+* No nested indexing -- done
 
 * Demo data loader -- done
-* Front-End Navbar
+* Front-End Navbar -- done
 * Entities R/W API
 * Collections / Projects
+* Ownership type (Company, Asset)
 * Implement entity auto-suggest
 * Collection grid view
 
@@ -16,7 +17,8 @@
 
 ## Domain Model
 
-Collection / Project
+Collection
+    CollectionEntity
 
 ## Permissions/Authorization Model
 

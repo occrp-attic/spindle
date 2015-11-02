@@ -6,10 +6,12 @@ import unicodecsv
 from flask.ext.testing import TestCase as FlaskTestCase
 from jsonmapping import Mapper
 
-from spindle.core import get_es, get_loom_config, get_loom_indexer, db
+from loom.db import Source, session
+from spindle.core import get_es, get_loom_indexer
 from spindle.cli import configure_app
 
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
+ES_INDEX = 'spindle_test_idx_'
 BA_SOURCE = 'ba_parliament'
 BA_FIXTURES = {'entities': [], 'resolver': None}
 
@@ -19,13 +21,8 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 logging.getLogger('elasticsearch').setLevel(logging.WARNING)
 
 
-def load_ba_fixtures():
+def load_ba_fixtures(config):
     # This is messy. Would be cool to do it more cleanly, but how?
-    config = get_loom_config()
-    if not BA_FIXTURES['resolver']:
-        BA_FIXTURES['resolver'] = config.resolver
-    config._resolver = BA_FIXTURES['resolver']
-
     if not len(BA_FIXTURES['entities']):
         with open(os.path.join(FIXTURES, 'ba.mapping.yaml'), 'rb') as fh:
             mapping = yaml.load(fh)
@@ -36,7 +33,7 @@ def load_ba_fixtures():
                 _, data = mapper.apply(row)
                 BA_FIXTURES['entities'].append(data)
 
-    config.sources.upsert({
+    Source.ensure({
         'slug': BA_SOURCE,
         'title': 'BiH Parliament',
         'url': 'http://foo.ba/'
@@ -48,17 +45,18 @@ def load_ba_fixtures():
 
 class TestCase(FlaskTestCase):
 
-    ES_INDEX = 'spindle_test_idx_'
-
     def create_app(self):
         app = configure_app({
             'DEBUG': True,
             'TESTING': True,
-            'ELASTICSEARCH_INDEX': self.ES_INDEX,
+            'ELASTICSEARCH_INDEX': ES_INDEX,
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'PRESERVE_CONTEXT_ON_EXCEPTION': False,
             'CELERY_ALWAYS_EAGER': True
         })
+        if not BA_FIXTURES['resolver']:
+            BA_FIXTURES['resolver'] = app.loom_config.resolver
+        app.loom_config._resolver = BA_FIXTURES['resolver']
         return app
 
     def login(self, id='tester', name=None, email=None):
@@ -71,13 +69,12 @@ class TestCase(FlaskTestCase):
 
     def setUp(self):
         self.es = get_es()
-        self.es.indices.create(index=self.ES_INDEX, ignore=400)
-        db.create_all()
+        get_loom_indexer().configure()
 
     def setUpFixtures(self):
-        load_ba_fixtures()
+        load_ba_fixtures(self.app.loom_config)
 
     def tearDown(self):
-        self.es.indices.delete(index=self.ES_INDEX, ignore=[400, 404])
-        db.session.remove()
-        db.drop_all()
+        self.es.indices.delete(index=ES_INDEX, ignore=[400, 404])
+        session.remove()
+        # db.drop_all()

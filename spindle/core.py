@@ -1,6 +1,5 @@
 from flask import Flask, current_app
 from flask.ext.assets import Environment
-from flask.ext.sqlalchemy import SQLAlchemy
 from flask_oauthlib.client import OAuth
 from elasticsearch import Elasticsearch
 from werkzeug.contrib.cache import SimpleCache
@@ -9,7 +8,6 @@ from loom.config import Config
 from loom.indexer import Indexer
 from spindle import default_settings
 
-db = SQLAlchemy()
 assets = Environment()
 cache = SimpleCache(default_timeout=3600)
 oauth = OAuth()
@@ -22,33 +20,33 @@ def create_app(config={}):
     app.config.from_envvar('SPINDLE_SETTINGS', silent=True)
     app.config.update(config)
 
+    host = app.config.get('ELASTICSEARCH_HOST')
+    app.spindle_es = Elasticsearch(host)
+
+    config = {
+        'schemas': app.config.get('SCHEMAS'),
+        'database': app.config.get('DATABASE_URI')
+    }
+    app.loom_config = Config(config)
+    app.loom_config._elastic_client = app.spindle_es
+    app.loom_config._elastic_index = app.config.get('ELASTICSEARCH_INDEX')
+    app.loom_config.setup()
+
     assets.init_app(app)
-    db.init_app(app)
     oauth.init_app(app)
     return app
 
 
 def get_es():
-    if not hasattr(current_app, '_spindle_es'):
-        host = current_app.config.get('ELASTICSEARCH_HOST')
-        current_app._spindle_es = Elasticsearch(host)
-    return current_app._spindle_es
+    return current_app.spindle_es
 
 
 def get_es_index():
-    return current_app.config.get('ELASTICSEARCH_INDEX')
+    return current_app.loom_config.elastic_index
 
 
 def get_loom_config():
-    if not hasattr(current_app, '_loom_config'):
-        config = {
-            'schemas': current_app.config.get('SCHEMAS')
-        }
-        current_app._loom_config = Config(config)
-        current_app._loom_config._engine = db.engine
-        current_app._loom_config._elastic_client = get_es()
-        current_app._loom_config._elastic_index = get_es_index()
-    return current_app._loom_config
+    return current_app.loom_config
 
 
 def get_loom_indexer():

@@ -1,14 +1,14 @@
 from flask import current_app
 from pycountry import countries
 
-from spindle.model import db, Source
+from loom.db import session, Source
 
 
 def get_sources():
     """ Get a list of all sources stored in the index, then resolve and
     return them. """
     sources = {}
-    for source in db.session.query(Source):
+    for source in session.query(Source):
         sources[source.slug] = source.to_dict()
     return sources
 

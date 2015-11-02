@@ -5,7 +5,7 @@ APP_NAME = 'OCCRP Search'
 ELASTICSEARCH_HOST = '127.0.0.1:9200'
 ELASTICSEARCH_INDEX = 'graph'
 
-SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/loom'
+DATABASE_URI = 'postgresql://localhost/loom'
 
 SCHEMAS = {
     'legal_person': 'https://schema.occrp.org/generic/legal_person.json#',
