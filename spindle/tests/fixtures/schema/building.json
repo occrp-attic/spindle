@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://schema.occrp.org/generic/building.json#",
+  "title": "Building",
+  "description": "A building",
+  "type": "object",
+  "faIcon": "fa-map",
+  "oneOf": [
+      {"$ref": "https://schema.occrp.org/generic/asset.json#"}
+  ],
+  "properties": {
+    "address": {
+      "$ref": "https://schema.occrp.org/generic/address.json#"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://schema.occrp.org/generic/membership.json#",
+  "title": "Membership",
+  "description": "A relationship between a member and an organization",
+  "type": "object",
+  "inline": false,
+  "properties": {
+    "id": {
+      "description": "The membership's unique identifier",
+      "type": ["string", "null"]
+    },
+    "label": {
+      "title": "Label",
+      "description": "A label describing the membership",
+      "type": ["string", "null"]
+    },
+    "role": {
+      "title": "Role",
+      "description": "The role that the member fulfills in the organization",
+      "type": ["string", "null"]
+    },
+    "person": {
+      "description": "The person who is a member of the organization",
+      "$ref": "https://schema.occrp.org/generic/legal_person.json#",
+      "rdfReverse": "memberships"
+    },
+    "organization": {
+      "title": "Organization",
+      "description": "The organization in which the person or organization is a member",
+      "$ref": "https://schema.occrp.org/generic/organization.json#",
+      "rdfReverse": "members"
+    },
+    "start_date": {
+      "description": "The date on which the relationship began",
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "end_date": {
+      "description": "The date on which the relationship ended",
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "contact_details": {
+      "description": "Means of contacting the member of the organization",
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.occrp.org/generic/contact_detail.json#"
+      }
+    },
+    "links": {
+      "description": "URLs to documents about the membership",
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.occrp.org/generic/link.json#"
+      }
+    },
+    "created_at": {
+      "description": "The time at which the resource was created",
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "description": "The time at which the resource was last modified",
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "sources": {
+      "description": "URLs to documents from which the resource is derived",
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.occrp.org/generic/link.json#"
+      }
+    }
+  }
+}

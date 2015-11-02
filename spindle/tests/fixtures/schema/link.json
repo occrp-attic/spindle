@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://schema.occrp.org/generic/link.json#",
+  "title": "Link",
+  "description": "A URL",
+  "type": "object",
+  "inline": true,
+  "properties": {
+    "url": {
+      "description": "A URL",
+      "type": "string",
+      "format": "uri",
+      "required": true,
+      "rdfType": "id"
+    },
+    "note": {
+      "description": "A note, e.g. 'Wikipedia page'",
+      "type": ["string", "null"]
+    }
+  }
+}

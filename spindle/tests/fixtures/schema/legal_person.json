@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://schema.occrp.org/generic/legal_person.json#",
+  "title": "Legal Person",
+  "description": "An individual or company",
+  "type": "object",
+  "faIcon": "fa-user-secret",
+  "oneOf": [
+    {"$ref": "https://schema.occrp.org/generic/any.json#"}
+  ],
+  "properties": {
+    "assets": {
+      "type": "array",
+      "rdfReverse": "owners",
+      "items": {
+        "$ref": "https://schema.occrp.org/generic/asset.json#"
+      }
+    },
+    "memberships": {
+      "title": "Memberships",
+      "type": "array",
+      "description": "The person's memberships",
+      "rdfReverse": "person",
+      "items": {
+        "$ref": "https://schema.occrp.org/generic/membership.json#"
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://schema.occrp.org/generic/company.json#",
+  "title": "Company",
+  "description": "A company in OpenCorporates",
+  "type": "object",
+  "faIcon": "fa-suitcase",
+  "oneOf": [
+      {"$ref": "https://schema.occrp.org/generic/organization.json#"}
+  ],
+  "properties": {
+    "company_number": {
+      "type": "string",
+      "title": "Company number",
+      "description": "unique identifier given by the corporate register with which it is incorporated",
+      "minLength": 1
+    },
+    "retrieved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "current_status": {
+      "title": "Current status",
+      "type": ["string", "null"]
+    },
+    "company_type": {
+      "title": "Company type",
+      "type": ["string", "null"]
+    },
+    "registry_url": {
+      "title": "Company register link",
+      "type": "string",
+      "format": "uri"
+    },
+    "website": {
+      "title": "Website",
+      "type": "string",
+      "minLength": 5,
+      "format": "uri"
+    },
+    "telephone_number": {
+      "type": "string",
+      "minLength": 4
+    },
+    "fax_number": {
+      "type": "string",
+      "minLength": 4
+    },
+    "registered_address": {
+      "$ref": "https://schema.occrp.org/generic/address.json"
+    },
+    "headquarters_address": {
+      "$ref": "https://schema.occrp.org/generic/address.json"
+    },
+    "postal_address": {
+      "$ref": "https://schema.occrp.org/generic/address.json"
+    },
+    "filings": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.occrp.org/generic/filing.json"
+      }
+    },
+    "industry_codes": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.occrp.org/generic/industry_code.json#"
+      }
+    }
+  },
+  "additionalProperties": false
+}

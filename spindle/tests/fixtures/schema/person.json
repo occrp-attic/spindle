@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://schema.occrp.org/generic/person.json#",
+  "title": "Person",
+  "description": "A real person, alive or dead",
+  "type": "object",
+  "faIcon": "fa-user",
+  "oneOf": [
+      {"$ref": "https://schema.occrp.org/generic/legal_person.json#"}
+  ],
+  "properties": {
+    "family_name": {
+      "description": "One or more family names",
+      "type": ["string", "null"]
+    },
+    "given_name": {
+      "description": "One or more primary given names",
+      "type": ["string", "null"]
+    },
+    "additional_name": {
+      "description": "One or more secondary given names",
+      "type": ["string", "null"]
+    },
+    "honorific_prefix": {
+      "description": "One or more honorifics preceding a person's name",
+      "type": ["string", "null"]
+    },
+    "honorific_suffix": {
+      "description": "One or more honorifics following a person's name",
+      "type": ["string", "null"]
+    },
+    "patronymic_name": {
+      "description": "One or more patronymic names",
+      "type": ["string", "null"]
+    },
+    "sort_name": {
+      "description": "A name to use in a lexicographically ordered list",
+      "type": ["string", "null"]
+    },
+    "email": {
+      "description": "A preferred email address",
+      "type": ["string", "null"],
+      "format": "email"
+    },
+    "gender": {
+      "description": "A gender",
+      "type": ["string", "null"]
+    },
+    "birth_date": {
+      "description": "A date of birth",
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "death_date": {
+      "description": "A date of death",
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "image": {
+      "description": "A URL of a head shot",
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "summary": {
+      "description": "A one-line account of a person's life",
+      "type": ["string", "null"]
+    },
+    "biography": {
+      "description": "An extended account of a person's life",
+      "type": ["string", "null"]
+    },
+    "residential_address": {
+      "$ref": "https://schema.occrp.org/generic/address.json#"
+    },
+    "postal_address": {
+      "$ref": "https://schema.occrp.org/generic/address.json#"
+    },
+    "contact_details": {
+      "description": "Means of contacting the person",
+      "type": "array",
+      "items": {
+        "$ref": "https://schema.occrp.org/generic/contact_detail.json#"
+      }
+    }
+  }
+}

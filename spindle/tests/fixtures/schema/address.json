@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://schema.occrp.org/generic/address.json#",
+  "title": "Address",
+  "description": "An address object",
+  "type": "object",
+  "inline": true,
+  "properties": {
+    "text": {
+      "type": "text"
+    },
+    "street_address": {
+      "type": "string"
+    },
+    "locality": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "postal_code": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string",
+      "format": "country-code"
+    }
+  }
+}

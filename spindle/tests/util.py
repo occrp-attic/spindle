@@ -21,6 +21,14 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 logging.getLogger('elasticsearch').setLevel(logging.WARNING)
 
 
+def load_schemas(resolver):
+    schema_dir = os.path.join(FIXTURES, 'schema')
+    for fn in os.listdir(schema_dir):
+        with open(os.path.join(schema_dir, fn), 'r') as fh:
+            schema = yaml.load(fh)
+            resolver.store[schema.get('id')] = schema
+
+
 def load_ba_fixtures(config):
     # This is messy. Would be cool to do it more cleanly, but how?
     if not len(BA_FIXTURES['entities']):
@@ -55,6 +63,7 @@ class TestCase(FlaskTestCase):
             'CELERY_ALWAYS_EAGER': True
         })
         if not BA_FIXTURES['resolver']:
+            load_schemas(app.loom_config.resolver)
             BA_FIXTURES['resolver'] = app.loom_config.resolver
         app.loom_config._resolver = BA_FIXTURES['resolver']
         return app
