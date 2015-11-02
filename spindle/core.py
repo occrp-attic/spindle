@@ -20,16 +20,13 @@ def create_app(config={}):
     app.config.from_envvar('SPINDLE_SETTINGS', silent=True)
     app.config.update(config)
 
-    host = app.config.get('ELASTICSEARCH_HOST')
-    app.spindle_es = Elasticsearch(host)
-
     config = {
         'schemas': app.config.get('SCHEMAS'),
-        'database': app.config.get('DATABASE_URI')
+        'database': app.config.get('DATABASE_URI'),
+        'elastic_host': app.config.get('ELASTICSEARCH_HOST'),
+        'elastic_index': app.config.get('ELASTICSEARCH_INDEX')
     }
     app.loom_config = Config(config)
-    app.loom_config._elastic_client = app.spindle_es
-    app.loom_config._elastic_index = app.config.get('ELASTICSEARCH_INDEX')
     app.loom_config.setup()
 
     assets.init_app(app)
@@ -38,7 +35,7 @@ def create_app(config={}):
 
 
 def get_es():
-    return current_app.spindle_es
+    return current_app.loom_config.elastic_client
 
 
 def get_es_index():
@@ -50,6 +47,6 @@ def get_loom_config():
 
 
 def get_loom_indexer():
-    if not hasattr(current_app, '_loom_indexer'):
-        current_app._loom_indexer = Indexer(get_loom_config())
-    return current_app._loom_indexer
+    if not hasattr(current_app, 'loom_indexer'):
+        current_app.loom_indexer = Indexer(get_loom_config())
+    return current_app.loom_indexer

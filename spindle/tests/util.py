@@ -6,7 +6,7 @@ import unicodecsv
 from flask.ext.testing import TestCase as FlaskTestCase
 from jsonmapping import Mapper
 
-from loom.db import Source, session
+from loom.db import Source, Base, session
 from spindle.core import get_es, get_loom_indexer
 from spindle.cli import configure_app
 
@@ -14,11 +14,6 @@ FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
 ES_INDEX = 'spindle_test_idx_'
 BA_SOURCE = 'ba_parliament'
 BA_FIXTURES = {'entities': [], 'resolver': None}
-
-logging.basicConfig(level=logging.DEBUG)
-logging.getLogger('requests').setLevel(logging.WARNING)
-logging.getLogger('urllib3').setLevel(logging.WARNING)
-logging.getLogger('elasticsearch').setLevel(logging.WARNING)
 
 
 def load_schemas(resolver):
@@ -54,19 +49,14 @@ def load_ba_fixtures(config):
 class TestCase(FlaskTestCase):
 
     def create_app(self):
-        app = configure_app({
+        return configure_app({
             'DEBUG': True,
             'TESTING': True,
             'ELASTICSEARCH_INDEX': ES_INDEX,
-            'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
+            'DATABASE_URI': 'sqlite:///:memory:',
             'PRESERVE_CONTEXT_ON_EXCEPTION': False,
             'CELERY_ALWAYS_EAGER': True
         })
-        if not BA_FIXTURES['resolver']:
-            load_schemas(app.loom_config.resolver)
-            BA_FIXTURES['resolver'] = app.loom_config.resolver
-        app.loom_config._resolver = BA_FIXTURES['resolver']
-        return app
 
     def login(self, id='tester', name=None, email=None):
         with self.client.session_transaction() as session:
@@ -77,6 +67,11 @@ class TestCase(FlaskTestCase):
             }
 
     def setUp(self):
+        self.config = self.app.loom_config
+        if not BA_FIXTURES['resolver']:
+            load_schemas(self.config.resolver)
+            BA_FIXTURES['resolver'] = self.config.resolver
+        self.config._resolver = BA_FIXTURES['resolver']
         self.es = get_es()
         get_loom_indexer().configure()
 
@@ -85,5 +80,5 @@ class TestCase(FlaskTestCase):
 
     def tearDown(self):
         self.es.indices.delete(index=ES_INDEX, ignore=[400, 404])
-        session.remove()
-        # db.drop_all()
+        session.close()
+        # Base.metadata.drop_all()

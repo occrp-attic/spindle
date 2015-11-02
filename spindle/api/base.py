@@ -1,6 +1,7 @@
 from flask import render_template, jsonify, request, Blueprint
 from elasticsearch import ElasticsearchException
 
+from loom.db import session
 from spindle.core import get_es, get_es_index
 from spindle.search import query, more_like_this
 from spindle.metadata import get_metadata
@@ -16,6 +17,12 @@ def handle_error(err):
     res = jsonify({'status': 'error', 'message': unicode(err)})
     res.status_code = 500
     return res
+
+
+@base_api.after_app_request
+def clear_session(resp):
+    session.close()
+    return resp
 
 
 @base_api.route('/api/like/<path:id>')

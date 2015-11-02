@@ -5,6 +5,7 @@ from spindle.core import assets, create_app, get_loom_indexer
 from spindle.api.base import base_api
 from spindle.api.auth import auth_api
 from spindle.api.entities import entities_api
+from spindle.api.collections import collections_api
 
 
 def configure_app(config={}):
@@ -12,6 +13,7 @@ def configure_app(config={}):
     app.register_blueprint(base_api)
     app.register_blueprint(auth_api)
     app.register_blueprint(entities_api)
+    app.register_blueprint(collections_api)
     return app
 
 
