@@ -14,7 +14,7 @@ class CollectionsApiTestCase(TestCase):
     def test_index(self):
         res = self.client.get('/api/collections')
         assert res.status_code == 200
-        assert res.json['total'] == 1, res.json
+        assert res.json['total'] > 1, res.json
 
     def test_view(self):
         res = self.client.get('/api/collections/%s' % self.coll.id)
@@ -25,3 +25,31 @@ class CollectionsApiTestCase(TestCase):
     def test_view_not_found(self):
         res = self.client.get('/api/collections/8388')
         assert res.status_code == 404
+
+    def test_create(self):
+        data = {'title': "Hannah Banana"}
+        res = self.client.post('/api/collections', data=data)
+        assert res.status_code == 201
+        assert res.json['data']['id'], res.json
+
+    def test_create_invalid(self):
+        data = {'title': "H"}
+        res = self.client.post('/api/collections', data=data)
+        assert res.status_code == 400
+        assert 'too short' in res.json['message'], res.json
+
+    def test_update(self):
+        res = self.client.get('/api/collections/%s' % self.coll.id)
+        data = res.json['data']
+        data['title'] = '%s - new' % data['title']
+        res = self.client.post('/api/collections/%s' % data['id'], data=data)
+        assert res.status_code == 200, res
+        assert res.json['data']['title'] == data['title'], res.json
+        assert res.json['data']['id'], res.json
+
+    def test_update_invalid(self):
+        res = self.client.get('/api/collections/%s' % self.coll.id)
+        data = res.json['data']
+        data['title'] = 'H'
+        res = self.client.post('/api/collections/%s' % data['id'], data=data)
+        assert res.status_code == 400, res

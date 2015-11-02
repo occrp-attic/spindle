@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "https://schema.occrp.org/operational/collection.json#",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": ["integer", "null"]
+        },
+        "title": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2048
+        }
+    }
+}

@@ -1,13 +1,12 @@
 import os
 import yaml
-import logging
 import unicodecsv
 
 from flask.ext.testing import TestCase as FlaskTestCase
 from jsonmapping import Mapper
 
-from loom.db import Source, Base, session
-from spindle.core import get_es, get_loom_indexer
+from loom.db import Source, session
+from spindle.core import get_es, get_loom_indexer, load_local_schema
 from spindle.cli import configure_app
 
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
@@ -69,7 +68,8 @@ class TestCase(FlaskTestCase):
     def setUp(self):
         self.config = self.app.loom_config
         if not BA_FIXTURES['resolver']:
-            load_schemas(self.config.resolver)
+            schema_dir = os.path.join(FIXTURES, 'schema')
+            load_local_schema(self.config.resolver, schema_dir=schema_dir)
             BA_FIXTURES['resolver'] = self.config.resolver
         self.config._resolver = BA_FIXTURES['resolver']
         self.es = get_es()
