@@ -6,11 +6,12 @@
 
 * Demo data loader -- done
 * Front-End Navbar -- done
+* Collections / Projects -- done
 * Entities R/W API
-* Collections / Projects
 * Ownership type (Company, Asset)
 * Implement entity auto-suggest
 * Collection grid view
+* Roles / Users+Groups
 
 * Records de-ref, layer
 * Records indexing
@@ -22,6 +23,32 @@ Collection
 
 ## Permissions/Authorization Model
 
-Identity: User, Network
+Role: User, Network, Groups
+    id
+    name
+    type
+    is_admin
+
 Resource: Collection, Source
+
 Permission (Identity, Resource)
+    role
+    resource_type
+    resource_id
+
+Places where authz matters:
+    * REST API
+    * Entity construction
+
+Places where users matter:
+    * Collections (create / access)
+    * Statement authorship
+
+Statement:
+    * subject
+    * predicate
+    * object
+    * source_id
+    * collection
+    * author
+    * created_at

@@ -1,7 +1,9 @@
 from flask.ext.script import Manager
 from flask.ext.assets import ManageAssets
 
+from loom.db import session
 from spindle.core import assets, create_app, get_loom_indexer
+from spindle.model import Role
 from spindle.api.base import base_api
 from spindle.api.auth import auth_api
 from spindle.api.entities import entities_api
@@ -27,6 +29,8 @@ def main():
         "Initialize all parts of the system"
         indexer = get_loom_indexer()
         indexer.configure()
+        Role.create_defaults()
+        session.commit()
 
     manager.run()
 
