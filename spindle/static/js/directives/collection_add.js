@@ -47,7 +47,7 @@ spindle.directive('collectionAdd', ['$uibModal', '$http', function($uibModal, $h
 
         d.result.then(function(collection) {
           scope.collections.results.push(collection);
-          scope.addCollection(collection);
+          scope.toggleCollection(collection);
         });
       };
     }

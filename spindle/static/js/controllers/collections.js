@@ -1,6 +1,6 @@
 
-spindle.controller('CollectionCreateDialog', ['$scope', '$http', '$uibModalInstance', 'collections',
-    function($scope, $http, $uibModalInstance, collections) {
+spindle.controller('CollectionCreateDialog', ['$scope', '$http', '$uibModalInstance',
+    function($scope, $http, $uibModalInstance) {
   $scope.collection = {title: ''};
 
   $scope.validTitle = function() {
@@ -10,7 +10,6 @@ spindle.controller('CollectionCreateDialog', ['$scope', '$http', '$uibModalInsta
   $scope.create = function() {
     if ($scope.validTitle()) {
       $http.post('/api/collections', $scope.collection).then(function(res) {
-        collections.flush();
         $uibModalInstance.close(res.data.data);
       });
     }
