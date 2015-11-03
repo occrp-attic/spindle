@@ -1,6 +1,9 @@
 <div class="entity-detail">
   <div class="row">
     <div class="col-md-12" ng-show="data.$schema">
+      <div class="pull-right">
+        <collection-add subject="data.id"></collection-add>
+      </div>
       <h2>
         <entity-icon schema="data.$schema"></entity-icon>
         {{data.name}}

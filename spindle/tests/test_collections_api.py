@@ -1,3 +1,5 @@
+import json
+
 from loom.db import Collection, session
 from spindle.tests.util import TestCase
 
@@ -10,6 +12,9 @@ class CollectionsApiTestCase(TestCase):
         self.coll.title = "Test Collection"
         session.add(self.coll)
         session.commit()
+        self.schema_uri = 'https://schema.occrp.org/generic/organization.json#'
+        self.entity = {'id': 'foo', 'name': 'Foobar'}
+        self.config.entities.save(self.schema_uri, self.entity, 'test_source')
 
     def test_index(self):
         res = self.client.get('/api/collections')
@@ -27,14 +32,17 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 404
 
     def test_create(self):
-        data = {'title': "Hannah Banana"}
-        res = self.client.post('/api/collections', data=data)
+        data = json.dumps({'title': "Hannah Banana"})
+        res = self.client.post('/api/collections', data=data,
+                               content_type='application/json')
         assert res.status_code == 201
         assert res.json['data']['id'], res.json
+        assert not len(res.json['data']['subjects']), res.json
 
     def test_create_invalid(self):
-        data = {'title': "H"}
-        res = self.client.post('/api/collections', data=data)
+        data = json.dumps({'title': "H"})
+        res = self.client.post('/api/collections', data=data,
+                               content_type='application/json')
         assert res.status_code == 400
         assert 'too short' in res.json['message'], res.json
 
@@ -42,7 +50,9 @@ class CollectionsApiTestCase(TestCase):
         res = self.client.get('/api/collections/%s' % self.coll.id)
         data = res.json['data']
         data['title'] = '%s - new' % data['title']
-        res = self.client.post('/api/collections/%s' % data['id'], data=data)
+        jdata = json.dumps(data)
+        res = self.client.post('/api/collections/%s' % data['id'], data=jdata,
+                               content_type='application/json')
         assert res.status_code == 200, res
         assert res.json['data']['title'] == data['title'], res.json
         assert res.json['data']['id'], res.json
@@ -51,5 +61,43 @@ class CollectionsApiTestCase(TestCase):
         res = self.client.get('/api/collections/%s' % self.coll.id)
         data = res.json['data']
         data['title'] = 'H'
-        res = self.client.post('/api/collections/%s' % data['id'], data=data)
+        jdata = json.dumps(data)
+        res = self.client.post('/api/collections/%s' % data['id'], data=jdata,
+                               content_type='application/json')
         assert res.status_code == 400, res
+
+    def test_create_with_subjects(self):
+        data = json.dumps({"title": "Hannah Banana", "subjects": ["foo"]})
+        res = self.client.post('/api/collections', data=data,
+                               content_type='application/json')
+        assert res.status_code == 201, res
+        assert res.json['data']['id'], res.json
+        assert 1 == len(res.json['data']['subjects']), res.json
+
+    def test_update_subjects(self):
+        self.schema_uri = 'https://schema.occrp.org/generic/organization.json#'
+        self.entity = {'id': 'bar', 'name': 'Barfoo'}
+        self.config.entities.save(self.schema_uri, self.entity, 'test_source')
+
+        data = json.dumps({"title": "Hannah Banana", "subjects": ["foo"]})
+        res = self.client.post('/api/collections', data=data,
+                               content_type='application/json')
+        assert res.status_code == 201, res
+        assert res.json['data']['id'], res.json
+        assert 1 == len(res.json['data']['subjects']), res.json
+        data = res.json['data']
+        data['subjects'] = ['bar']
+        res = self.client.post('/api/collections/%s' % res.json['data']['id'],
+                               data=json.dumps(data),
+                               content_type='application/json')
+        assert res.status_code == 200, res
+        assert res.json['data']['id'], res.json
+        assert 1 == len(res.json['data']['subjects']), res.json
+        assert 'bar' in res.json['data']['subjects'], res.json
+        assert 'foo' not in res.json['data']['subjects'], res.json
+
+    def test_create_with_invalid_subjects(self):
+        data = json.dumps({"title": "Hannah Banana", "subjects": ["no-foo"]})
+        res = self.client.post('/api/collections', data=data,
+                               content_type='application/json')
+        assert res.status_code == 400

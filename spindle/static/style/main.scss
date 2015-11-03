@@ -17,7 +17,7 @@ $font-family-sans-serif:  'Open Sans', sans-serif;
 $input-border-focus: $brand-primary;
 
 @import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
-@import "mixins";
+// @import "mixins";
 
 @mixin header-font {
     font-family: $font-family-sans-serif;
@@ -30,6 +30,10 @@ div[ng-view].ng-enter {
 
 h1, h2, h3, h4 {
     @include header-font;
+}
+
+a, a.action {
+    cursor: pointer;
 }
 
 body, html {
@@ -53,7 +57,7 @@ body, html {
 
 #spinner-overlay {
     position: absolute;
-    z-index: 1000;
+    z-index: 1100;
     top: 0;
     left: 0;
     width: 100%;

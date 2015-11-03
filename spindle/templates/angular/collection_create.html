@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Create a collection</h4>
+</div>
+
+<form class="form-horizontal dataset-settings" role="form" name="forms.dim" ng-submit="create()">
+  <div class="modal-body">
+    <div class="form-group" ng-class="{'has-error': !validTitle()}">
+      <label class="col-sm-3 control-label" for="title">Title</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="title" ng-model="collection.title">
+        <p class="help-block">
+          Select a descriptive name for your collection.
+        </p>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" ng-disabled="!validTitle()"
+    ng-click="create()">Create</button>
+</div>

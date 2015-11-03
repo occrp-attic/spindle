@@ -1,0 +1,21 @@
+<span class="btn-group collection-add" uib-dropdown
+  on-toggle="toggleDropdown(open)">
+ <a uib-dropdown-toggle class="btn btn-default" ng-class="class">
+   <i class="fa fa-list"></i> Collections
+ </a>
+ <ul class="uib-dropdown-menu dropdown-menu-right" role="menu">
+   <li role="menuitem" ng-repeat="coll in collections.results">
+     <a ng-click="toggleCollection(coll)" class="action">
+       <span ng-show="isPart(coll)"><i class="fa fa-check-square"></i></span>
+       <span ng-hide="isPart(coll)"><i class="fa fa-square"></i></span>
+       {{coll.title}}
+     </a>
+   </li>
+   <li class="divider" ng-show="collections.total"></li>
+   <li role="menuitem">
+    <a ng-click="newCollection()" class="action">
+      <i class="fa fa-plus-square"></i> New collection
+    </a>
+   </li>
+ </ul>
+</span>

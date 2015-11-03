@@ -10,6 +10,14 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 2048
+        },
+        "subjects": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 2048
+            }
         }
     }
 }
