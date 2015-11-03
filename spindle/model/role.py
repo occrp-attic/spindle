@@ -38,7 +38,8 @@ class Role(Base, CommonColumnsMixin):
 
     @classmethod
     def load(cls, id):
-        return session.query(cls).filter_by(id=id).first()
+        if id is not None:
+            return session.query(cls).filter_by(id=id).first()
 
     @classmethod
     def load_or_create(cls, id, type, name, email=None):

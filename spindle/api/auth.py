@@ -21,7 +21,7 @@ def get_oauth_token():
 @auth_api.before_app_request
 def load_user():
     request.auth_roles = session.get('roles', [Role.SYSTEM_GUEST])
-    request.auth_user = session.get('user', {})
+    request.auth_user = session.get('user')
     request.logged_in = request.auth_user is not None
 
 
@@ -72,7 +72,7 @@ def callback():
             Role.load_or_create(group_id, Role.GROUP, me.data.get('name'))
             session['roles'].append(group_id)
     else:
-        raise RuntimeError("Unknown OAuth URL: %s" % oauth_provider.base_url)
+        raise RuntimeError("Unknown OAuth URL: %r" % oauth_provider.base_url)
     session['roles'].append(user_id)
     session['user'] = user_id
     db_session.commit()

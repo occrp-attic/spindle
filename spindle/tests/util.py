@@ -6,6 +6,7 @@ from flask.ext.testing import TestCase as FlaskTestCase
 from jsonmapping import Mapper
 
 from loom.db import Source, session
+from spindle.model import Role
 from spindle.core import get_es, get_loom_indexer, load_local_schema
 from spindle.cli import configure_app
 
@@ -58,14 +59,13 @@ class TestCase(FlaskTestCase):
         })
 
     def login(self, id='tester', name=None, email=None):
+        Role.load_or_create(id, Role.USER, name or id, email=email)
         with self.client.session_transaction() as session:
-            session['user'] = {
-                'id': 'test:%s' % id,
-                'name': name or id.capitalize(),
-                'email': email or id + '@example.com'
-            }
+            session['roles'] = [Role.SYSTEM_GUEST, Role.SYSTEM_USER, id]
+            session['user'] = id
 
     def setUp(self):
+        Role.create_defaults()
         self.config = self.app.loom_config
         if not BA_FIXTURES['resolver']:
             schema_dir = os.path.join(FIXTURES, 'schema')
