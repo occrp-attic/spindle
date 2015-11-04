@@ -1,6 +1,6 @@
 from flask import request, Blueprint, session, redirect
 from flask_oauthlib.client import OAuthException
-from apikit import jsonify
+from apikit import jsonify, Pager
 
 from loom.db import session as db_session
 from spindle.model import Role
@@ -33,6 +33,12 @@ def get_session():
         'roles': list(request.auth_roles),
         'login_uri': url_for('auth.authorize')
     })
+
+
+@auth_api.route('/api/roles')
+def list_roles():
+    roles = db_session.query(Role)
+    return jsonify(Pager(roles))
 
 
 @auth_api.route('/auth/authorize')
@@ -69,7 +75,7 @@ def callback():
                             email=me.data.get('email'))
         for group in me.data.get('groups', []):
             group_id = 'idashboard:%s' % group.get('id')
-            Role.load_or_create(group_id, Role.GROUP, me.data.get('name'))
+            Role.load_or_create(group_id, Role.GROUP, group.get('name'))
             session['roles'].append(group_id)
     else:
         raise RuntimeError("Unknown OAuth URL: %r" % oauth_provider.base_url)
