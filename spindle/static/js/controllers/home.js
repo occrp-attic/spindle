@@ -16,8 +16,21 @@ var loadSummary = ['$http', '$q', function($http, $q) {
 }];
 
 
-spindle.controller('HomeController', ['$scope', '$http', '$location', 'summary', 'collections',
-    function($scope, $http, $location, summary, collections) {
+spindle.controller('HomeController', ['$scope', '$http', '$location', '$uibModal', 'summary', 'collections',
+    function($scope, $http, $location, $uibModal, summary, collections) {
   $scope.collections = collections;
   $scope.summary = summary;
+
+  $scope.newCollection = function() {
+    var d = $uibModal.open({
+      templateUrl: 'collections/new.html',
+      controller: 'CollectionNewDialog',
+      backdrop: true,
+      resolve: {}
+    });
+
+    d.result.then(function(collection) {
+      $location.path('/collections/' + collection.id);
+    });
+  };
 }]);

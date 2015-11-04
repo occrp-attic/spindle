@@ -60,9 +60,10 @@ class TestCase(FlaskTestCase):
 
     def login(self, id='tester', name=None, email=None):
         Role.load_or_create(id, Role.USER, name or id, email=email)
-        with self.client.session_transaction() as session:
-            session['roles'] = [Role.SYSTEM_GUEST, Role.SYSTEM_USER, id]
-            session['user'] = id
+        session.commit()
+        with self.client.session_transaction() as sess:
+            sess['roles'] = [Role.SYSTEM_GUEST, Role.SYSTEM_USER, id]
+            sess['user'] = id
 
     def setUp(self):
         Role.create_defaults()
