@@ -5,7 +5,7 @@ spindle.directive('collectionAdd', ['$uibModal', '$http', function($uibModal, $h
       'subject': '=',
       'class': '@'
     },
-    templateUrl: 'collection_add.html',
+    templateUrl: 'collections/add.html',
     link: function (scope, element, attrs) {
       scope.loaded = false;
       scope.collections = [];
@@ -39,8 +39,8 @@ spindle.directive('collectionAdd', ['$uibModal', '$http', function($uibModal, $h
 
       scope.newCollection = function() {
         var d = $uibModal.open({
-          templateUrl: 'collection_create.html',
-          controller: 'CollectionCreateDialog',
+          templateUrl: 'collections/new.html',
+          controller: 'CollectionNewDialog',
           backdrop: true,
           resolve: {}
         });

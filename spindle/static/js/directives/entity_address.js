@@ -5,7 +5,7 @@ spindle.directive('entityAddress', [function() {
     scope: {
       'bind': '='
     },
-    templateUrl: 'entity_address.html',
+    templateUrl: 'entities/address.html',
     link: function (scope, element, attrs, model) {
     }
   };

@@ -10,7 +10,7 @@ var loadCollections = ['$q', '$http', function($q, $http) {
 }];
 
 
-spindle.controller('CollectionCreateDialog', ['$scope', '$http', '$uibModalInstance',
+spindle.controller('CollectionNewDialog', ['$scope', '$http', '$uibModalInstance',
     function($scope, $http, $uibModalInstance) {
   $scope.collection = {title: ''};
 

@@ -9,7 +9,7 @@ spindle.directive('searchFacet', ['$http', 'metadataService', 'query',
       'title': '@',
       'type': '@'
     },
-    templateUrl: 'search_facet.html',
+    templateUrl: 'search/facet.html',
     link: function (scope, element, attrs, model) {
       scope.result = [];
       scope.meta = {};

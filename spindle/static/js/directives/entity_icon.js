@@ -7,7 +7,7 @@ spindle.directive('entityIcon', ['schema', function(schema) {
       'schema': '='
     },
     replace: true,
-    templateUrl: 'entity_icon.html',
+    templateUrl: 'entities/icon.html',
     link: function (scope, element, attrs, model) {
       scope.icon = 'fa-question-circle';
       if (scope.schema) {

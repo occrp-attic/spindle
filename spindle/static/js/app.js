@@ -15,7 +15,7 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
   });
 
   $routeProvider.when('/search', {
-    templateUrl: 'search.html',
+    templateUrl: 'search/index.html',
     controller: 'SearchController',
     reloadOnSearch: true,
     resolve: {
@@ -25,7 +25,7 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
   });
 
   $routeProvider.when('/entities/:id', {
-    templateUrl: 'entity.html',
+    templateUrl: 'entities/view.html',
     controller: 'EntityController',
     reloadOnSearch: false,
     resolve: {
@@ -35,7 +35,7 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
   });
 
   $routeProvider.when('/collections/:id', {
-    templateUrl: 'collection.html',
+    templateUrl: 'collections/view.html',
     controller: 'CollectionController',
     reloadOnSearch: false,
     resolve: {

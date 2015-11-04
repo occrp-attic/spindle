@@ -9,7 +9,7 @@ spindle.directive('entityTableColumn', [function() {
       'title': '@',
       'width': '@'
     },
-    templateUrl: 'entity_table_column.html',
+    templateUrl: 'entities/table_column.html',
     link: function (scope, element, attrs, entityTable) {
       entityTable.addColumn(scope.path);
     }

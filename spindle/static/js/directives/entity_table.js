@@ -9,7 +9,7 @@ spindle.directive('entityTable', [function() {
       'columns': '@',
       'title': '@'
     },
-    templateUrl: 'entity_table.html',
+    templateUrl: 'entities/table.html',
     controller: ['$scope', function($scope) {
       var self = this,
           columns = [];
