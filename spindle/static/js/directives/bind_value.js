@@ -18,7 +18,7 @@ spindle.directive('bindValue', ['$sce', 'metadataService', function($sce, metada
       if (bind && bind.model && bind.data) {
         var schema = bind.schema, value = bind.data, url = false, classes = false;
         if (bind.model.isObject) {
-          url = '#/entity/' + bind.data.id;
+          url = '#/entities/' + bind.data.id;
           value = bind.data.name;
         } else if (schema.format) {
           if (schema.format == 'country-code') {

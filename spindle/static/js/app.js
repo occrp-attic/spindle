@@ -9,7 +9,8 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
     controller: 'HomeController',
     resolve: {
       metadata: loadMetadata,
-      summary: loadSummary
+      summary: loadSummary,
+      collections: loadCollections
     }
   });
 
@@ -23,12 +24,22 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
     }
   });
 
-  $routeProvider.when('/entity/:id', {
+  $routeProvider.when('/entities/:id', {
     templateUrl: 'entity.html',
     controller: 'EntityController',
     reloadOnSearch: false,
     resolve: {
       bind: loadEntityBind,
+      metadata: loadMetadata
+    }
+  });
+
+  $routeProvider.when('/collections/:id', {
+    templateUrl: 'collection.html',
+    controller: 'CollectionController',
+    reloadOnSearch: false,
+    resolve: {
+      collection: loadCollection,
       metadata: loadMetadata
     }
   });

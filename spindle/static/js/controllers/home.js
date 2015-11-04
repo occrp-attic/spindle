@@ -16,8 +16,8 @@ var loadSummary = ['$http', '$q', function($http, $q) {
 }];
 
 
-spindle.controller('HomeController', ['$scope', '$http', '$location', 'summary',
-  function($scope, $http, $location, summary) {
-
+spindle.controller('HomeController', ['$scope', '$http', '$location', 'summary', 'collections',
+    function($scope, $http, $location, summary, collections) {
+  $scope.collections = collections;
   $scope.summary = summary;
 }]);

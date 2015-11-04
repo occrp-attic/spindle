@@ -1,4 +1,15 @@
 
+var loadCollections = ['$q', '$http', function($q, $http) {
+  var dfd = $q.defer();
+  $http.get('/api/collections').then(function(res) {
+    dfd.resolve(res.data);
+  }, function(err) {
+    dfd.reject();
+  });
+  return dfd.promise;
+}];
+
+
 spindle.controller('CollectionCreateDialog', ['$scope', '$http', '$uibModalInstance',
     function($scope, $http, $uibModalInstance) {
   $scope.collection = {title: ''};
@@ -19,4 +30,23 @@ spindle.controller('CollectionCreateDialog', ['$scope', '$http', '$uibModalInsta
     $uibModalInstance.dismiss('ok');
   };
 
+}]);
+
+
+var loadCollection = ['$q', '$http', '$route', function($q, $http, $route) {
+  var dfd = $q.defer(),
+      url = '/api/collections/' + $route.current.params.id;
+  $http.get(url).then(function(res) {
+    dfd.resolve(res.data.data);
+  }, function(err) {
+    dfd.reject();
+  });
+  return dfd.promise;
+}];
+
+
+spindle.controller('CollectionController', ['$scope', '$http', 'collection',
+    function($scope, $http, collection) {
+  $scope.collection = collection;
+  console.log("Collection", collection);
 }]);
