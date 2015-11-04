@@ -1,4 +1,6 @@
 from sqlalchemy import Column, Unicode, Enum
+from sqlalchemy.orm import relationship
+
 from loom.db.util import Base, CommonColumnsMixin, session
 
 
@@ -18,6 +20,7 @@ class Role(Base, CommonColumnsMixin):
     name = Column(Unicode, nullable=False)
     email = Column(Unicode, nullable=True)
     type = Column(Enum(*TYPES, name='role_type'), nullable=False)
+    permissions = relationship("Permission", backref="role")
 
     def __init__(self, id, type):
         self.id = id
@@ -27,7 +30,7 @@ class Role(Base, CommonColumnsMixin):
         return {
             'id': self.id,
             'name': self.name,
-            'email': self.email,
+            # 'email': self.email,
             'type': self.type
         }
 
