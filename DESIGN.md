@@ -3,15 +3,17 @@
 
 * Result highlights -- done
 * No nested indexing -- done
-
 * Demo data loader -- done
 * Front-End Navbar -- done
 * Collections / Projects -- done
+* Roles / Users+Groups -- done
+* Collection permissions
+* Source permissions
 * Entities R/W API
 * Ownership type (Company, Asset)
 * Implement entity auto-suggest
 * Collection grid view
-* Roles / Users+Groups
+* Layout once-over
 
 * Records de-ref, layer
 * Records indexing

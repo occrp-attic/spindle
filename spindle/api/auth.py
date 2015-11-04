@@ -1,13 +1,12 @@
 from flask import request, Blueprint, session, redirect
 from flask_oauthlib.client import OAuthException
-from apikit import jsonify, Pager
+from apikit import jsonify
 
 from loom.db import session as db_session
 from spindle.model import Role
 from spindle.core import oauth_provider
 from spindle.util import url_for
 
-# TODO: support OAuth against ID
 auth_api = Blueprint('auth', __name__)
 
 
@@ -33,12 +32,6 @@ def get_session():
         'roles': list(request.auth_roles),
         'login_uri': url_for('auth.authorize')
     })
-
-
-@auth_api.route('/api/roles')
-def list_roles():
-    roles = db_session.query(Role)
-    return jsonify(Pager(roles))
 
 
 @auth_api.route('/auth/authorize')
