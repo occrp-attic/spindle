@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Unicode, Enum, Boolean, ForeignKey
+from sqlalchemy import Column, Unicode, Enum, Boolean, ForeignKey, Integer
 from loom.db.util import Base, CommonColumnsMixin
 
 
@@ -16,7 +16,7 @@ class Permission(Base, CommonColumnsMixin):
     role_id = Column(Unicode, ForeignKey('role.id'), index=True)
     read = Column(Boolean, default=False)
     write = Column(Boolean, default=False)
-    resource_id = Column(Unicode, nullable=True)
+    resource_id = Column(Integer, nullable=False)
     resource_type = Column(Enum(*RESOURCE_TYPES, name='permission_type'),
                            nullable=False)
 

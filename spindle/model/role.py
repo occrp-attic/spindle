@@ -36,8 +36,8 @@ class Role(Base, CommonColumnsMixin):
 
     @classmethod
     def create_defaults(cls):
-        cls.load_or_create(cls.SYSTEM_GUEST, cls.SYSTEM, 'Guest')
-        cls.load_or_create(cls.SYSTEM_USER, cls.SYSTEM, 'User')
+        cls.load_or_create(cls.SYSTEM_GUEST, cls.SYSTEM, 'Guests')
+        cls.load_or_create(cls.SYSTEM_USER, cls.SYSTEM, 'All users')
 
     @classmethod
     def load(cls, id):

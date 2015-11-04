@@ -3,6 +3,7 @@ from flask_oauthlib.client import OAuthException
 from apikit import jsonify
 
 from loom.db import session as db_session
+from spindle import authz
 from spindle.model import Role
 from spindle.core import oauth_provider
 from spindle.util import url_for
@@ -22,6 +23,7 @@ def load_user():
     request.auth_roles = session.get('roles', [Role.SYSTEM_GUEST])
     request.auth_user = session.get('user')
     request.logged_in = request.auth_user is not None
+    authz.request_resources()
 
 
 @auth_api.route('/api/session')
@@ -41,6 +43,7 @@ def authorize():
 
 @auth_api.route('/auth/reset')
 def reset():
+    authz.require(authz.logged_in())
     session.clear()
     return redirect(url_for('base.index'))
 

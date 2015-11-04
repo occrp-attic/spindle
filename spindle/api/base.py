@@ -19,6 +19,16 @@ def handle_es_error(err):
     return jsonify({'status': 'error', 'message': unicode(err)}, status=500)
 
 
+@base_api.app_errorhandler(403)
+def handle_authz_error(err):
+    return jsonify({
+        'status': 'error',
+        'message': 'You are not authorized to do this.',
+        'roles': request.auth_roles,
+        'user': request.auth_user
+    }, status=403)
+
+
 @base_api.app_errorhandler(ValidationError)
 def handle_validation_error(err):
     return jsonify({

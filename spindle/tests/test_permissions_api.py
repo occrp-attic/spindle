@@ -16,9 +16,9 @@ class PermissionsApiTestCase(TestCase):
 
     def test_roles(self):
         res = self.client.get('/api/roles')
-        assert res.json['total'] == 2, res.json
-        assert len(res.json['results']) == 2, res.json
+        assert res.json['total'] == 3, res.json
+        assert len(res.json['results']) == 3, res.json
         res = Role.load_or_create('foo', Role.USER, 'Foo User')
         session.commit()
         res = self.client.get('/api/roles')
-        assert res.json['total'] == 3, res.json
+        assert res.json['total'] == 4, res.json

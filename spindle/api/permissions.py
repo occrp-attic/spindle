@@ -21,11 +21,11 @@ def list_roles():
 @permissions_api.route('/api/permissions')
 def index():
     q = session.query(Permission)
-    # TODO: authz
     if 'collection' in request.args:
         q = q.filter(Permission.resource_type == Permission.COLLECTION)
         q = q.filter(Permission.resource_id == request.args.get('collection'))
     elif 'source' in request.args:
+        # TODO: authz
         q = q.filter(Permission.resource_type == Permission.SOURCE)
         q = q.filter(Permission.resource_id == request.args.get('source'))
     else:
@@ -43,3 +43,4 @@ def index():
 @permissions_api.route('/api/permissions/<id>', methods=['POST', 'PUT'])
 def create_or_update(id=None):
     pass
+    # TODO: make sure system roles are never writeable.
