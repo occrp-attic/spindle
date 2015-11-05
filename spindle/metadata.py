@@ -9,7 +9,7 @@ def get_sources():
     return them. """
     sources = {}
     for source in session.query(Source):
-        sources[source.slug] = source.to_dict()
+        sources[source.id] = source.to_dict()
     return sources
 
 

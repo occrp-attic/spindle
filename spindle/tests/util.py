@@ -36,13 +36,13 @@ def load_ba_fixtures(config):
                 _, data = mapper.apply(row)
                 BA_FIXTURES['entities'].append(data)
 
-    Source.ensure({
+    source = Source.ensure({
         'slug': BA_SOURCE,
         'title': 'BiH Parliament',
         'url': 'http://foo.ba/'
     })
     for entity in BA_FIXTURES['entities']:
-        config.entities.save(entity['$schema'], entity, BA_SOURCE)
+        config.entities.save(entity['$schema'], entity, source_id=source.id)
     get_loom_indexer().index(source=BA_SOURCE)
 
 

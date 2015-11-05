@@ -26,5 +26,5 @@ class BaseApiTestCase(TestCase):
         self.setUpFixtures()
         res = self.client.get('/api/metadata')
         assert res.status_code == 200, res
-        sources = res.json['sources']
-        assert BA_SOURCE in sources, sources
+        for source in res.json['sources'].values():
+            assert source['slug'] == BA_SOURCE, source
