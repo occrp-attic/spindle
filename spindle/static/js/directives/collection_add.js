@@ -1,5 +1,5 @@
-spindle.directive('collectionAdd', ['$uibModal', '$http', 'sessionService',
-    function($uibModal, $http, sessionService) {
+spindle.directive('collectionAdd', ['$uibModal', '$http', '$location', 'sessionService',
+    function($uibModal, $http, $location, sessionService) {
   return {
     restrict: 'E',
     scope: {
@@ -25,6 +25,11 @@ spindle.directive('collectionAdd', ['$uibModal', '$http', 'sessionService',
             scope.collections = res.data;
           });
         }
+      };
+
+      scope.openCollection = function(collection, $event) {
+        $event.stopPropagation();
+        $location.path('/collections/' + collection.id);
       };
 
       scope.isPart = function(collection) {

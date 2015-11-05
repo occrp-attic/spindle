@@ -9,6 +9,9 @@
        <span ng-show="isPart(coll)"><i class="fa fa-check-square"></i></span>
        <span ng-hide="isPart(coll)"><i class="fa fa-square"></i></span>
        {{coll.title}}
+       <span class="inline" ng-click="openCollection(coll, $event)">
+         <i class="fa fa-arrow-circle-right"></i>
+       </span>
      </a>
    </li>
    <li class="divider" ng-show="collections.total"></li>
