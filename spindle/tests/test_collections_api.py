@@ -20,7 +20,6 @@ class CollectionsApiTestCase(TestCase):
         permission.resource_id = self.coll.id
         permission.resource_type = Permission.COLLECTION
         session.add(permission)
-        session.flush()
         session.commit()
         self.schema_uri = 'https://schema.occrp.org/generic/organization.json#'
         self.entity = {'id': 'foo', 'name': 'Foobar'}

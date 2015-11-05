@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "https://schema.occrp.org/operational/source.json#",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": ["integer", "null"]
+        },
+        "title": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2048
+        },
+        "url": {
+            "type": ["string", "null"],
+            "format": "uri",
+            "minLength": 0,
+            "maxLength": 16000
+        }
+    },
+    "required": ["title", "url"]
+}

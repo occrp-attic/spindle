@@ -12,12 +12,18 @@ def request_resources():
     q = session.query(Permission)
     q = q.filter(Permission.role_id.in_(request.auth_roles))
     request.authz_collections = {READ: [], WRITE: []}
+    request.authz_sources = {READ: [], WRITE: []}
     for perm in q:
         if perm.resource_type == Permission.COLLECTION:
             if perm.read:
                 request.authz_collections[READ].append(perm.resource_id)
             if perm.write and request.logged_in:
                 request.authz_collections[WRITE].append(perm.resource_id)
+        if perm.resource_type == Permission.SOURCE:
+            if perm.read:
+                request.authz_sources[READ].append(perm.resource_id)
+            if perm.write and request.logged_in:
+                request.authz_sources[WRITE].append(perm.resource_id)
 
 
 def collections(right):
@@ -30,6 +36,20 @@ def collection(right, collection_id):
     """ Can the user exercise ``right`` on ``collection_id``? """
     try:
         return int(collection_id) in collections(right)
+    except (ValueError, TypeError):
+        return False
+
+
+def sources(right):
+    if not hasattr(request, 'authz_sources'):
+        return []
+    return request.authz_sources.get(right, [])
+
+
+def source(right, source_id):
+    """ Can the user exercise ``right`` on ``source_id``? """
+    try:
+        return int(source_id) in sources(right)
     except (ValueError, TypeError):
         return False
 

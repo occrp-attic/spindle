@@ -8,6 +8,7 @@ from spindle.api.base import base_api
 from spindle.api.auth import auth_api
 from spindle.api.entities import entities_api
 from spindle.api.collections import collections_api
+from spindle.api.sources import sources_api
 from spindle.api.permissions import permissions_api
 
 
@@ -17,6 +18,7 @@ def configure_app(config={}):
     app.register_blueprint(auth_api)
     app.register_blueprint(entities_api)
     app.register_blueprint(collections_api)
+    app.register_blueprint(sources_api)
     app.register_blueprint(permissions_api)
     return app
 
