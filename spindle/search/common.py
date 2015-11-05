@@ -1,5 +1,16 @@
 from copy import deepcopy
 
+from spindle import authz
+
+
+def authz_filter(q):
+    return add_filter(q, {
+        "or": [
+            {"terms": {"$sources": list(authz.sources(authz.READ))}},
+            {"terms": {"$collections": list(authz.collections(authz.READ))}}
+        ]
+    })
+
 
 def add_filter(q, filter_):
     """ Add the filter ``filter_`` to the given query. """

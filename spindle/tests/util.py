@@ -6,7 +6,7 @@ from flask.ext.testing import TestCase as FlaskTestCase
 from jsonmapping import Mapper
 
 from loom.db import Source, session
-from spindle.model import Role
+from spindle.model import Role, Permission
 from spindle.core import get_es, get_loom_indexer, load_local_schema
 from spindle.cli import configure_app
 
@@ -41,6 +41,14 @@ def load_ba_fixtures(config):
         'title': 'BiH Parliament',
         'url': 'http://foo.ba/'
     })
+    permission = Permission()
+    permission.role_id = Role.SYSTEM_USER
+    permission.read = True
+    permission.write = False
+    permission.resource_id = source.id
+    permission.resource_type = Permission.SOURCE
+    session.add(permission)
+    session.commit()
     for entity in BA_FIXTURES['entities']:
         config.entities.save(entity['$schema'], entity, source_id=source.id)
     get_loom_indexer().index(source=BA_SOURCE)

@@ -13,6 +13,10 @@ class SearchApiTestCase(TestCase):
         assert len(config.types), len(config.types)
 
         res = self.client.get('/api/search')
+        assert res.json['total'] == 0, res.json
+
+        self.login()
+        res = self.client.get('/api/search')
         assert res.json['total'] == 50, res.json
 
         res = self.client.get('/api/search?limit=4')

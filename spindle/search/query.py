@@ -5,11 +5,11 @@ from werkzeug.datastructures import MultiDict
 
 from spindle.core import get_es, get_es_index
 from spindle.util import url_for, result_entity
-from spindle.search.common import add_filter
+from spindle.search.common import add_filter, authz_filter
 
 QUERY_FIELDS = ['name^100', '$text^10', '$latin^2']
-DEFAULT_FIELDS = ['$sources', 'id', '$schema', '$attrcount',
-                  '$linkcount', 'name']
+DEFAULT_FIELDS = ['$sources', '$collections', '$authors', 'id', '$schema',
+                  '$attrcount', '$linkcount', 'name']
 
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
@@ -22,6 +22,7 @@ def query(args):
     if not isinstance(args, MultiDict):
         args = MultiDict(args)
     q = text_query(args.get('q', ''))
+    q = authz_filter(q)
 
     # Extract filters, given in the form: &filter:foo_field=bla_value
     filters = []
