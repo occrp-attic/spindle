@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title">Source data settings</h4>
+</div>
+
+<form class="form-horizontal" role="form" ng-submit="save()">
+  <div class="modal-body">
+    <div class="form-group" ng-class="{'has-error': !validTitle()}">
+      <label class="col-sm-2 control-label" for="title">Title</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="title" ng-model="source.title">
+        <p class="help-block">
+          Choose a descriptive title for this data source.
+        </p>
+      </div>
+    </div>
+    <div class="form-group" ng-class="{'has-error': !validURL()}">
+      <label class="col-sm-2 control-label" for="url">Title</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="url" ng-model="source.url">
+        <p class="help-block">
+          A link to the source of this dataset.
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Access</label>
+      <div class="col-sm-10">
+        <permissions-edit api-base="/api/sources/{{source.id}}"></permissions-edit>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" ng-disabled="!valid()"
+    ng-click="save()">Save</button>
+</div>

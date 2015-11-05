@@ -23,13 +23,17 @@ def list_roles():
 
 
 @permissions_api.route('/api/collections/<int:collection>/permissions')
-# @permissions_api.route('/api/sources/<int:source>/permissions')
-def index(collection=None):
+@permissions_api.route('/api/sources/<int:source>/permissions')
+def index(collection=None, source=None):
     q = session.query(Permission)
     if collection is not None:
         authz.require(authz.collection(authz.WRITE, collection))
         q = q.filter(Permission.resource_type == Permission.COLLECTION)
         q = q.filter(Permission.resource_id == collection)
+    elif source is not None:
+        authz.require(authz.source(authz.WRITE, source))
+        q = q.filter(Permission.resource_type == Permission.SOURCE)
+        q = q.filter(Permission.resource_id == source)
     return jsonify({
         'total': q.count(),
         'results': q
@@ -38,14 +42,16 @@ def index(collection=None):
 
 @permissions_api.route('/api/collections/<int:collection>/permissions',
                        methods=['POST', 'PUT'])
-# @permissions_api.route('/api/sources/<int:source>/permissions',
-#                        methods=['POST', 'PUT'])
-def create_or_update(collection=None):
+@permissions_api.route('/api/sources/<int:source>/permissions',
+                       methods=['POST', 'PUT'])
+def create_or_update(collection=None, source=None):
     if collection is not None:
         authz.require(authz.collection(authz.WRITE, collection))
+    if source is not None:
+        authz.require(authz.source(authz.WRITE, source))
 
     resource_type = Permission.COLLECTION if collection else Permission.SOURCE
-    resource_id = collection  # or source
+    resource_id = collection or source
     data = request_data()
     validate(data, permissions_schema)
 

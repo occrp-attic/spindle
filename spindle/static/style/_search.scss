@@ -86,4 +86,16 @@
         color: $text-muted;
         font-weight: 300;
     }
+
+    span.edit {
+        color: $text-muted;
+        // float: right;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        display: inline-block;
+    }
+
+    .active span.edit {
+        color: #fff;
+    }
 }
