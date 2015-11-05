@@ -1,7 +1,8 @@
 
 spindle.factory('metadataService', ['$http', '$q', 'schema',
     function($http, $q, schema) {
-  var dfd = $q.defer();
+  var dfd = $q.defer(),
+      rolesDfd = null;
 
   $http.get('/api/metadata').then(function(res) {
     // After getting the metadata, resolve the list of used schemas into
@@ -29,6 +30,15 @@ spindle.factory('metadataService', ['$http', '$q', 'schema',
   return {
     get: function() {
       return dfd.promise;
+    },
+    getRoles: function() {
+      if (rolesDfd == null) {
+        rolesDfd = $q.defer();
+        $http.get('/api/roles').then(function(res) {
+          rolesDfd.resolve(res.data);
+        });
+      }
+      return rolesDfd.promise;
     }
   }
 }]);

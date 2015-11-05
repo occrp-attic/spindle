@@ -1,14 +1,23 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
-  <h4 class="modal-title">Settings: {{collection.title}}</h4>
+  <h4 class="modal-title">Settings</h4>
 </div>
 
-<form class="form-horizontal dataset-settings" role="form" name="forms.dim" ng-submit="save()">
+<form class="form-horizontal dataset-settings" role="form" ng-submit="save()">
   <div class="modal-body">
     <div class="form-group" ng-class="{'has-error': !validTitle()}">
-      <label class="col-sm-3 control-label" for="title">Title</label>
-      <div class="col-sm-9">
+      <label class="col-sm-2 control-label" for="title">Title</label>
+      <div class="col-sm-10">
         <input type="text" class="form-control" id="title" ng-model="collection.title">
+        <p class="help-block">
+          Choose a descriptive title for this collection of entities.
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Access</label>
+      <div class="col-sm-10">
+        <permissions-edit api-base="/api/collections/{{collection.id}}"></permissions-edit>
       </div>
     </div>
   </div>

@@ -81,7 +81,10 @@ spindle.controller('CollectionSettingsDialog', ['$scope', '$http', '$uibModalIns
     if ($scope.validTitle()) {
       var apiUrl = '/api/collections/' + $scope.collection.id;
       $http.post(apiUrl, $scope.collection).then(function(res) {
-        $uibModalInstance.close(res.data.data);
+        $scope.$on('permissionsSaved', function() {
+          $uibModalInstance.close(res.data.data);
+        });
+        $scope.$broadcast('savePermissions', res.data);
       });
     }
   };

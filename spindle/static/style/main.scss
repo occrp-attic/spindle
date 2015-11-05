@@ -49,6 +49,10 @@ body, html {
     background-color: $gray-subtle;
 }
 
+td.numeric {
+    text-align: right;
+}
+
 // page and spinner
 #page {
     position: relative;
@@ -84,3 +88,4 @@ body, html {
 @import "navbar";
 @import "search";
 @import "entity";
+@import "admin";
