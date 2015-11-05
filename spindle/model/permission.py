@@ -22,10 +22,10 @@ class Permission(Base, CommonColumnsMixin):
 
     def to_dict(self):
         return {
-            'id': self.id,
+            # 'id': self.id,
             'role': self.role_id,
             'read': self.read,
-            'write': self.email,
+            'write': self.write,
             'resource_id': self.resource_id,
             'resource_type': self.resource_type
         }

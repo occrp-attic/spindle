@@ -16,7 +16,7 @@ def request_resources():
         if perm.resource_type == Permission.COLLECTION:
             if perm.read:
                 request.authz_collections[READ].append(perm.resource_id)
-            if perm.write:
+            if perm.write and request.logged_in:
                 request.authz_collections[WRITE].append(perm.resource_id)
 
 

@@ -19,5 +19,6 @@
                 "maxLength": 2048
             }
         }
-    }
+    },
+    "required": ["title"]
 }

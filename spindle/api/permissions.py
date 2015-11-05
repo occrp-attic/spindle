@@ -1,9 +1,13 @@
-from flask import Blueprint, request
-from apikit import jsonify
+from flask import Blueprint
+from werkzeug.exceptions import BadRequest
+from apikit import jsonify, request_data
 
 from loom.db import session
+from spindle import authz
+from spindle.core import validate
 from spindle.model import Role, Permission
 
+permissions_schema = 'https://schema.occrp.org/operational/permission.json#'
 permissions_api = Blueprint('permissions', __name__)
 
 
@@ -18,29 +22,53 @@ def list_roles():
     })
 
 
-@permissions_api.route('/api/permissions')
-def index():
+@permissions_api.route('/api/collections/<int:collection>/permissions')
+# @permissions_api.route('/api/sources/<int:source>/permissions')
+def index(collection=None):
     q = session.query(Permission)
-    if 'collection' in request.args:
+    if collection is not None:
+        authz.require(authz.collection(authz.WRITE, collection))
         q = q.filter(Permission.resource_type == Permission.COLLECTION)
-        q = q.filter(Permission.resource_id == request.args.get('collection'))
-    elif 'source' in request.args:
-        # TODO: authz
-        q = q.filter(Permission.resource_type == Permission.SOURCE)
-        q = q.filter(Permission.resource_id == request.args.get('source'))
-    else:
-        return jsonify({
-            'status': 'error',
-            'message': 'You need to specify either a source or a collection.'
-        }, status=400)
+        q = q.filter(Permission.resource_id == collection)
     return jsonify({
         'total': q.count(),
         'results': q
     })
 
 
-@permissions_api.route('/api/permissions', methods=['POST', 'PUT'])
-@permissions_api.route('/api/permissions/<id>', methods=['POST', 'PUT'])
-def create_or_update(id=None):
-    pass
-    # TODO: make sure system roles are never writeable.
+@permissions_api.route('/api/collections/<int:collection>/permissions',
+                       methods=['POST', 'PUT'])
+# @permissions_api.route('/api/sources/<int:source>/permissions',
+#                        methods=['POST', 'PUT'])
+def create_or_update(collection=None):
+    if collection is not None:
+        authz.require(authz.collection(authz.WRITE, collection))
+
+    resource_type = Permission.COLLECTION if collection else Permission.SOURCE
+    resource_id = collection  # or source
+    data = request_data()
+    validate(data, permissions_schema)
+
+    # check that the role exists.
+    rq = session.query(Role).filter(Role.id == data['role'])
+    if rq.first() is None:
+        raise BadRequest()
+
+    q = session.query(Permission)
+    q = q.filter(Permission.role_id == data['role'])
+    q = q.filter(Permission.resource_type == resource_type)
+    q = q.filter(Permission.resource_id == resource_id)
+    permission = q.first()
+    if permission is None:
+        permission = Permission()
+        permission.role_id = data['role']
+        permission.resource_type = resource_type
+        permission.resource_id = resource_id
+    permission.read = data['read']
+    permission.write = data['write']
+    session.add(permission)
+    session.commit()
+    return jsonify({
+        'status': 'ok',
+        'updated': permission
+    })
