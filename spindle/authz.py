@@ -11,19 +11,19 @@ WRITE = 'write'
 def request_resources():
     q = session.query(Permission)
     q = q.filter(Permission.role_id.in_(request.auth_roles))
-    request.authz_collections = {READ: [], WRITE: []}
-    request.authz_sources = {READ: [], WRITE: []}
+    request.authz_collections = {READ: set(), WRITE: set()}
+    request.authz_sources = {READ: set(), WRITE: set()}
     for perm in q:
         if perm.resource_type == Permission.COLLECTION:
             if perm.read:
-                request.authz_collections[READ].append(perm.resource_id)
+                request.authz_collections[READ].add(perm.resource_id)
             if perm.write and request.logged_in:
-                request.authz_collections[WRITE].append(perm.resource_id)
+                request.authz_collections[WRITE].add(perm.resource_id)
         if perm.resource_type == Permission.SOURCE:
             if perm.read:
-                request.authz_sources[READ].append(perm.resource_id)
+                request.authz_sources[READ].add(perm.resource_id)
             if perm.write and request.logged_in:
-                request.authz_sources[WRITE].append(perm.resource_id)
+                request.authz_sources[WRITE].add(perm.resource_id)
 
 
 def collections(right):

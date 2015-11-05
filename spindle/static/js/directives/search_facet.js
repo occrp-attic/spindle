@@ -1,6 +1,6 @@
 
-spindle.directive('searchFacet', ['$http', '$q', '$uibModal', 'metadataService', 'query',
-    function($http, $q, $uibModal, metadataService, query) {
+spindle.directive('searchFacet', ['$http', '$q', '$uibModal', 'metadataService', 'authz', 'query',
+    function($http, $q, $uibModal, metadataService, authz, query) {
   return {
     restrict: 'E',
     scope: {
@@ -35,8 +35,9 @@ spindle.directive('searchFacet', ['$http', '$q', '$uibModal', 'metadataService',
         });
       };
 
-      scope.isSources = function() {
-        return scope.facet == '$sources';
+      scope.canEditSource = function(sourceId) {
+        return scope.facet == '$sources' &&
+          authz.source(authz.WRITE, sourceId);
       }
 
       scope.$watch('results', function(res) {

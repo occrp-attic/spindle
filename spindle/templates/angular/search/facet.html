@@ -7,7 +7,7 @@
 
       <span class="badge">{{value.doc_count | number}}</span>
       {{meta[value.key].title}}
-      <span class="edit" ng-show="isSources()" ng-click="editSource(value.key, $event)">
+      <span class="edit" ng-show="canEditSource(value.key)" ng-click="editSource(value.key, $event)">
         <i class="fa fa-wrench"></i>
       </span>
     </li>

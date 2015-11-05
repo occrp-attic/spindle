@@ -10,8 +10,8 @@ var loadCollections = ['$q', '$http', function($q, $http) {
 }];
 
 
-spindle.controller('CollectionNewDialog', ['$scope', '$http', '$uibModalInstance',
-    function($scope, $http, $uibModalInstance) {
+spindle.controller('CollectionNewDialog', ['$scope', '$http', '$uibModalInstance', 'sessionService',
+    function($scope, $http, $uibModalInstance, sessionService) {
   $scope.collection = {title: ''};
 
   $scope.validTitle = function() {
@@ -21,6 +21,7 @@ spindle.controller('CollectionNewDialog', ['$scope', '$http', '$uibModalInstance
   $scope.create = function() {
     if ($scope.validTitle()) {
       $http.post('/api/collections', $scope.collection).then(function(res) {
+        sessionService.flush(); // re-fetch ACLs.
         $uibModalInstance.close(res.data.data);
       });
     }
@@ -45,9 +46,11 @@ var loadCollection = ['$q', '$http', '$route', function($q, $http, $route) {
 }];
 
 
-spindle.controller('CollectionController', ['$scope', '$http', '$uibModal', 'collection',
-    function($scope, $http, $uibModal, collection) {
+spindle.controller('CollectionController', ['$scope', '$http', '$uibModal', 'authz', 'collection',
+    function($scope, $http, $uibModal, authz, collection) {
   $scope.collection = collection;
+  $scope.editable = authz.collection(authz.WRITE, collection.id);
+
   console.log("Collection", collection);
 
   $scope.editSettings = function() {

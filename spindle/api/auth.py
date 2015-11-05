@@ -32,7 +32,9 @@ def get_session():
         'logged_in': request.logged_in,
         'user': Role.load(request.auth_user),
         'roles': list(request.auth_roles),
-        'login_uri': url_for('auth.authorize')
+        'login_uri': url_for('auth.authorize'),
+        'sources': request.authz_sources,
+        'collections': request.authz_collections
     })
 
 
