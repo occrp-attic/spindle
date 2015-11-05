@@ -7,6 +7,7 @@
 * Front-End Navbar -- done
 * Collections / Projects -- done
 * Roles / Users+Groups -- done
+* Add ownership type relation -- done
 * Collection permissions
 * Source permissions
 * Entities R/W API
@@ -14,6 +15,8 @@
 * Implement entity auto-suggest
 * Collection grid view
 * Layout once-over
+* Embeddable entities for other sites
+* Image uploading/storage for entities
 
 * Records de-ref, layer
 * Records indexing
