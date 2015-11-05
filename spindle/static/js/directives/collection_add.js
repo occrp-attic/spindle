@@ -1,4 +1,5 @@
-spindle.directive('collectionAdd', ['$uibModal', '$http', function($uibModal, $http) {
+spindle.directive('collectionAdd', ['$uibModal', '$http', 'sessionService',
+    function($uibModal, $http, sessionService) {
   return {
     restrict: 'E',
     scope: {
@@ -8,7 +9,14 @@ spindle.directive('collectionAdd', ['$uibModal', '$http', function($uibModal, $h
     templateUrl: 'collections/add.html',
     link: function (scope, element, attrs) {
       scope.loaded = false;
+      scope.visible = false;
       scope.collections = [];
+
+      sessionService.get().then(function(sess) {
+        if (sess.logged_in) {
+          scope.visible = true;
+        }
+      });
 
       scope.toggleDropdown = function(open) {
         if (open) {
