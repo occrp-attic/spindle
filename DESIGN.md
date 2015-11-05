@@ -14,6 +14,9 @@
 * Implement entity auto-suggest
 * Collection grid view
 * Layout once-over
+* Embeddable entities for other sites
+* Add ownership type relation
+* Image uploading/storage for entities
 
 * Records de-ref, layer
 * Records indexing
