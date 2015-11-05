@@ -16,7 +16,7 @@ class Role(Base, CommonColumnsMixin):
     SYSTEM_GUEST = 'guest'
     SYSTEM_USER = 'user'
 
-    id = Column(Unicode, nullable=False, primary_key=True, unique=True)
+    id = Column(Unicode(512), nullable=False, primary_key=True, unique=True)
     name = Column(Unicode, nullable=False)
     email = Column(Unicode, nullable=True)
     type = Column(Enum(*TYPES, name='role_type'), nullable=False)
