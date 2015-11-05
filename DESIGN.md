@@ -8,10 +8,12 @@
 * Collections / Projects -- done
 * Roles / Users+Groups -- done
 * Add ownership type relation -- done
-* Collection permissions
-* Source permissions
+* Collection permissions -- done
+* Source permissions -- done
+* Search authz filters
+* Entity authz filters
 * Entities R/W API
-* Ownership type (Company, Asset)
+* Ownership type (Company, Asset) -- done
 * Implement entity auto-suggest
 * Collection grid view
 * Layout once-over

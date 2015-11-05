@@ -1,4 +1,3 @@
-from copy import deepcopy
 from pprint import pprint  # noqa
 from collections import defaultdict
 
@@ -6,6 +5,7 @@ from werkzeug.datastructures import MultiDict
 
 from spindle.core import get_es, get_es_index
 from spindle.util import url_for, result_entity
+from spindle.search.common import add_filter
 
 QUERY_FIELDS = ['name^100', '$text^10', '$latin^2']
 DEFAULT_FIELDS = ['$sources', 'id', '$schema', '$attrcount',
@@ -32,27 +32,8 @@ def query(args):
             _, field = key.split(':', 1)
             filters.append((field, value))
 
-    # Generate aggregations. They are a generalized mechanism to do facetting
-    # in ElasticSearch. Anything placed inside the "scoped" sub-aggregation
-    # is made to be ``global``, ie. it'll have to bring it's own filters.
     facets = args.getlist('facet')
-    aggs = {
-        'scoped': {
-            'global': {},
-            'aggs': {}
-        }
-    }
-    for facet in facets:
-        agg = {facet: {'terms': {'field': facet, 'size': 200}}}
-        if facet in OR_FIELDS:
-            aggs['scoped']['aggs'][facet] = {
-                'filter': {
-                    'query': filter_query(q, filters, skip=facet)
-                },
-                'aggs': agg
-            }
-        else:
-            aggs.update(agg)
+    aggs = aggregate(q, facets, filters)
 
     sort = ['_score']
     if args.get('sort') == 'linkcount':
@@ -93,23 +74,28 @@ def filter_query(q, filters, skip=None):
     return q
 
 
-def add_filter(q, filter_):
-    """ Add the filter ``filter_`` to the given query. """
-    q = deepcopy(q)
-    if 'filtered' not in q:
-        return {
-            'filtered': {
-                'query': q,
-                'filter': filter_
-            }
+def aggregate(q, facets, filters):
+    # Generate aggregations. They are a generalized mechanism to do facetting
+    # in ElasticSearch. Anything placed inside the "scoped" sub-aggregation
+    # is made to be ``global``, ie. it'll have to bring it's own filters.
+    aggs = {
+        'scoped': {
+            'global': {},
+            'aggs': {}
         }
-
-    if 'and' in q['filtered']['filter']:
-        q['filtered']['filter']['and'].append(filter_)
-    else:
-        q['filtered']['filter'] = \
-            {'and': [filter_, q['filtered']['filter']]}
-    return q
+    }
+    for facet in facets:
+        agg = {facet: {'terms': {'field': facet, 'size': 200}}}
+        if facet in OR_FIELDS:
+            aggs['scoped']['aggs'][facet] = {
+                'filter': {
+                    'query': filter_query(q, filters, skip=facet)
+                },
+                'aggs': agg
+            }
+        else:
+            aggs.update(agg)
+    return aggs
 
 
 def paginate(q, limit, offset):
