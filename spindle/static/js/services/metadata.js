@@ -1,6 +1,6 @@
 
-spindle.factory('metadataService', ['$http', '$q', 'schema',
-    function($http, $q, schema) {
+spindle.factory('metadataService', ['$http', '$q', 'schemaService',
+    function($http, $q, schemaService) {
   var dfd = $q.defer(),
       rolesDfd = null;
 
@@ -10,7 +10,7 @@ spindle.factory('metadataService', ['$http', '$q', 'schema',
     var metadata = res.data, schemaDfds = [];
     for (var i in res.data.schemas) {
       var uri = res.data.schemas[i];
-      schemaDfds.push(schema.loadSchema(uri));
+      schemaDfds.push(schemaService.loadSchema(uri));
     }
     $q.all(schemaDfds).then(function(res) {
       metadata.schemas = {}

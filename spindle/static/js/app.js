@@ -1,5 +1,6 @@
 var spindle = angular.module('spindle', ['ngRoute', 'ngAnimate',
-  'ui.bootstrap', 'angulartics', 'angulartics.piwik', 'infinite-scroll']);
+  'ui.bootstrap', 'angulartics', 'angulartics.piwik', 'infinite-scroll',
+  'ngHandsontable']);
 
 spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
     function($routeProvider, $analyticsProvider, $compileProvider) {
@@ -40,7 +41,7 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
     reloadOnSearch: false,
     resolve: {
       collection: loadCollection,
-      metadata: loadMetadata
+      schemaModels: loadSchemaModels
     }
   });
 

@@ -29,6 +29,8 @@
     "moment": "~2.10.6",
     "angulartics": "~0.20.1",
     "ngInfiniteScroll": "~1.2.1",
-    "angular-recursion": "~1.0.5"
+    "angular-recursion": "~1.0.5",
+    "handsontable": "~0.20.0",
+    "ngHandsontable": "~0.7.0"
   }
 }

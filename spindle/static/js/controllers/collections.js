@@ -46,12 +46,68 @@ var loadCollection = ['$q', '$http', '$route', function($q, $http, $route) {
 }];
 
 
-spindle.controller('CollectionController', ['$scope', '$http', '$uibModal', 'authz', 'collection',
-    function($scope, $http, $uibModal, authz, collection) {
+var loadSchemaModels = ['$q', '$http', 'metadataService', 'schemaService', function($q, $http, metadataService, schemaService) {
+  var dfd = $q.defer();
+  metadataService.get().then(function(metadata) {
+    var dfds = [];
+    for (var schema in metadata.schemas) {
+      dfds.push(schemaService.getModel(schema));
+    }
+    $q.all(dfds).then(function(models) {
+      dfd.resolve({
+        models: models,
+        metadata: metadata
+      });
+    }, function(err) {
+      dfd.reject(err);
+    });
+  });
+  return dfd.promise;
+}];
+
+
+spindle.controller('CollectionController', ['$scope', '$http', '$uibModal', 'schemaModels', 'authz', 'collection',
+    function($scope, $http, $uibModal, schemaModels, authz, collection) {
+  console.log("Collection", collection);
   $scope.collection = collection;
   $scope.editable = authz.collection(authz.WRITE, collection.id);
 
-  console.log("Collection", collection);
+  $scope.tableSettings = {
+    stretchH: 'all',
+    fixedColumnsLeft: 1,
+    manualColumnMove: true,
+    colWidths: 150,
+    startRows: 20,
+  }
+
+  $http.get('/api/collections/' + collection.id + '/entities').then(function(res) {
+    $scope.entities;
+  });
+
+  var getModelColumns = function(model) {
+    var columns = [],
+        properties = model.getPropertyModels();
+    // return columns;
+    for (var i in properties) {
+      var prop = properties[i];
+      if (prop.schema.hidden) {
+        continue;
+      }
+      if (prop.isValue) {
+        columns.push({
+          'title': prop.getTitle(),
+          'data': prop.name
+        });
+      }
+    }
+    return columns;
+  };
+
+  for (var j in schemaModels.models) {
+    var model = schemaModels.models[j];
+    model.columns = getModelColumns(model);
+  }
+  $scope.models = schemaModels.models;
 
   $scope.editSettings = function() {
     var d = $uibModal.open({

@@ -1,9 +1,9 @@
 
-var loadEntityBind = ['$http', '$q', '$route', 'schema', function($http, $q, $route, schema) {
+var loadEntityBind = ['$http', '$q', '$route', 'schemaService', function($http, $q, $route, schemaService) {
   var dfd = $q.defer(),
       url = '/api/entities/' + $route.current.params.id;
   $http.get(url).then(function(res) {
-    schema.getBind(res.data.data).then(function(bind) {
+    schemaService.getBind(res.data.data).then(function(bind) {
       dfd.resolve(bind);
     }, function(err) {
       dfd.reject(err);

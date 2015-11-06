@@ -53,6 +53,11 @@ td.numeric {
     text-align: right;
 }
 
+// hot table
+.table-box {
+    overflow-x: scroll;
+}
+
 // used by the collections dropdown-menu
 .dropdown-menu li a {
     width: 100%;

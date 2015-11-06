@@ -1,5 +1,5 @@
 
-spindle.directive('entityIcon', ['schema', function(schema) {
+spindle.directive('entityIcon', ['schemaService', function(schemaService) {
   var icons = {};
   return {
     restrict: 'E',
@@ -14,7 +14,7 @@ spindle.directive('entityIcon', ['schema', function(schema) {
         if (icons[scope.schema]) {
           scope.icon = icons[scope.schema];
         }
-        schema.loadSchema(scope.schema).then(function(data) {
+        schemaService.loadSchema(scope.schema).then(function(data) {
           if (data.faIcon) {
             icons[scope.schema] = data.faIcon;
             scope.icon = data.faIcon;

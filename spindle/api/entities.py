@@ -24,6 +24,8 @@ def collection_index(collection):
     results = []
     for cs in collection.subjects:
         schema = entities.get_schema(cs.subject, right=authz.entity_right())
+        if schema is None:
+            continue
         data = entities.get(cs.subject, schema=schema, depth=2,
                             right=authz.entity_right())
         results.append(data)

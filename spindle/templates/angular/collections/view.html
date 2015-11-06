@@ -4,5 +4,21 @@
       <a class="btn btn-default" ng-show="editable" ng-click="editSettings()">Settings</a>
     </div>
     <h2>{{collection.title}}</h2>
+
+    <uib-tabset>
+      <uib-tab ng-repeat="model in models" active="tab.active">
+        <uib-tab-heading>
+          <entity-icon schema="model.schema.id"></entity-icon>
+          {{model.getPlural()}}
+        </uib-tab-heading>
+        <div class="table-box">
+          <hot-table col-headers="true" datarows="entities"
+            settings="tableSettings">
+            <hot-column ng-repeat="column in model.columns"
+              data="{{column.data}}" title="column.title"></hot-column>
+          </hot-table>
+        </div>
+      </uib-tab>
+    </uib-tabset>
   </div>
 </div>

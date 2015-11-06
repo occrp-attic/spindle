@@ -1,5 +1,5 @@
 
-spindle.factory('schema', ['$http', '$q', function($http, $q) {
+spindle.factory('schemaService', ['$http', '$q', function($http, $q) {
   var schemaCache = {}, schemata = {}, bindSerial = 1;
   /* JSON schema has a somewhat weird definition of inheritance which is most
   suitable to validation but is a bit off when doing data modelling. See:
@@ -121,7 +121,7 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
     to determine all available properties. */
     self.inherits = [self];
     for (var k in HIERARCHIES) {
-      prop = self.schema[HIERARCHIES[k]] || [];
+      var prop = self.schema[HIERARCHIES[k]] || [];
       for (var i in prop) {
         var model = new Model(prop[i], self.name);
         self.inherits = self.inherits.concat(model.inherits);
@@ -154,6 +154,14 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
       }
       return self._properties;
     };
+
+    self.getTitle = function() {
+      return self.schema.title || self.name;
+    }
+
+    self.getPlural = function() {
+      return self.schema.plural || self.getTitle();
+    }
 
     self.getPropertyModels = function() {
       /* Get a model for each property on the local object. */
@@ -236,6 +244,15 @@ spindle.factory('schema', ['$http', '$q', function($http, $q) {
 
   return {
     loadSchema: loadSchema,
+    getModel: function(schema) {
+      var dfd = $q.defer();
+      reflectSchema({$ref: schema}).then(function(schema) {
+        dfd.resolve(new Model(schema));
+      }, function(err) {
+        dfd.reject(err);
+      });
+      return dfd.promise;
+    },
     getBind: function(obj) {
       var dfd = $q.defer();
       reflectSchema({$ref: obj.$schema}).then(function(schema) {

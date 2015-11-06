@@ -8,9 +8,11 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800&subset=latin,greek,vietnamese,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
 
-  {% assets filters="scss,cssmin", output="build/style.css",
+  {% assets filters="scss,cssutils", output="build/style.css",
     "bower_components/angular/angular-csp.css",
     "bower_components/animate.css/animate.css",
+    "bower_components/pikaday/scss/pikaday.scss",
+    "bower_components/handsontable/dist/handsontable.css",
     "style/main.scss"
   %}
     <link href='{{ ASSET_URL }}' rel='stylesheet' type='text/css'>
@@ -79,14 +81,22 @@
 
   {% include "analytics.html" %}
 
-  {% assets filters="uglifyjs", output="build/deps.js",
+  {% assets filters="uglifyjs", output="build/base.js",
       "bower_components/jquery/dist/jquery.js",
       "bower_components/moment/moment.js",
+      "bower_components/zeroclipboard/dist/ZeroClipboard.js",
+      "bower_components/pikaday/pikaday.js",
+      "bower_components/handsontable/dist/handsontable.js" %}
+    <script src='{{ ASSET_URL }}'></script>
+  {% endassets %}
+
+  {% assets filters="uglifyjs", output="build/angular.js",
       "bower_components/angular/angular.js",
       "bower_components/angular-animate/angular-animate.js",
       "bower_components/angular-route/angular-route.js",
       "bower_components/angular-bootstrap/ui-bootstrap.js",
       "bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
+      "bower_components/ngHandsontable/dist/ngHandsontable.js",
       "bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js",
       "bower_components/angulartics/src/angulartics.js",
       "bower_components/angulartics/src/angulartics-piwik.js" %}

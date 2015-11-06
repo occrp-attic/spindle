@@ -17,7 +17,7 @@
         <dd>{{metadata.schemas[data.$schema].title}}</dd>
       </dl>
       <dl ng-repeat="property in properties">
-        <dt>{{property.schema.title || property.model.name}}:</dt>
+        <dt>{{property.model.getTitle()}}:</dt>
         <dd><bind-value bind="property"></bind-value></dd>
       </dl>
       <entity-address bind="bind.p.residential_address"></entity-address>
