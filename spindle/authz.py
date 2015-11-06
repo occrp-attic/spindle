@@ -1,7 +1,7 @@
 from flask import request
 from werkzeug.exceptions import Forbidden
 
-from loom.db import Collection, Source, session
+from loom.db import Collection, Source, EntityRight, session
 from spindle.model import Permission
 
 READ = 'read'
@@ -9,6 +9,7 @@ WRITE = 'write'
 
 
 def admin_resources():
+    """ Load access rights for admins. """
     for coll_id, in session.query(Collection.id):
         request.authz_collections[READ].add(coll_id)
         request.authz_collections[WRITE].add(coll_id)
@@ -17,11 +18,8 @@ def admin_resources():
         request.authz_sources[WRITE].add(source_id)
 
 
-def request_resources():
-    request.authz_collections = {READ: set(), WRITE: set()}
-    request.authz_sources = {READ: set(), WRITE: set()}
-    if request.auth_admin:
-        return admin_resources()
+def user_resources():
+    """ Load access rights for normal (non-admin) users. """
     q = session.query(Permission)
     q = q.filter(Permission.role_id.in_(request.auth_roles))
     for perm in q:
@@ -35,6 +33,25 @@ def request_resources():
                 request.authz_sources[READ].add(perm.resource_id)
             if perm.write and request.logged_in:
                 request.authz_sources[WRITE].add(perm.resource_id)
+
+
+def request_resources():
+    request.authz_collections = {READ: set(), WRITE: set()}
+    request.authz_sources = {READ: set(), WRITE: set()}
+    if request.auth_admin:
+        admin_resources()
+    else:
+        user_resources()
+
+
+def entity_right():
+    """ This regulates how a particular user can see entities. """
+    if not hasattr(request, 'authz_right'):
+        # could shortcut this for admins by setting it to None.
+        request.authz_right = EntityRight(collections=collections(READ),
+                                          sources=sources(READ),
+                                          author=request.auth_user)
+    return request.authz_right
 
 
 def collections(right):

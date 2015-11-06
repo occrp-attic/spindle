@@ -3,7 +3,7 @@ from jsonmapping import SchemaVisitor
 from spindle.core import get_loom_config
 
 
-def percolate_resolver():
+def prepare_resolver():
     """ Load all schemas specified as well-known. """
     config = get_loom_config()
     for uri in config.schemas.values():
@@ -21,7 +21,7 @@ def _check_match(visitor, schema_uri):
 def implied_schemas(schema_uri):
     """ Given a schema URI, return a list of implied (i.e. child) schema URIs,
     with the original schema included. """
-    resolver = percolate_resolver()
+    resolver = prepare_resolver()
     schemas = [schema_uri]
     for uri, data in resolver.store.items():
         if isinstance(data, dict):
