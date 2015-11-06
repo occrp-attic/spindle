@@ -5,7 +5,7 @@ from apikit import jsonify
 
 from loom.db import session
 from spindle.core import get_es, get_es_index
-from spindle.search import query, more_like_this
+from spindle.search import query, more_like_this, suggest_entity
 from spindle.metadata import get_metadata
 from spindle.util import angular_templates
 
@@ -52,6 +52,11 @@ def clear_session(resp):
 def like(id):
     ent = get_es().get(index=get_es_index(), id=id, _source=False)
     return jsonify(more_like_this(ent))
+
+
+@base_api.route('/api/suggest')
+def suggest():
+    return jsonify(suggest_entity(request.args))
 
 
 @base_api.route('/api/search')

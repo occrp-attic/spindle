@@ -10,7 +10,7 @@
 * Add ownership type relation -- done
 * Collection permissions -- done
 * Source permissions -- done
-* Search authz filters
+* Search authz filters -- done (tbd: entity rendering)
 * Entity authz filters
 * Entities R/W API
 * Ownership type (Company, Asset) -- done
@@ -22,6 +22,9 @@
 
 * Records de-ref, layer
 * Records indexing
+
+
+* http://docs.handsontable.com/0.20.0/tutorial-quick-start.html
 
 ## Domain Model
 
