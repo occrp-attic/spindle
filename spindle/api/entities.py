@@ -10,7 +10,6 @@ entities_api = Blueprint('entities', __name__)
 
 @entities_api.route('/api/entities/<path:id>')
 def view(id):
-    data = get_loom_config().entities.get(id, depth=3,
-                                          right=authz.entity_right())
-    data = obj_or_404(data)
+    entities = get_loom_config().entities
+    data = obj_or_404(entities.get(id, depth=3, right=authz.entity_right()))
     return jsonify({'status': 'ok', 'data': result_entity(data)})

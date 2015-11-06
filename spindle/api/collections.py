@@ -12,6 +12,13 @@ collections_schema = 'https://schema.occrp.org/operational/collection.json#'
 collections_api = Blueprint('collections', __name__)
 
 
+def get_collection(id, right):
+    collection = session.query(Collection).filter(Collection.id == id).first()
+    collection = obj_or_404(collection)
+    authz.require(authz.collection(right, collection.id))
+    return collection
+
+
 def update_subjects(collection, data):
     """ There must be a nicer way to do this in SQLA. """
     # TODO: authz
@@ -64,17 +71,13 @@ def create():
 
 @collections_api.route('/api/collections/<int:id>')
 def view(id):
-    collection = session.query(Collection).filter(Collection.id == id).first()
-    collection = obj_or_404(collection)
-    authz.require(authz.collection(authz.READ, collection.id))
+    collection = get_collection(id, authz.READ)
     return jsonify({'status': 'ok', 'data': collection})
 
 
 @collections_api.route('/api/collections/<int:id>', methods=['POST', 'PUT'])
 def update(id):
-    collection = session.query(Collection).filter(Collection.id == id).first()
-    collection = obj_or_404(collection)
-    authz.require(authz.collection(authz.WRITE, collection.id))
+    collection = get_collection(id, authz.WRITE)
     data = request_data()
     validate(data, collections_schema)
     collection.title = data.get('title')

@@ -23,7 +23,8 @@ class CollectionsApiTestCase(TestCase):
         session.commit()
         self.schema_uri = 'https://schema.occrp.org/generic/organization.json#'
         self.entity = {'id': 'foo', 'name': 'Foobar'}
-        self.config.entities.save(self.schema_uri, self.entity, 'test_source')
+        self.config.entities.save(self.schema_uri, self.entity,
+                                  collection_id=self.coll.id)
 
     def test_index(self):
         res = self.client.get('/api/collections')
@@ -76,6 +77,8 @@ class CollectionsApiTestCase(TestCase):
     def test_update(self):
         self.login()
         res = self.client.get('/api/collections/%s' % self.coll.id)
+        assert res.status_code == 200, res
+        assert 'data' in res.json, res.json
         data = res.json['data']
         data['title'] = '%s - new' % data['title']
         jdata = json.dumps(data)

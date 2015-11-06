@@ -22,8 +22,10 @@ def get_oauth_token():
 def load_user():
     request.auth_roles = session.get('roles', [Role.SYSTEM_GUEST])
     request.auth_user = session.get('user')
-    request.auth_admin = session.get('is_admin', False)
+    request.auth_admin = False
     request.logged_in = request.auth_user is not None
+    if request.logged_in:
+        request.auth_admin = session.get('is_admin', False)
     authz.request_resources()
 
 

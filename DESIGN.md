@@ -14,8 +14,9 @@
 * Implement entity auto-suggest -- done
 * Admin flag -- done
 * Schema expander -- done
-* Entity authz filters
+* Entity authz filters -- done
 * Entities R/W API
+* Entities updates
 * Ownership type (Company, Asset) -- done
 * Collection grid view
 * Layout once-over
