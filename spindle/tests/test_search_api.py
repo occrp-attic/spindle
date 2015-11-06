@@ -52,3 +52,18 @@ class SearchApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'status' in res.json, res.json
         assert 'results' in res.json, res.json
+
+    def test_suggest(self):
+        self.setUpFixtures()
+        res = self.client.get('/api/suggest?text=ha')
+        assert res.status_code == 200, res
+        assert len(res.json['options']) == 0, res.json
+
+        self.login()
+        res = self.client.get('/api/suggest')
+        assert res.status_code == 200, res
+        assert len(res.json['options']) == 0, res.json
+
+        res = self.client.get('/api/suggest?text=hazim')
+        assert res.status_code == 200, res
+        assert len(res.json['options']) == 3, res.json
