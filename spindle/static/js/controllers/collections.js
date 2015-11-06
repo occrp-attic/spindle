@@ -86,7 +86,7 @@ spindle.controller('CollectionController', ['$scope', '$http', '$uibModal', 'sch
 
   var getModelColumns = function(model) {
     var columns = [],
-        properties = model.getPropertyModels();
+        properties = model.getPropertyModels().sort(spindleModelSort);
     // return columns;
     for (var i in properties) {
       var prop = properties[i];
@@ -107,7 +107,7 @@ spindle.controller('CollectionController', ['$scope', '$http', '$uibModal', 'sch
     var model = schemaModels.models[j];
     model.columns = getModelColumns(model);
   }
-  $scope.models = schemaModels.models;
+  $scope.models = schemaModels.models.sort(spindleModelSort);
 
   $scope.editSettings = function() {
     var d = $uibModal.open({

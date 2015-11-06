@@ -13,9 +13,7 @@
         </uib-tab-heading>
         <div class="table-box">
           <hot-table col-headers="true" datarows="entities"
-            settings="tableSettings">
-            <hot-column ng-repeat="column in model.columns"
-              data="{{column.data}}" title="column.title"></hot-column>
+            settings="tableSettings" columns="model.columns">
           </hot-table>
         </div>
       </uib-tab>
