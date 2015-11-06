@@ -13,7 +13,7 @@
 * Search authz filters -- done (tbd: entity rendering)
 * Implement entity auto-suggest -- done
 * Admin flag -- done
-* Schema expander
+* Schema expander -- done
 * Entity authz filters
 * Entities R/W API
 * Ownership type (Company, Asset) -- done

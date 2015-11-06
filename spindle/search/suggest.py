@@ -1,18 +1,22 @@
 from spindle.core import get_es, get_es_index
-from spindle.search.common import authz_filter
+from spindle.reflect import implied_schemas
+from spindle.search.common import authz_filter, add_filter
 
 
 def suggest_entity(args):
+    """ Auto-complete API. """
     text = args.get('text')
     options = []
     if text is not None and len(text.strip()):
+        q = authz_filter({'match': {'$suggest': text}})
+        schema = args.get('$schema')
+        if schema is not None:
+            # Find matching sub-schemas as well.
+            schemas = implied_schemas(schema)
+            q = add_filter(q, {"terms": {"$schema": schemas}})
         q = {
             'size': 5,
-            'query': authz_filter({
-                'match': {
-                    '$suggest': text
-                }
-            }),
+            'query': q,
             '_source': ['name', 'id', '$schema']
         }
         result = get_es().search(index=get_es_index(), body=q)

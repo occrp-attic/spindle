@@ -14,7 +14,7 @@ DEFAULT_FIELDS = ['$sources', '$collections', '$authors', 'id', '$schema',
 # Scoped facets are facets where the returned facet values are returned such
 # that any filter against the same field will not be applied in the sub-query
 # used to generate the facet values.
-OR_FIELDS = ['$schema', '$sources']
+OR_FIELDS = ['$schema', '$sources', '$collections', '$authors']
 
 
 def query(args):

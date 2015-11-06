@@ -67,3 +67,8 @@ class SearchApiTestCase(TestCase):
         res = self.client.get('/api/suggest?text=hazim')
         assert res.status_code == 200, res
         assert len(res.json['options']) == 3, res.json
+
+        LP = "https://schema.occrp.org/generic/legal_person.json%23"
+        res = self.client.get('/api/suggest?text=hazim&$schema=' + LP)
+        assert res.status_code == 200, res
+        assert len(res.json['options']) == 3, res.json
