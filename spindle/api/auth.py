@@ -22,6 +22,7 @@ def get_oauth_token():
 def load_user():
     request.auth_roles = session.get('roles', [Role.SYSTEM_GUEST])
     request.auth_user = session.get('user')
+    request.auth_admin = session.get('is_admin', False)
     request.logged_in = request.auth_user is not None
     authz.request_resources()
 
@@ -63,14 +64,16 @@ def callback():
     if 'googleapis.com' in oauth_provider.base_url:
         me = oauth_provider.get('userinfo')
         user_id = 'google:%s' % me.data.get('id')
-        Role.load_or_create(user_id, Role.USER, me.data.get('name'),
-                            email=me.data.get('email'))
+        role = Role.load_or_create(user_id, Role.USER, me.data.get('name'),
+                                   email=me.data.get('email'))
     elif 'occrp.org' in oauth_provider.base_url or \
             'investigativedashboard.org' in oauth_provider.base_url:
         me = oauth_provider.get('api/2/accounts/profile/')
         user_id = 'idashboard:user:%s' % me.data.get('id')
-        Role.load_or_create(user_id, Role.USER, me.data.get('display_name'),
-                            email=me.data.get('email'))
+        role = Role.load_or_create(user_id, Role.USER,
+                                   me.data.get('display_name'),
+                                   email=me.data.get('email'),
+                                   is_admin=me.data.get('is_admin'))
         for group in me.data.get('groups', []):
             group_id = 'idashboard:%s' % group.get('id')
             Role.load_or_create(group_id, Role.GROUP, group.get('name'))
@@ -78,6 +81,7 @@ def callback():
     else:
         raise RuntimeError("Unknown OAuth URL: %r" % oauth_provider.base_url)
     session['roles'].append(user_id)
-    session['user'] = user_id
+    session['user'] = role.id
+    session['is_admin'] = role.is_admin
     db_session.commit()
     return redirect(next_url)

@@ -1,4 +1,5 @@
 from spindle.tests.util import TestCase
+from loom.db import Collection, session
 
 
 class AuthApiTestCase(TestCase):
@@ -16,3 +17,17 @@ class AuthApiTestCase(TestCase):
         res = self.client.get('/api/session')
         assert res.json.get('logged_in'), res.json
         assert res.json.get('user'), res.json
+
+    def test_admin_all_access(self):
+        self.setUpFixtures()
+        self.coll = Collection()
+        self.coll.title = "Test Collection"
+        session.add(self.coll)
+        session.commit()
+        res = self.client.get('/api/session')
+        assert not len(res.json['sources']['write']), res.json
+        assert not len(res.json['collections']['write']), res.json
+        self.login(id='admin', is_admin=True)
+        res = self.client.get('/api/session')
+        assert len(res.json['sources']['write']), res.json
+        assert len(res.json['collections']['write']), res.json

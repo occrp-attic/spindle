@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Unicode, Enum
+from sqlalchemy import Column, Unicode, Boolean, Enum
 from sqlalchemy.orm import relationship
 
 from loom.db.util import Base, CommonColumnsMixin, session
@@ -19,6 +19,7 @@ class Role(Base, CommonColumnsMixin):
     id = Column(Unicode(512), nullable=False, primary_key=True, unique=True)
     name = Column(Unicode, nullable=False)
     email = Column(Unicode, nullable=True)
+    is_admin = Column(Boolean, nullable=False, default=False)
     type = Column(Enum(*TYPES, name='role_type'), nullable=False)
     permissions = relationship("Permission", backref="role")
 
@@ -30,6 +31,7 @@ class Role(Base, CommonColumnsMixin):
         return {
             'id': self.id,
             'name': self.name,
+            'is_admin': self.is_admin,
             # 'email': self.email,
             'type': self.type
         }
@@ -45,11 +47,12 @@ class Role(Base, CommonColumnsMixin):
             return session.query(cls).filter_by(id=id).first()
 
     @classmethod
-    def load_or_create(cls, id, type, name, email=None):
+    def load_or_create(cls, id, type, name, email=None, is_admin=False):
         role = cls.load(id)
         if role is None:
             role = cls(id, type)
         role.name = name
         role.email = email
+        role.is_admin = is_admin
         session.add(role)
         return role

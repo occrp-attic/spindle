@@ -11,18 +11,20 @@
 * Collection permissions -- done
 * Source permissions -- done
 * Search authz filters -- done (tbd: entity rendering)
+* Implement entity auto-suggest -- done
+* Admin flag -- done
+* Schema expander
 * Entity authz filters
 * Entities R/W API
 * Ownership type (Company, Asset) -- done
-* Implement entity auto-suggest
 * Collection grid view
 * Layout once-over
+
+Post-Istanbul:
 * Embeddable entities for other sites
 * Image uploading/storage for entities
-
 * Records de-ref, layer
 * Records indexing
-
 
 * http://docs.handsontable.com/0.20.0/tutorial-quick-start.html
 

@@ -5,7 +5,7 @@ import unicodecsv
 from flask.ext.testing import TestCase as FlaskTestCase
 from jsonmapping import Mapper
 
-from loom.db import Source, session
+from loom.db import Source, Base, session
 from spindle.model import Role, Permission
 from spindle.core import get_es, get_loom_indexer, load_local_schema
 from spindle.cli import configure_app
@@ -66,12 +66,14 @@ class TestCase(FlaskTestCase):
             'CELERY_ALWAYS_EAGER': True
         })
 
-    def login(self, id='tester', name=None, email=None):
-        Role.load_or_create(id, Role.USER, name or id, email=email)
+    def login(self, id='tester', name=None, email=None, is_admin=False):
+        Role.load_or_create(id, Role.USER, name or id, email=email,
+                            is_admin=is_admin)
         session.commit()
         with self.client.session_transaction() as sess:
             sess['roles'] = [Role.SYSTEM_GUEST, Role.SYSTEM_USER, id]
             sess['user'] = id
+            sess['is_admin'] = is_admin
 
     def setUp(self):
         Role.create_defaults()
@@ -90,4 +92,5 @@ class TestCase(FlaskTestCase):
     def tearDown(self):
         self.es.indices.delete(index=ES_INDEX, ignore=[400, 404])
         session.close()
-        # Base.metadata.drop_all()
+        Base.metadata.drop_all()
+        Base.metadata.create_all()
