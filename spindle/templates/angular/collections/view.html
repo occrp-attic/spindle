@@ -6,16 +6,12 @@
     <h2>{{collection.title}}</h2>
 
     <uib-tabset>
-      <uib-tab ng-repeat="model in models" active="tab.active">
+      <uib-tab ng-repeat="model in models" active="tab.active" select="updateTables()">
         <uib-tab-heading>
           <entity-icon schema="model.schema.id"></entity-icon>
           {{model.getPlural()}}
         </uib-tab-heading>
-        <div class="table-box">
-          <hot-table col-headers="true" datarows="entities"
-            settings="tableSettings" columns="model.columns">
-          </hot-table>
-        </div>
+        <entity-editor model="model" collection="collection"></entity-editor>
       </uib-tab>
     </uib-tabset>
   </div>

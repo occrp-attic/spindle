@@ -68,45 +68,19 @@ var loadSchemaModels = ['$q', '$http', 'metadataService', 'schemaService', funct
 
 spindle.controller('CollectionController', ['$scope', '$http', '$uibModal', 'schemaModels', 'authz', 'collection',
     function($scope, $http, $uibModal, schemaModels, authz, collection) {
-  console.log("Collection", collection);
+  // console.log("Collection", collection);
+
   $scope.collection = collection;
   $scope.editable = authz.collection(authz.WRITE, collection.id);
 
-  $scope.tableSettings = {
-    stretchH: 'all',
-    fixedColumnsLeft: 1,
-    manualColumnMove: true,
-    colWidths: 150,
-    startRows: 20,
+  $scope.updateTables = function() {
+    $scope.$broadcast('updateEditor');
   }
 
-  $http.get('/api/collections/' + collection.id + '/entities').then(function(res) {
-    $scope.entities;
-  });
+  // $http.get('/api/collections/' + collection.id + '/entities').then(function(res) {
+  //   $scope.entities = res.data.results;
+  // });
 
-  var getModelColumns = function(model) {
-    var columns = [],
-        properties = model.getPropertyModels().sort(spindleModelSort);
-    // return columns;
-    for (var i in properties) {
-      var prop = properties[i];
-      if (prop.schema.hidden) {
-        continue;
-      }
-      if (prop.isValue) {
-        columns.push({
-          'title': prop.getTitle(),
-          'data': prop.name
-        });
-      }
-    }
-    return columns;
-  };
-
-  for (var j in schemaModels.models) {
-    var model = schemaModels.models[j];
-    model.columns = getModelColumns(model);
-  }
   $scope.models = schemaModels.models.sort(spindleModelSort);
 
   $scope.editSettings = function() {
