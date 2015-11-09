@@ -69,57 +69,31 @@
         </entity-table-column>
       </entity-table>
 
-      <entity-table bind="bind" collection="parents" columns="4"
-        title="Parent companies">
-        <entity-table-column path="" title="Name">
-        </entity-table-column>
-        <entity-table-column path="jurisdiction_code" title="Jurisdiction">
-        </entity-table-column>
-        <entity-table-column path="founding_date" title="Founding">
-        </entity-table-column>
-        <entity-table-column path="dissolution_date" title="Dissolution">
-        </entity-table-column>
-      </entity-table>
-
-      <entity-table bind="bind" collection="children" columns="4"
-        title="Subsidiary companies">
-        <entity-table-column path="" title="Name">
-        </entity-table-column>
-        <entity-table-column path="jurisdiction_code" title="Jurisdiction">
-        </entity-table-column>
-        <entity-table-column path="founding_date" title="Founding">
-        </entity-table-column>
-        <entity-table-column path="dissolution_date" title="Dissolution">
-        </entity-table-column>
-      </entity-table>
-
       <entity-table bind="bind" collection="assets" columns="4"
-        title="Asset ownership, land and buildings">
-        <entity-table-column path="" title="Name">
+        title="Asset ownership, companies, land and buildings">
+        <entity-table-column path="asset" title="Name">
         </entity-table-column>
-        <entity-table-column path="jurisdiction_code" title="Jurisdiction">
+        <entity-table-column path="asset.jurisdiction_code" title="Jurisdiction">
         </entity-table-column>
-        <entity-table-column path="parcel_number" title="Parcel number">
+        <entity-table-column path="share" title="Share">
         </entity-table-column>
         <entity-table-column path="valuation" title="Valuation">
         </entity-table-column>
       </entity-table>
 
-      <entity-table bind="bind" collection="owners" columns="2"
-        title="Owners of the asset">
-        <entity-table-column path="" title="Name">
+      <entity-table bind="bind" collection="ownerships" columns="4"
+        title="Owners and shareholders">
+        <entity-table-column path="owner" title="Name">
         </entity-table-column>
-        <entity-table-column path="jurisdiction_code" title="Jurisdiction">
+        <entity-table-column path="owner.jurisdiction_code" title="Jurisdiction">
+        </entity-table-column>
+        <entity-table-column path="share" title="Share">
+        </entity-table-column>
+        <entity-table-column path="valuation" title="Valuation">
         </entity-table-column>
       </entity-table>
 
       <!-- end main area -->
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <!-- entity-bind bind="bind" root="data.id" metadata="metadata">
-      </entity-bind -->
     </div>
   </div>
 </div>
