@@ -2,6 +2,7 @@ import os
 
 DEBUG = False
 ASSETS_DEBUG = False
+SECRET_KEY = os.environ.get('SPINDLE_SECRET_KEY')
 
 ELASTICSEARCH_HOST = 'elasticsearch:9200'
 ELASTICSEARCH_INDEX = 'graph'
