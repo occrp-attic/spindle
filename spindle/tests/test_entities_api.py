@@ -1,3 +1,5 @@
+import json
+
 from loom.db import Collection, CollectionSubject, session
 from spindle.model import Permission, Role
 from spindle.tests.util import TestCase
@@ -60,3 +62,62 @@ class EntitiesApiTestCase(TestCase):
         assert len(results) == 2, res.json
         assert 'name' in results[0], res.json
         assert '$schema' in results[0], res.json
+
+        res = self.client.get(url, query_string={'$schema': self.schema_uri})
+        assert res.status_code == 200, res
+        results = res.json['results']
+        assert len(results) == 2, res.json
+
+        res = self.client.get(url, query_string={'$schema': 'foo'})
+        assert res.status_code == 200, res
+        results = res.json['results']
+        assert len(results) == 0, res.json
+
+    def test_create_entity(self):
+        self.login()
+        url = '/api/collections/%s/entities' % self.coll.id
+        ent = {
+            '$schema': self.schema_uri,
+            'name': 'Mother Superior'
+        }
+        res = self.client.post(url, data=json.dumps(ent),
+                               content_type='application/json')
+        assert res.status_code == 201, res
+        data = res.json['data']
+        assert 'id' in data, res.json
+        assert 'name' in data, res.json
+        assert data['name'] == ent['name'], res.json
+        assert 'tester' in data['$authors'], res.json
+
+        ent = {'name': 'Mother Superior'}
+        res = self.client.post(url, data=json.dumps(ent),
+                               content_type='application/json')
+        assert res.status_code == 400, res
+
+        ent = {'name': 'Mother Superior', '$schema': 'foo'}
+        res = self.client.post(url, data=json.dumps(ent),
+                               content_type='application/json')
+        assert res.status_code == 400, res
+
+        ent = {'$schema': self.schema_uri}
+        res = self.client.post(url, data=json.dumps(ent),
+                               content_type='application/json')
+        assert res.status_code == 400, res
+
+    def test_entity_update_dedupe(self):
+        self.login()
+        config = self.app.loom_config
+        type_num = len(config.types)
+        prop_num = len(config.properties)
+        # assert False, (type_num, prop_num)
+        url = '/api/collections/%s/entities' % self.coll.id
+        ent = {
+            'id': 'foo',
+            '$schema': self.schema_uri,
+            'name': 'New name'
+        }
+        res = self.client.post(url, data=json.dumps(ent),
+                               content_type='application/json')
+        assert res.status_code == 200, res
+        assert len(config.types) == type_num, (len(config.types), type_num)
+        assert len(config.properties) == prop_num + 1, len(config.properties)

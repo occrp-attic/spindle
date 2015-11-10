@@ -20,4 +20,5 @@ RUN pip install functools32 gunicorn && pip install -r requirements.txt \
     && pip install -e .
 RUN rm -rf .git && bower --allow-root install
 
+RUN spindle init
 EXPOSE 8000
