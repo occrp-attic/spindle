@@ -65,10 +65,8 @@
     border-radius: 0;
 
     .panel-heading {
-        // @include header-font;
+        @include small-title;
         background-color: $body-bg;
-        color: $text-muted;
-        text-transform: uppercase;
         padding-left: $spacing;
         padding-right: $spacing;
     }
@@ -96,6 +94,6 @@
     }
 
     .active span.edit {
-        color: #fff;
+        color: $page-bg;
     }
 }

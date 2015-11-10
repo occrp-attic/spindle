@@ -1,10 +1,13 @@
 #topnav {
-    background-color: $gray-subtle;
+    // background-color: $gray-subtle;
+    background-color: $page-bg;
     border-top: $spacing / 2 solid $brand-primary;
+    border-bottom: 1px solid $table-border-color;
+    font-weight: 300;
 
     // margin-bottom: $spacing * 4;
-    padding-top: $spacing;
-    padding-bottom: $spacing;
+    padding-top: $spacing / 2;
+    padding-bottom: $spacing / 2;
 
     .navbar-brand {
         img {
@@ -14,7 +17,29 @@
         }
     }
 
-    input {
+    input#search-bar {
         box-shadow: none;
+        border: 0;
+        font-weight: 300;
+        // padding-left: 0;
+        font-size: 1.2em;
+
+        @media (min-width: $screen-sm-min) {
+          min-width: $screen-sm-min / 2.5;
+        }
+
+        @media (min-width: $screen-md-min) {
+          min-width: $screen-md-min / 2.5;
+        }
+
+        @media (min-width: $screen-lg-min) {
+          min-width: $screen-lg-min / 2.5;
+        }
+    }
+
+    span.input-group-addon {
+        border: 0;
+        background-color: $page-bg;
+        padding-right: 0;
     }
 }

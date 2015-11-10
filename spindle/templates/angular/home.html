@@ -1,33 +1,58 @@
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-8">
     <div class="jumbotron">
       <p>
-        This prototype makes data from company registries and
-        other databases easier to search.
-      </p>
-      <p>
-        Send any suggestions and feedback to
-        <a href="mailto:tech@occrp.org">tech@occrp.org</a>.
+        Search and manage data on persons of interest, companies and assets.
       </p>
     </div>
+
+    <div class="row short-intro">
+      <div class="col-md-6">
+        <p class="help-block">This site combines multiple source databases about company and
+          asset ownership into a research tool.
+        </p>
+      </div>
+      <div class="col-md-6">
+        <p class="help-block">When signed in, you can also create entity collections which
+          may include data from external sources.
+        </p>
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <table class="table table-striped">
+      <tr>
+        <th>Your research collections</th>
+        <th class="numeric" width="1%">Entities</th>
+        <th class="numeric" width="30%">
+          <a class="btn btn-primary btn-xs" ng-show="session.logged_in"
+            ng-click="newCollection()">New collection</a>
+        </th>
+      </tr>
+      <tr ng-if="!collections.results.length">
+        <td colspan="3">
+          Create collections to manage entities of interest.
+        </td>
+      </tr>
+      <tr ng-repeat="coll in collections.results">
+        <td>
+          <a ng-href="#/collections/{{coll.id}}">{{coll.title}}</a>
+        </td>
+        <td class="numeric">
+          {{coll.subjects.length}}
+        </td>
+        <td class="numeric">
+          {{coll.created_at | date}}
+        </td>
+      </tr>
+    </table>
   </div>
-</div>
-<div class="row">
-  <div class="col-md-6">
+  <div class="col-md-4">
     <search-facet results="summary" facet="$sources"
       type="sources" title="Browse by source">
     </search-facet>
     <search-facet results="summary" facet="$schema"
       type="schemas" title="Browse by entity">
     </search-facet>
-  </div>
-  <div class="col-md-6">
-    <h3>Research collections</h3>
-    <a class="btn btn-primary" ng-show="session.logged_in" ng-click="newCollection()">New collection</a>
-    <ul>
-      <li ng-repeat="coll in collections.results">
-        <a ng-href="#/collections/{{coll.id}}">{{coll.title}}</a>
-      </li>
-    </ul>
   </div>
 </div>
