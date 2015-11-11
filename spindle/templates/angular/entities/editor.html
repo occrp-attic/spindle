@@ -3,9 +3,14 @@
     <tr>
       <th ng-repeat="column in columns" ng-bind="column.title"></th>
     </tr>
-    <tr ng-repeat="row in rows">
-      <td ng-repeat="cell in row.cells">
-        <bind-value bind="cell"></bind-value>
+    <tr ng-repeat="row in rows"
+        ng-class="{'selected': row.edit}">
+      <td ng-repeat="cell in row.cells"
+        class="entity-editor-cell"
+        ng-class="{'selected': isCellSelected($parent.$index, $index)}"
+        ng-dblclick="selectCell($parent.$index, $index, $event)">
+        <bind-value ng-if="!row.edit" bind="cell"></bind-value>
+        <bind-edit ng-if="row.edit" bind="cell"></bind-edit>
       </td>
     </tr>
   </table>

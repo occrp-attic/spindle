@@ -214,11 +214,11 @@ spindle.factory('schemaService', ['$http', '$q', function($http, $q) {
 
     /* Get all descendant objects or array elements which occur in both the
     data and the schema. */
-    if (self.model.isArray) {
+    if (self.model.isArray && angular.isArray(self.data)) {
       for (var i in self.data) {
         self.binds.push(new Bind(self.data[i], self.model.getItemsModel()));
       }
-    } else if (self.model.isObject) {
+    } else if (self.model.isObject && angular.isObject(self.data)) {
       var models = self.model.getPropertyModels();
       for (var i in models) {
         var model = models[i],

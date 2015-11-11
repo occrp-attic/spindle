@@ -1,6 +1,6 @@
 
-spindle.directive('entityEditor', ['$http', 'authz', 'schemaService', 'metadataService',
-    function($http, authz, schemaService, metadataService) {
+spindle.directive('entityEditor', ['$http', '$document', 'authz', 'schemaService', 'metadataService',
+    function($http, $document, authz, schemaService, metadataService) {
   return {
     restrict: 'E',
     transclude: false,
@@ -10,66 +10,69 @@ spindle.directive('entityEditor', ['$http', 'authz', 'schemaService', 'metadataS
     },
     templateUrl: 'entities/editor.html',
     controller: ['$scope', function($scope) {
+
       var apiUrl = '/api/collections/' + $scope.collection.id + '/entities';
       $scope.editable = authz.collection(authz.WRITE, $scope.collection.id);
+
+      var selectedRow = null, selectedCell = null;
+
+      $scope.selectRow = function(rowIdx) {
+        if (selectedRow == rowIdx) {
+          return;
+        }
+        selectedRow = rowIdx;
+        for (var i in $scope.rows) {
+          if ($scope.rows[i].edit) {
+            $scope.saveRow(i);
+          }
+          $scope.rows[i].edit = i == rowIdx;
+        }
+      };
+
+      $scope.isCellSelected = function(rowIdx, cellIdx) {
+        return rowIdx == selectedRow && cellIdx == selectedCell;
+      };
+
+      $scope.selectCell = function(rowIdx, cellIdx, $event) {
+        selectedCell = cellIdx;
+        $scope.selectRow(rowIdx);
+        if ($event) {
+          $event.stopPropagation();  
+        }
+      };
+
+      $scope.saveRow = function(idx) {
+        console.log('Save!');
+      };
+
+      angular.element($document).on('click', function(event) {
+        // this will listen to all clicks and blur the current cell when
+        // it happens outside the editor.
+        if (!$(event.target).closest('.entity-editor-cell').length) {
+          if (selectedCell != null || selectedRow != null) {
+            $scope.selectCell(null, null)
+            $scope.$apply();  
+          }
+        }
+      });
 
       var loadData = function() {
         var params = {$schema: $scope.model.schema.id};
         return $http.get(apiUrl, {params: params});
       };
 
-      // var getModelColumns = function(model, metadata) {
-      //   var columns = [],
-      //       properties = model.getPropertyModels().sort(spindleModelSort);
-      //   for (var i in properties) {
-      //     var prop = properties[i];
-      //     if (prop.schema.hidden || prop.isArray) {
-      //       continue;
-      //     }
-      //     var column = {
-      //       title: prop.getTitle(),
-      //       data: prop.name,
-      //       readOnly: !$scope.editable
-      //     };
-      //     if (prop.isValue) {
-      //       if (prop.types.indexOf('integer') != -1 || prop.types.indexOf('number') != -1) {
-      //         column.type = 'numeric';
-      //       } else if (prop.types.indexOf('boolean') != -1 || prop.types.indexOf('bool') != -1) {
-      //         column.type = 'checkbox';
-      //       } else if (prop.schema.format == 'date' || prop.schema.format == 'date-time') {
-      //         column.type = 'date';
-      //         column.dateFormat = 'YYYY-MM-DD';
-      //         column.correctFormat = true;
-      //       } else if (prop.schema.format == 'country-code') {
-      //         var countries = [];
-      //         for (var cc in metadata.countries) {
-      //           var c = metadata.countries[cc];
-      //           countries.push(c);
-      //         }
-      //         column.type = 'handsontable',
-      //         column.handsontable = {
-      //           data: countries,
-      //           strict: true
-      //         }
-      //       }
-      //       // TODO countries
-      //     }
-      //     // TODO inline objects
-      //     // TODO named objects
-      //     columns.push(column);
-      //   }
-      //   return columns;
-      // };
-
       var getModelColumns = function(model, metadata) {
         var columns = [], models = model.getPropertyModels().sort(spindleModelSort);
         for (var i in models) {
-          var model = models[i];
-          columns.push({
-            title: model.getTitle(),
-            model: model
-          });
-        } 
+          var model = models[i],
+              hidden = model.schema.hidden || model.isArray || model.schema.inline;
+          if (!hidden) {
+            columns.push({
+              title: model.getTitle(),
+              model: model
+            });  
+          }
+        }
         return columns;
       };
 
@@ -83,17 +86,34 @@ spindle.directive('entityEditor', ['$http', 'authz', 'schemaService', 'metadataS
           }
           rows.push({
             cells: cells,
-            data: entity
+            data: entity,
+            edit: false
           });
         }
         return rows;
+      };
+
+      var addStubRow = function() {
+        var cells = [];
+        for (var j in $scope.columns) {
+          var column = $scope.columns[j];
+          cells.push(schemaService.bindModel(undefined, column.model));
+        }
+        $scope.rows.push({
+          cells: cells,
+          data: {},
+          edit: false
+        });
       };
 
       var init = function() {
         metadataService.get().then(function(metadata) {
           loadData().then(function(res) {
             $scope.columns = getModelColumns($scope.model, metadata);
-            $scope.rows = getRows($scope.columns, res.data);  
+            $scope.rows = getRows($scope.columns, res.data);
+            for (var i in [1, 2, 3, 4]) {
+              addStubRow();
+            }
           });
         });
       };

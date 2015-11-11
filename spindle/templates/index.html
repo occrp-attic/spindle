@@ -12,7 +12,6 @@
     "bower_components/angular/angular-csp.css",
     "bower_components/animate.css/animate.css",
     "bower_components/pikaday/scss/pikaday.scss",
-    "bower_components/handsontable/dist/handsontable.css",
     "style/main.scss"
   %}
     <link href='{{ ASSET_URL }}' rel='stylesheet' type='text/css'>
@@ -105,9 +104,7 @@
   {% assets filters="uglifyjs", output="build/base.js",
       "bower_components/jquery/dist/jquery.js",
       "bower_components/moment/moment.js",
-      "bower_components/zeroclipboard/dist/ZeroClipboard.js",
-      "bower_components/pikaday/pikaday.js",
-      "bower_components/handsontable/dist/handsontable.js" %}
+      "bower_components/pikaday/pikaday.js" %}
     <script src='{{ ASSET_URL }}'></script>
   {% endassets %}
 
@@ -117,7 +114,6 @@
       "bower_components/angular-route/angular-route.js",
       "bower_components/angular-bootstrap/ui-bootstrap.js",
       "bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
-      "bower_components/ngHandsontable/dist/ngHandsontable.js",
       "bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js",
       "bower_components/angulartics/src/angulartics.js",
       "bower_components/angulartics/src/angulartics-piwik.js" %}
@@ -134,6 +130,7 @@
       "js/services/authz.js",
       "js/directives/permissions_edit.js",
       "js/directives/bind_value.js",
+      "js/directives/bind_edit.js",
       "js/directives/entity_icon.js",
       "js/directives/entity_table.js",
       "js/directives/entity_table_column.js",

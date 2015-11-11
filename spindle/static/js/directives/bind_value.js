@@ -15,7 +15,7 @@ spindle.directive('bindValue', ['$sce', 'metadataService', function($sce, metada
     link: function (scope, element, attrs, model) {
       var bind = scope.bind,
           model = bind.model,
-          html = '<span class="empty-value">&mdash;</span>';
+          html = '&nbsp;';
       if (bind && bind.model && bind.data) {
         var schema = bind.schema,
             value = bind.data,
