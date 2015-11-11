@@ -1,1 +1,10 @@
-<input type="text" ng-model="bind.data">
+<span ng-if="textEntry">
+  <input type="text" ng-model="bind.data">
+</span>
+
+<span ng-if="bind.model.isCountry">
+  <input type="text" ng-model="bind.data"
+    uib-typeahead-editable="false"
+    typeahead-input-formatter="formatCountry($model)"
+    uib-typeahead="c.code as c.title for c in countries | filter:$viewValue | limitTo:8">
+</span>

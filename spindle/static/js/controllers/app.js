@@ -7,6 +7,10 @@ spindle.controller('AppController', ['$scope', '$rootScope', '$http', '$location
   $scope.routeLoaded = false;
   $scope.routeFailed = false;
 
+  $scope.onKey = function($event) {
+    $rootScope.$emit('keydown', $event);
+  };
+
   $rootScope.$on("$routeChangeStart", function (event, next, current) {
     $scope.routeLoaded = false;
     $scope.routeFailed = false;

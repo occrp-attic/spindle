@@ -12,25 +12,38 @@
         white-space: nowrap;
     }
 
-    td {
-        cursor: text;
-
-        input {
-            width: 100%;
-            border: 0;
-            box-shadow: none;
-            outline: none;
-            background-color: transparent;
-            margin: -3px;
-            
-            &:hover, &:active, &:focus {
-                outline: none;
-                box-shadow: none;  
-            }
+    &.editable {
+        td {
+            cursor: text;
         }
     }
 
+    bind-edit {
+        width: inherit;
+    }
+
+    input {
+        width: inherit;
+        border: 0;
+        box-shadow: none;
+        outline: none;
+        background-color: transparent;
+        margin: -3px;
+        
+        &:hover, &:active, &:focus {
+            outline: none;
+            box-shadow: none;  
+        }
+    }
+
+    td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     td.selected {
-        border: 1px solid $occrp-dark;
+        // border: 2px solid $occrp-dark;
+        background-color: transparentize($occrp-dark, 0.5);
     }
 }
