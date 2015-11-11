@@ -37,11 +37,8 @@
             &middot;
             <span ng-repeat="source in result.$sources">
               {{metadata.sources[source].title}}
-              <span ng-if="!$last">
-                &middot;
-              </span>
+              &middot;
             </span>
-            &middot;
             <span ng-if="result.$linkcount == 0">
               no relationships
             </span>
@@ -51,8 +48,8 @@
             <span ng-if="result.$linkcount > 1">
               {{result.$linkcount}} relationships
             </span>
-            <div class="highlight" ng-if="result.$highlight">
-              <span ng-repeat="hlt in result.$hltHtml" ng-bind-html="hlt"></span>
+            <div class="highlight" ng-if="result.$hltHtml">
+              <span ng-bind-html="result.$hltHtml"></span>
             </div>
           </div>
         </li>

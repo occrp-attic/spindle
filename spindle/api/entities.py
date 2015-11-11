@@ -42,6 +42,15 @@ def collection_index(collection):
     })
 
 
+def add_to_collection(collection, subject):
+    for cs in collection.subjects:
+        if cs.subject == subject:
+            return
+    cs = CollectionSubject(collection, subject)
+    session.add(cs)
+    session.commit()
+
+
 @entities_api.route('/api/collections/<int:collection>/entities',
                     methods=['POST', 'PUT'])
 def collection_entity_save(collection):
@@ -64,9 +73,7 @@ def collection_entity_save(collection):
     subject = entities.save(schema, data, collection_id=collection.id,
                             author=request.auth_user,
                             right=authz.entity_right())
-    cs = CollectionSubject(collection, subject)
-    session.add(cs)
-    session.commit()
+    add_to_collection(collection, subject)
     get_loom_indexer().index_one(subject, schema=schema)
     entity = entities.get(subject, schema=schema, depth=2,
                           right=authz.entity_right())

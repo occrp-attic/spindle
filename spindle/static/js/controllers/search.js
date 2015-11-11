@@ -11,10 +11,14 @@ spindle.controller('SearchController', ['$scope', '$http', '$location', '$sce', 
     for (var i in results.results) {
       var result = results.results[i];
       if (result.$highlight) {
-        result.$hltHtml = [];
+        var longest = 0;
+        result.$hltHtml = null;
         for (var j in result.$highlight) {
-          var hlt = $sce.trustAsHtml(result.$highlight[j]);
-          result.$hltHtml.push(hlt);
+          var hlt = result.$highlight[j];
+          if (hlt.length > longest) {
+            longest = hlt.length;
+            result.$hltHtml = $sce.trustAsHtml(hlt);
+          }
         }
       }
     }

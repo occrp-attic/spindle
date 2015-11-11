@@ -24,7 +24,7 @@
       <entity-address bind="bind.p.registered_address"></entity-address>
       <entity-address bind="bind.p.headquarters_address"></entity-address>
       <entity-address bind="bind.p.postal_address"></entity-address>
-      <dl>
+      <dl ng-if="data.$sources.length">
         <dt>Data sources:</dt>
         <dd>
           <span ng-repeat="source in data.$sources">
