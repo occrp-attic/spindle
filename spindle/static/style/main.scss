@@ -84,12 +84,6 @@ td.numeric, th.numeric {
     text-align: right;
 }
 
-// hot table
-.table-box {
-    margin-top: 0.5em;
-    overflow-x: scroll;
-}
-
 // used by the collections dropdown-menu
 .dropdown-menu li a {
     width: 100%;
@@ -108,4 +102,5 @@ td.numeric, th.numeric {
 @import "navbar";
 @import "search";
 @import "entity";
+@import "editor";
 @import "admin";

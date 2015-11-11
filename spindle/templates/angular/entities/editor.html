@@ -1,5 +1,7 @@
-<div class="table-box">
-  <hot-table hot-id="{{editorId}}" col-headers="true" datarows="entities"
-    settings="tableSettings" columns="model.columns">
-  </hot-table>
+<div class="entity-editor table-box">
+  <table class="table table-striped">
+    <tr>
+      <th ng-repeat="column in columns" ng-bind="column.title"></th>
+    </tr>
+  </table>
 </div>

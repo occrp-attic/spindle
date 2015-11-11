@@ -9,8 +9,11 @@
     <h2>
       {{collection.title}}
     </h2>
-
-    <uib-tabset justified="true">
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <uib-tabset>
       <uib-tab ng-repeat="model in models" active="tab.active">
         <uib-tab-heading>
           <entity-icon schema="model.schema.id"></entity-icon>
