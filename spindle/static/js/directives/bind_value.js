@@ -41,7 +41,7 @@ spindle.directive('bindValue', ['$sce', 'metadataService', function($sce, metada
         } else if (classes) {
           html = '<span class="' + classes + '">' + value + '</span>';
         } else {
-          html = value
+          html = value + '';
         }
       }
       scope.html = $sce.trustAsHtml(html);

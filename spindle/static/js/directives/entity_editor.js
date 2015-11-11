@@ -1,6 +1,6 @@
 
-spindle.directive('entityEditor', ['$http', 'authz', 'hotRegisterer', 'metadataService',
-    function($http, authz, hotRegisterer, metadataService) {
+spindle.directive('entityEditor', ['$http', 'authz', 'schemaService', 'metadataService',
+    function($http, authz, schemaService, metadataService) {
   return {
     restrict: 'E',
     transclude: false,
@@ -15,9 +15,7 @@ spindle.directive('entityEditor', ['$http', 'authz', 'hotRegisterer', 'metadataS
 
       var loadData = function() {
         var params = {$schema: $scope.model.schema.id};
-        $http.get(apiUrl, {params: params}).then(function(res) {
-          $scope.entities = res.data.results;
-        });
+        return $http.get(apiUrl, {params: params});
       };
 
       // var getModelColumns = function(model, metadata) {
@@ -75,12 +73,30 @@ spindle.directive('entityEditor', ['$http', 'authz', 'hotRegisterer', 'metadataS
         return columns;
       };
 
+      var getRows = function(columns, entities) {
+        var rows = []
+        for (var i in entities.results) {
+          var entity = entities.results[i], cells = [];
+          for (var j in columns) {
+            var column = columns[j], value = entity[column.model.name];
+            cells.push(schemaService.bindModel(value, column.model));
+          }
+          rows.push({
+            cells: cells,
+            data: entity
+          });
+        }
+        return rows;
+      };
+
       var init = function() {
-        loadData();
         metadataService.get().then(function(metadata) {
-          $scope.columns = getModelColumns($scope.model, metadata);
+          loadData().then(function(res) {
+            $scope.columns = getModelColumns($scope.model, metadata);
+            $scope.rows = getRows($scope.columns, res.data);  
+          });
         });
-      }
+      };
 
       init();
     }]

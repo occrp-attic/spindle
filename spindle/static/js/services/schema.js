@@ -123,6 +123,7 @@ spindle.factory('schemaService', ['$http', '$q', function($http, $q) {
     self.isNumber = self.isInteger || self.isFloat;
     self.isDateTime = self.isString && self.format == 'date-time';
     self.isDate = self.isString && self.format == 'date';
+    self.isTemporal = self.isDateTime || self.isDate;
     self.isURI = self.isString && self.format == 'uri';
     self.isCountry = self.isString && self.format == 'country-code';
 
@@ -272,6 +273,9 @@ spindle.factory('schemaService', ['$http', '$q', function($http, $q) {
         dfd.reject(err);
       });
       return dfd.promise;
+    },
+    bindModel: function(obj, model) {
+      return new Bind(obj, model);
     }
   }
 }]);

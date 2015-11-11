@@ -3,5 +3,10 @@
     <tr>
       <th ng-repeat="column in columns" ng-bind="column.title"></th>
     </tr>
+    <tr ng-repeat="row in rows">
+      <td ng-repeat="cell in row.cells">
+        <bind-value bind="cell"></bind-value>
+      </td>
+    </tr>
   </table>
 </div>
