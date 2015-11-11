@@ -112,9 +112,19 @@ spindle.factory('schemaService', ['$http', '$q', function($http, $q) {
 
     // utility functions for traversal.
     self.types = angular.isArray(self.schema.type) ? self.schema.type : [self.schema.type];
+    self.format = self.schema.format;
     self.isObject = self.types.indexOf('object') != -1;
     self.isArray = self.types.indexOf('array') != -1;
     self.isValue = !self.isObject && !self.isArray;
+    self.isString = self.types.indexOf('string') != -1;
+    self.isBool = self.types.indexOf('boolean') != -1 || self.types.indexOf('bool');
+    self.isInteger = self.types.indexOf('integer') != -1 || self.types.indexOf('int');
+    self.isFloat = self.types.indexOf('float') != -1 || self.types.indexOf('numeric');
+    self.isNumber = self.isInteger || self.isFloat;
+    self.isDateTime = self.isString && self.format == 'date-time';
+    self.isDate = self.isString && self.format == 'date';
+    self.isURI = self.isString && self.format == 'uri';
+    self.isCountry = self.isString && self.format == 'country-code';
 
     /* Resolve the full hierarchy of JSON schemas referred to by the current
     schema. This is essentially a class hierarchy which is necessary in order

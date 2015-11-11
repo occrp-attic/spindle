@@ -14,27 +14,26 @@ spindle.directive('bindValue', ['$sce', 'metadataService', function($sce, metada
     template: '<span ng-bind-html="::html"></span>',
     link: function (scope, element, attrs, model) {
       var bind = scope.bind,
+          model = bind.model,
           html = '<span class="empty-value">&mdash;</span>';
       if (bind && bind.model && bind.data) {
-        var schema = bind.schema, value = bind.data, url = false, classes = false;
-        if (bind.model.isObject) {
+        var schema = bind.schema,
+            value = bind.data,
+            url = false,
+            classes = false;
+        if (model.isObject) {
           url = '#/entities/' + bind.data.id;
           value = bind.data.name;
-        } else if (schema.format) {
-          if (schema.format == 'country-code') {
-            value = countries[value] ? countries[value].title : value;
-          }
-          if (schema.format == 'uri') {
-            url = value;
-          }
-          if (schema.format == 'date-time') {
-            value = moment(value).format('LLL');
-            classes = 'date-time';
-          }
-          if (schema.format == 'date') {
-            value = moment(value).format('LL');
-            classes = 'date-time';
-          }
+        } else if (model.isCountry) {
+          value = countries[value] ? countries[value].title : value;
+        } else if (model.isURI) {
+          url = value;
+        } else if (model.isDateTime) {
+          value = moment(value).format('LLL');
+          classes = 'date-time';
+        } else if (model.isDate) {
+          value = moment(value).format('LL');
+          classes = 'date-time';
         }
 
         if (url) {
