@@ -14,6 +14,17 @@ def suggest_entity(args):
             # Find matching sub-schemas as well.
             schemas = implied_schemas(schema)
             q = add_filter(q, {"terms": {"$schema": schemas}})
+        collection = args.get('collection')
+        if collection is not None:
+            q = {
+                'function_score': {
+                    'query': q,
+                    'functions': [{
+                        'boost_factor': 2,
+                        'filter': {'term': {'$collections': collection}}
+                    }]
+                }
+            }
         q = {
             'size': 5,
             'query': q,

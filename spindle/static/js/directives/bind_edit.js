@@ -47,7 +47,7 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
         var params = {
           text: $viewValue,
           $schema: model.schema.id,
-          collection: scope.collection
+          collection: scope.collection.id
         };
         var dfd = $q.defer();
         $http.get('/api/suggest', {params: params}).then(function(res) {
