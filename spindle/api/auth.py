@@ -61,7 +61,7 @@ def callback():
         # FIXME: notify the user, somehow.
         return redirect(next_url)
     session['oauth'] = resp
-    # This is ugly, but useful for debugging and non-OCCRP users.
+    Role.create_defaults()
     session['roles'] = [Role.SYSTEM_GUEST, Role.SYSTEM_USER]
     if 'googleapis.com' in oauth_provider.base_url:
         me = oauth_provider.get('userinfo')
