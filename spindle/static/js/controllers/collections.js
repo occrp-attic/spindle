@@ -68,19 +68,8 @@ var loadSchemaModels = ['$q', '$http', 'metadataService', 'schemaService', funct
 
 spindle.controller('CollectionController', ['$scope', '$http', '$uibModal', 'schemaModels', 'authz', 'collection',
     function($scope, $http, $uibModal, schemaModels, authz, collection) {
-  // console.log("Collection", collection);
-
   $scope.collection = collection;
   $scope.editable = authz.collection(authz.WRITE, collection.id);
-
-  $scope.updateTables = function() {
-    $scope.$broadcast('updateEditor');
-  }
-
-  // $http.get('/api/collections/' + collection.id + '/entities').then(function(res) {
-  //   $scope.entities = res.data.results;
-  // });
-
   $scope.models = schemaModels.models.sort(spindleModelSort);
 
   $scope.editSettings = function() {
