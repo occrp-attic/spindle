@@ -1,8 +1,8 @@
-var spindle = angular.module('spindle', ['ngRoute', 'ngAnimate',
+var spindle = angular.module('spindle', ['ngRoute', 'ngAnimate', 'pikaday',
   'ui.bootstrap', 'angulartics', 'angulartics.piwik', 'infinite-scroll']);
 
-spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
-    function($routeProvider, $analyticsProvider, $compileProvider) {
+spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider', 'pikadayConfigProvider',
+    function($routeProvider, $analyticsProvider, $compileProvider, pikadayConfigProvider) {
 
   $routeProvider.when('/', {
     templateUrl: 'home.html',
@@ -49,4 +49,11 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider',
   });
 
   $compileProvider.debugInfoEnabled(false);
+
+  pikadayConfigProvider.setConfig({
+    format: "LL",
+    setDefaultDate: false,
+    defaultDate: null
+  });
+
 }]);

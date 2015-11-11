@@ -14,12 +14,14 @@
 <div class="row">
   <div class="col-md-12">
     <uib-tabset>
-      <uib-tab ng-repeat="model in models" active="tab.active">
+      <uib-tab ng-repeat="model in models" active="model.active" select="setSchema(model)">
         <uib-tab-heading>
           <entity-icon schema="model.schema.id"></entity-icon>
           {{model.getPlural()}}
         </uib-tab-heading>
-        <entity-editor model="model" collection="collection"></entity-editor>
+        <div ng-if="model.active">
+          <entity-editor model="model" collection="collection"></entity-editor>
+        </div>
       </uib-tab>
     </uib-tabset>
   </div>

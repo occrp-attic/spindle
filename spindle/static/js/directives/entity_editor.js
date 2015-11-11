@@ -97,6 +97,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
       $scope.editCell = function(cell) {
         if ($scope.editable) {
           cell.editing = true;
+          cell.dirty = true;
           $scope.$broadcast('editBind', cell.serial);  
         }
       };
@@ -118,19 +119,35 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
 
       $scope.saveRow = function(idx) {
         if (!$scope.editable) return;
-        // console.log('Save!');
 
         var row = $scope.rows[idx],
-            data = row.data;
+            data = {},
+            hasData = false;
+        if (row.data && row.data.id) {
+          data.id = row.data.id;
+          data.$schema = row.data.$schema;
+        } else {
+          data = row.data;
+        }
         for (var i in row.cells) {
           var cell = row.cells[i];
-          data[cell.model.name] = cell.data;
+          if (cell.dirty) {
+            hasData = true;
+          }
+          if (cell.data) {
+            data[cell.model.name] = cell.data;            
+          }
         }
-        $http.post(apiUrl, data).then(function(res) {
-          console.log(res);
-        }, function(err) {
-          console.log(err);
-        });
+        if (hasData) {
+          $http.post(apiUrl, data).then(function(res) {
+            $scope.rows[idx].failed = false;
+            if (res.status == 201) { // new record
+              addStubRow();
+            }
+          }, function(err) {
+            $scope.rows[idx].failed = true;
+          });  
+        }
       };
 
       angular.element($document).on('click', function(event) {

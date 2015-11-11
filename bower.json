@@ -31,7 +31,8 @@
     "ngInfiniteScroll": "~1.2.1",
     "angular-recursion": "~1.0.5",
     "handsontable": "0.20.0",
-    "ngHandsontable": "~0.7.0"
+    "ngHandsontable": "~0.7.0",
+    "pikaday-angular": "~2.0.0"
   },
   "resolutions": {
     "handsontable": "0.20.0"

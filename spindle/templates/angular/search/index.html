@@ -27,7 +27,7 @@
         <li ng-repeat="result in results.results"
           class="result">
           <div class="pull-right">
-            <collection-add subject="result.id" class="btn-xs"></collection-add>
+            <collection-add subject="result.id" class="btn-xs" schema="result.$schema"></collection-add>
           </div>
           <a class="title" href="#/entities/{{result.id}}">
             <entity-icon schema="result.$schema"></entity-icon> {{result.name}}

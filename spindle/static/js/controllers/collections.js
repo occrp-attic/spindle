@@ -66,12 +66,17 @@ var loadSchemaModels = ['$q', '$http', 'metadataService', 'schemaService', funct
 }];
 
 
-spindle.controller('CollectionController', ['$scope', '$http', '$uibModal', 'schemaModels', 'authz', 'collection',
-    function($scope, $http, $uibModal, schemaModels, authz, collection) {
+spindle.controller('CollectionController', ['$scope', '$http', '$location', '$uibModal', 'schemaModels', 'authz', 'collection',
+    function($scope, $http, $location, $uibModal, schemaModels, authz, collection) {
   $scope.collection = collection;
   $scope.editable = authz.collection(authz.WRITE, collection.id);
-  $scope.models = schemaModels.models.sort(spindleModelSort);
 
+  $scope.setSchema = function(model) {
+    var search = $location.search();
+    search.$schema = model.schema.id;
+    $location.search(search); 
+  }
+    
   $scope.editSettings = function() {
     var d = $uibModal.open({
       templateUrl: 'collections/settings.html',
@@ -88,6 +93,20 @@ spindle.controller('CollectionController', ['$scope', '$http', '$uibModal', 'sch
       $scope.collection = collection;
     });
   };
+
+  var init = function() {
+    var models = [];
+    for (var i in schemaModels.models) {
+      var model = schemaModels.models[i];
+      if (model.schema.id == $location.search().$schema) {
+        model.active = true;
+      }
+      models.push(model);
+    }
+    $scope.models = models.sort(spindleModelSort);  
+  }
+
+  init();
 }]);
 
 

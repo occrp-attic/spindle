@@ -12,9 +12,9 @@
         white-space: nowrap;
     }
 
-    &.editable {
+    .editable {
         td {
-            cursor: text;
+            cursor: pointer;
         }
     }
 
@@ -43,7 +43,11 @@
     }
 
     td.selected {
-        // border: 2px solid $occrp-dark;
-        background-color: transparentize($occrp-dark, 0.5);
+        border: 2px solid $brand-primary;
+        // background-color: transparentize($occrp-dark, 0.5);
+    }
+
+    tr.failed {
+        background-color: transparentize($brand-primary, 0.8);
     }
 }

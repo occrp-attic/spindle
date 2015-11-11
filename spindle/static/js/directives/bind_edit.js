@@ -1,5 +1,7 @@
 
-spindle.directive('bindEdit', ['metadataService', '$timeout', function(metadataService, $timeout) {
+spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
+    function(metadataService, $timeout, $http, $q) {
+
   var countries = [], countryLabels = {};
   metadataService.get().then(function(metadata) {
     for (var code in metadata.countries) {
@@ -21,9 +23,32 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', function(metadataS
       scope.textEntry = !model.isTemporal && !model.isCountry && !model.isObject;
       scope.countries = countries;
 
+      if (model.isTemporal) {
+        scope.picker = bind.data;
+      }
+
+      scope.onPikadaySelect = function(pikaday) {
+        bind.data = pikaday.toString();
+      };
+
       scope.formatCountry = function($model) {
         return countryLabels[$model];
-      }
+      };
+
+      scope.formatEntity = function($model) {
+        if ($model) {
+          return $model.name;
+        }
+      };
+
+      scope.suggestEntities = function($viewValue) {
+        var params = {text: $viewValue, $schema: model.schema.id};
+        var dfd = $q.defer();
+        $http.get('/api/suggest', {params: params}).then(function(res) {
+          dfd.resolve(res.data.options);
+        });
+        return dfd.promise;
+      };
 
       scope.$on('editBind', function(e, serial) {
         if (scope.bind.serial == serial) {

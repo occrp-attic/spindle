@@ -4,6 +4,7 @@ spindle.directive('collectionAdd', ['$uibModal', '$http', '$location', 'sessionS
     restrict: 'E',
     scope: {
       'subject': '=',
+      'schema': '=',
       'class': '@'
     },
     templateUrl: 'collections/add.html',
@@ -30,6 +31,7 @@ spindle.directive('collectionAdd', ['$uibModal', '$http', '$location', 'sessionS
       scope.openCollection = function(collection, $event) {
         $event.stopPropagation();
         $location.path('/collections/' + collection.id);
+        $location.search({$schema: scope.schema});
       };
 
       scope.isPart = function(collection) {
