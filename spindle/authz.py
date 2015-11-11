@@ -56,7 +56,7 @@ def entity_right():
 
 def collections(right):
     if not hasattr(request, 'authz_collections'):
-        return []
+        return set([])
     return request.authz_collections.get(right, [])
 
 
@@ -70,7 +70,7 @@ def collection(right, collection_id):
 
 def sources(right):
     if not hasattr(request, 'authz_sources'):
-        return []
+        return set([])
     return request.authz_sources.get(right, [])
 
 

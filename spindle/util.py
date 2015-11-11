@@ -2,6 +2,8 @@ import os
 from flask import current_app
 from flask import url_for as flask_url_for
 
+from spindle import authz
+
 
 def angular_templates():
     partials_dir = os.path.join(current_app.static_folder, '..')
@@ -29,6 +31,10 @@ def result_entity(entity):
     if '_source' in entity and '_id' in entity:
         entity = entity['_source']
     entity['$uri'] = url_for('entities.view', id=entity.get('id'))
+    colls = entity.get('$collections', [])
+    entity['$collections'] = authz.collections(authz.READ).intersection(colls)
+    sources = entity.get('$sources', [])
+    entity['$sources'] = authz.sources(authz.READ).intersection(sources)
     entity.pop('$text', None)
     entity.pop('$latin', None)
     for k, v in entity.items():
