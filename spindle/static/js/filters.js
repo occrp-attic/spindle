@@ -4,3 +4,7 @@ spindle.filter('date', function() {
     return moment(val).format('LL');
   };
 });
+
+spindle.filter('urlencode', function() {
+  return window.encodeURIComponent;
+});

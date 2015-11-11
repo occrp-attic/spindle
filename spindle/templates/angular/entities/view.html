@@ -26,15 +26,18 @@
       <entity-address bind="bind.p.postal_address"></entity-address>
       <dl ng-if="data.$sources.length">
         <dt>Data sources:</dt>
-        <dd>
-          <span ng-repeat="source in data.$sources">
-            <a href="{{metadata.sources[source].url}}">
-              {{metadata.sources[source].title}}
-            </a>
-            <span ng-if="!$last">
-              &middot;
-            </span>
-          </span>
+        <dd ng-repeat="source in data.$sources">  
+          <a href="{{metadata.sources[source].url}}">
+            {{metadata.sources[source].title}}
+          </a>
+        </dd>
+      </dl>
+      <dl ng-if="collections.length">
+        <dt>Data from research:</dt>
+        <dd ng-repeat="collection in collections">
+          <a href="#/collections/{{collection.id}}?$schema={{data.$schema | urlencode}}">
+            {{collection.title}}
+          </a>
         </dd>
       </dl>
 

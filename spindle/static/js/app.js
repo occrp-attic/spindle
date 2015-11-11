@@ -29,7 +29,7 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider', 'pik
     controller: 'EntityController',
     reloadOnSearch: false,
     resolve: {
-      bind: loadEntityBind,
+      entity: loadEntityResources,
       metadata: loadMetadata
     }
   });
