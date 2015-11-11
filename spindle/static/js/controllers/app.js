@@ -1,6 +1,6 @@
 
-spindle.controller('AppController', ['$scope', '$rootScope', '$http', '$location', 'query', 'sessionService',
-  function($scope, $rootScope, $http, $location, query, sessionService) {
+spindle.controller('AppController', ['$scope', '$route', '$rootScope', '$http', '$location', 'query', 'sessionService',
+  function($scope, $route, $rootScope, $http, $location, query, sessionService) {
 
   $scope.query = query;
   $scope.session = {'logged_in': false, 'user': {}};
@@ -33,6 +33,10 @@ spindle.controller('AppController', ['$scope', '$rootScope', '$http', '$location
   });
 
   $scope.submitSearch = function(form) {
+    if ($route.current.$$route.controller != 'SearchController') {
+      $location.search({});
+    }
+    // console.log($location.search());
     query.set('q', $scope.query.state.q);
   };
 
