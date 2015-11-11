@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from apikit import jsonify, obj_or_404, request_data
 from werkzeug.exceptions import BadRequest
 
+from loom.db import CollectionSubject, session
 from spindle import authz
 from spindle.core import get_loom_config, get_loom_indexer, validate
 from spindle.util import result_entity
@@ -60,11 +61,14 @@ def collection_entity_save(collection):
     # this will raise if it fails:
     validate(data, schema)
 
-    entity_id = entities.save(schema, data, collection_id=collection.id,
-                              author=request.auth_user,
-                              right=authz.entity_right())
-    get_loom_indexer().index_one(entity_id, schema=schema)
-    entity = entities.get(entity_id, schema=schema, depth=2,
+    subject = entities.save(schema, data, collection_id=collection.id,
+                            author=request.auth_user,
+                            right=authz.entity_right())
+    cs = CollectionSubject(collection, subject)
+    session.add(cs)
+    session.commit()
+    get_loom_indexer().index_one(subject, schema=schema)
+    entity = entities.get(subject, schema=schema, depth=2,
                           right=authz.entity_right())
     return jsonify({
         'status': 'ok',

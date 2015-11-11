@@ -75,7 +75,8 @@ class EntitiesApiTestCase(TestCase):
 
     def test_create_entity(self):
         self.login()
-        url = '/api/collections/%s/entities' % self.coll.id
+        coll_id = self.coll.id
+        url = '/api/collections/%s/entities' % coll_id
         ent = {
             '$schema': self.schema_uri,
             'name': 'Mother Superior'
@@ -88,6 +89,11 @@ class EntitiesApiTestCase(TestCase):
         assert 'name' in data, res.json
         assert data['name'] == ent['name'], res.json
         assert 'tester' in data['$authors'], res.json
+
+        new_subject = data['id']
+        res = self.client.get('/api/collections/%s' % coll_id)
+        data = res.json['data']
+        assert new_subject in data['subjects'], data
 
         ent = {'name': 'Mother Superior'}
         res = self.client.post(url, data=json.dumps(ent),
