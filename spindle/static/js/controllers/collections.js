@@ -21,8 +21,11 @@ spindle.controller('CollectionNewDialog', ['$scope', '$http', '$uibModalInstance
   $scope.create = function() {
     if ($scope.validTitle()) {
       $http.post('/api/collections', $scope.collection).then(function(res) {
-        sessionService.flush(); // re-fetch ACLs.
-        $uibModalInstance.close(res.data.data);
+        // re-fetch ACLs.
+        sessionService.flush().then(function() {
+          $uibModalInstance.close(res.data.data);  
+        });
+        
       });
     }
   };
