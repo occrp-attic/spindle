@@ -35,6 +35,13 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
           }
         }
 
+        // press escape to leave edit mode
+        if ($event.keyCode == 27) {
+          if (selectedCell.editing) {
+            $scope.cancelEditCell(selectedCell);  
+          }
+        }
+
         // press tab to go to the next field
         if ($event.keyCode == 9) {
           if ($event.altKey || $event.shiftKey) { // alt inverts the behaviour
@@ -98,7 +105,15 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
         if ($scope.editable) {
           cell.editing = true;
           cell.dirty = true;
-          $scope.$broadcast('editBind', cell.serial);  
+          $scope.$broadcast('editBind', cell.serial);
+        }
+      };
+
+      $scope.cancelEditCell = function(cell) {
+        if ($scope.editable) {
+          cell.editing = false;
+          cell.dirty = false;
+          $scope.$broadcast('cancelEditBind', cell.serial);
         }
       };
 
@@ -127,7 +142,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
           data.id = row.data.id;
           data.$schema = row.data.$schema;
         } else {
-          data = row.data;
+          data.$schema = $scope.model.schema.id;
         }
         for (var i in row.cells) {
           var cell = row.cells[i];
@@ -141,6 +156,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
         if (hasData) {
           $http.post(apiUrl, data).then(function(res) {
             $scope.rows[idx].failed = false;
+            $scope.rows[idx].data.id = res.data.id;
             if (res.status == 201) { // new record
               addStubRow();
             }
@@ -206,7 +222,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
         }
         $scope.rows.push({
           cells: cells,
-          data: {$schema: $scope.model.schema.id},
+          data: {},
           edit: false
         });
       };
@@ -216,7 +232,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
           loadData().then(function(res) {
             $scope.columns = getModelColumns($scope.model, metadata);
             $scope.rows = getRows($scope.columns, res.data);
-            for (var i in [1, 2]) {
+            for (var i in [1, 2, 3]) {
               addStubRow();
             }
           });

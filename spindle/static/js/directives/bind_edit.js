@@ -14,12 +14,14 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
     restrict: 'E',
     replace: false,
     scope: {
-      'bind': '='
+      'bind': '=',
+      'collection': '='
     },
     templateUrl: 'bind/edit.html',
     link: function (scope, element, attrs, model) {
       var bind = scope.bind,
-          model = bind.model;
+          model = bind.model,
+          oldData = null;
       scope.textEntry = !model.isTemporal && !model.isCountry && !model.isObject;
       scope.countries = countries;
 
@@ -42,7 +44,11 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
       };
 
       scope.suggestEntities = function($viewValue) {
-        var params = {text: $viewValue, $schema: model.schema.id};
+        var params = {
+          text: $viewValue,
+          $schema: model.schema.id,
+          collection: scope.collection
+        };
         var dfd = $q.defer();
         $http.get('/api/suggest', {params: params}).then(function(res) {
           dfd.resolve(res.data.options);
@@ -52,9 +58,16 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
 
       scope.$on('editBind', function(e, serial) {
         if (scope.bind.serial == serial) {
+          oldData = scope.bind.data;
           $timeout(function() {
             angular.element(element).find('input').focus();
           });
+        }
+      });
+
+      scope.$on('cancelEditBind', function(e, serial) {
+        if (scope.bind.serial == serial) {
+          scope.bind.data = oldData;
         }
       });
     }

@@ -8,7 +8,7 @@
         ng-class="{'selected': cell.selected}"
         ng-click="clickCell($parent.$index, $index, $event)">
         <bind-value ng-hide="cell.editing" bind="cell"></bind-value>
-        <bind-edit ng-show="cell.editing" bind="cell"></bind-edit>
+        <bind-edit ng-show="cell.editing" bind="cell" collection="collection"></bind-edit>
       </td>
     </tr>
   </table>
