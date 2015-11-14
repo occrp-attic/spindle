@@ -43,10 +43,11 @@ def collection_index(collection):
 
 
 def add_to_collection(collection, subject):
-    for cs in collection.subjects:
-        if cs.subject == subject:
-            return
-    cs = CollectionSubject(collection, subject)
+    q = session.query(CollectionSubject).filter_by(subject=subject)
+    q = q.filter_by(collection_id=collection.id)
+    cs = q.first()
+    if cs is None:
+        cs = CollectionSubject(collection, subject)
     session.add(cs)
     session.commit()
 

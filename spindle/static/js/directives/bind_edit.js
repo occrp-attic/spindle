@@ -30,7 +30,7 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
       }
 
       scope.onPikadaySelect = function(pikaday) {
-        bind.data = pikaday.toString();
+        bind.data = pikaday.getDate();
       };
 
       scope.formatCountry = function($model) {

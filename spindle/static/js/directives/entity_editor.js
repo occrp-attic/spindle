@@ -153,14 +153,16 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
             data[cell.model.name] = cell.data;            
           }
         }
-        if (hasData) {
+        if (hasData && !row.saving) {
           $http.post(apiUrl, data).then(function(res) {
+            $scope.rows[idx].saving = false;
             $scope.rows[idx].failed = false;
-            $scope.rows[idx].data.id = res.data.id;
+            $scope.rows[idx].data = res.data.data;
             if (res.status == 201) { // new record
               addStubRow();
             }
           }, function(err) {
+            $scope.rows[idx].saving = false;
             $scope.rows[idx].failed = true;
           });  
         }
@@ -223,7 +225,8 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
         $scope.rows.push({
           cells: cells,
           data: {},
-          edit: false
+          edit: false,
+          saving: false
         });
       };
 
