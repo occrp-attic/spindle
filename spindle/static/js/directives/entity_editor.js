@@ -14,7 +14,9 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
       var apiUrl = '/api/collections/' + $scope.collection.id + '/entities';
       $scope.editable = authz.collection(authz.WRITE, $scope.collection.id);
 
-      var selectedCell = null;
+      var selectedCell = null,
+          editorDiv = angular.element(document.getElementById('entity-editor'))
+        
 
       $rootScope.$on('keydown', function(e, $event) {
         if (selectedCell == null) {
@@ -27,19 +29,22 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
           if (selectedCell.editing) {
             if (selectedCell.colIdx < columns) {
               $scope.clickCell(selectedCell.rowIdx, selectedCell.colIdx + 1);
+              $scope.editCell(selectedCell);
             } else if (selectedCell.rowIdx < rows) {
               $scope.clickCell(selectedCell.rowIdx + 1, 0);
             }
           } else {
-            $scope.editCell(selectedCell);  
+            $scope.editCell(selectedCell);
           }
+          return;
         }
 
         // press escape to leave edit mode
         if ($event.keyCode == 27) {
           if (selectedCell.editing) {
-            $scope.cancelEditCell(selectedCell);  
+            $scope.cancelEditCell(selectedCell);
           }
+          return;
         }
 
         // press tab to go to the next field
@@ -58,6 +63,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
             }  
           }
           $event.preventDefault();
+          return;
         }
 
         if ($event.keyCode == 38 && !selectedCell.editing) {
@@ -66,26 +72,36 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
             $scope.clickCell(selectedCell.rowIdx - 1, selectedCell.colIdx);
             $event.preventDefault();
           }
+          return;
         } else if ($event.keyCode == 40 && !selectedCell.editing) {
           // go down.
           if (selectedCell.rowIdx < rows) {
             $scope.clickCell(selectedCell.rowIdx + 1, selectedCell.colIdx);
             $event.preventDefault();
           }
+          return;
         } else if ($event.keyCode == 39 && !selectedCell.editing) {
           // go right.
           if (selectedCell.colIdx < columns) {
             $scope.clickCell(selectedCell.rowIdx, selectedCell.colIdx + 1);
             $event.preventDefault();
           }
+          return;
         } else if ($event.keyCode == 37 && !selectedCell.editing) {
           // go left.
           if (selectedCell.colIdx > 0) {
             $scope.clickCell(selectedCell.rowIdx, selectedCell.colIdx - 1);
             $event.preventDefault();
           }
+          return;
         }
       });
+
+      $scope.centerCell = function(cell) {
+        var cellElement = angular.element(document.getElementById('cell-' + cell.serial)),
+            cellWidth = cellElement[0].clientWidth;
+        editorDiv.scrollLeftAnimated(Math.max(0, cellElement[0].offsetLeft - (cellWidth * 3)));
+      };
 
       $scope.clickCell = function(rowIdx, colIdx, $event) {
         var cell = $scope.rows[rowIdx].cells[colIdx];
@@ -95,6 +111,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
           $scope.editCell(cell);
         } else {
           $scope.selectCell(cell);
+          $scope.centerCell(cell);
         }
         if ($event) {
           $event.stopPropagation();  
@@ -205,7 +222,8 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
           var entity = entities.results[i], cells = [];
           for (var j in columns) {
             var column = columns[j], value = entity[column.model.name];
-            cells.push(schemaService.bindModel(value, column.model));
+            var cell = schemaService.bindModel(value, column.model);
+            cells.push(cell);
           }
           rows.push({
             cells: cells,
@@ -220,7 +238,8 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
         var cells = [];
         for (var j in $scope.columns) {
           var column = $scope.columns[j];
-          cells.push(schemaService.bindModel(undefined, column.model));
+          var cell = schemaService.bindModel(undefined, column.model)
+          cells.push(cell);
         }
         $scope.rows.push({
           cells: cells,

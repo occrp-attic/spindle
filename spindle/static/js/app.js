@@ -1,4 +1,4 @@
-var spindle = angular.module('spindle', ['ngRoute', 'ngAnimate', 'pikaday',
+var spindle = angular.module('spindle', ['ngRoute', 'ngAnimate', 'pikaday', 'duScroll',
   'ui.bootstrap', 'angulartics', 'angulartics.piwik', 'infinite-scroll']);
 
 spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider', 'pikadayConfigProvider',
@@ -51,7 +51,7 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider', 'pik
   $compileProvider.debugInfoEnabled(false);
 
   pikadayConfigProvider.setConfig({
-    format: "LL",
+    // format: "LL",
     setDefaultDate: false,
     defaultDate: null
   });

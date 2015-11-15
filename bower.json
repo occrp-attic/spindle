@@ -32,7 +32,8 @@
     "angular-recursion": "~1.0.5",
     "handsontable": "0.20.0",
     "ngHandsontable": "~0.7.0",
-    "pikaday-angular": "~2.0.0"
+    "pikaday-angular": "~2.0.0",
+    "angular-scroll": "~0.7.3"
   },
   "resolutions": {
     "handsontable": "0.20.0"
