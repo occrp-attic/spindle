@@ -13,14 +13,14 @@
 
 <span ng-if="bind.model.isCountry">
   <input type="text" ng-model="bind.data"
-    uib-typeahead-editable="false"
+    typeahead-editable="false"
     typeahead-input-formatter="formatCountry($model)"
     uib-typeahead="c.code as c.title for c in countries | filter:$viewValue | limitTo:8">
 </span>
 
 <span ng-if="bind.model.isObject">
   <input type="text" ng-model="bind.data"
-    uib-typeahead-editable="false"
+    typeahead-editable="false"
     typeahead-input-formatter="formatEntity($model)"
     uib-typeahead="c as c.name for c in suggestEntities($viewValue)">
 </span>

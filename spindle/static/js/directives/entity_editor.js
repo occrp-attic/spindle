@@ -29,7 +29,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
           if (selectedCell.editing) {
             if (selectedCell.colIdx < columns) {
               $scope.clickCell(selectedCell.rowIdx, selectedCell.colIdx + 1);
-              $scope.editCell(selectedCell);
+              // $scope.editCell(selectedCell);
             } else if (selectedCell.rowIdx < rows) {
               $scope.clickCell(selectedCell.rowIdx + 1, 0);
             }
@@ -98,9 +98,11 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
       });
 
       $scope.centerCell = function(cell) {
-        var cellElement = angular.element(document.getElementById('cell-' + cell.serial)),
-            cellWidth = cellElement[0].clientWidth;
-        editorDiv.scrollLeftAnimated(Math.max(0, cellElement[0].offsetLeft - (cellWidth * 3)));
+        var cellElement = angular.element(document.getElementById('cell-' + cell.serial));
+        if (cellElement[0]) {
+          var offset = cellElement[0].offsetLeft - (cellElement[0].clientWidth * 3);
+          editorDiv.scrollLeftAnimated(Math.max(0, offset));  
+        }
       };
 
       $scope.clickCell = function(rowIdx, colIdx, $event) {
@@ -111,17 +113,18 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
           $scope.editCell(cell);
         } else {
           $scope.selectCell(cell);
-          $scope.centerCell(cell);
         }
         if ($event) {
           $event.stopPropagation();  
+        } else {
+          $scope.centerCell(cell);
         }
       };
 
       $scope.editCell = function(cell) {
         if ($scope.editable) {
           cell.editing = true;
-          cell.dirty = true;
+          $scope.rows[cell.rowIdx].dirty = true;
           $scope.$broadcast('editBind', cell.serial);
         }
       };
@@ -129,7 +132,6 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
       $scope.cancelEditCell = function(cell) {
         if ($scope.editable) {
           cell.editing = false;
-          cell.dirty = false;
           $scope.$broadcast('cancelEditBind', cell.serial);
         }
       };
@@ -153,27 +155,25 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
         if (!$scope.editable) return;
 
         var row = $scope.rows[idx],
-            data = {},
-            hasData = false;
+            data = {};
+
         if (row.data && row.data.id) {
           data.id = row.data.id;
-          data.$schema = row.data.$schema;
-        } else {
+        }
+
+        if (row.dirty && !row.saving) {
           data.$schema = $scope.model.schema.id;
-        }
-        for (var i in row.cells) {
-          var cell = row.cells[i];
-          if (cell.dirty) {
-            hasData = true;
+          for (var i in row.cells) {
+            var cell = row.cells[i];
+            if (cell.data) {
+              data[cell.model.name] = cell.data;            
+            }
           }
-          if (cell.data) {
-            data[cell.model.name] = cell.data;            
-          }
-        }
-        if (hasData && !row.saving) {
+
           $http.post(apiUrl, data).then(function(res) {
             $scope.rows[idx].saving = false;
             $scope.rows[idx].failed = false;
+            $scope.rows[idx].dirty = false;
             $scope.rows[idx].data = res.data.data;
             if (res.status == 201) { // new record
               $scope.rows.push(makeRow());
@@ -181,7 +181,14 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
           }, function(err) {
             $scope.rows[idx].saving = false;
             $scope.rows[idx].failed = true;
+            $scope.rows[idx].dirty = false;
           });  
+        }
+      };
+
+      var flushRows = function() {
+        for (var i in $scope.rows) {
+          $scope.saveRow(i);
         }
       };
 
@@ -191,13 +198,22 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
         if (!$(event.target).closest('.entity-editor-cell').length) {
           if (selectedCell != null) {
             $scope.selectCell(null);
+            flushRows();
             $scope.$apply();  
           }
         }
       });
 
+      $scope.$on('$destroy', function() {
+        flushRows();
+      });
+
       $scope.$on('fillStub', function(evt, entity) {
         $scope.rows[selectedCell.rowIdx] = makeRow(entity);
+        $scope.rows[selectedCell.rowIdx].cells[0].dirty = true;
+        $scope.saveRow(selectedCell.rowIdx);
+        $scope.clickCell(selectedCell.rowIdx, selectedCell.colIdx);
+        $scope.rows.push(makeRow());
       });
 
       var loadData = function() {

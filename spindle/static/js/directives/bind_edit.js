@@ -57,9 +57,13 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
       scope.suggestEntities = function($viewValue) {
         var params = {
           text: $viewValue,
-          $schema: model.schema.id,
-          collection: scope.collection.id
+          $schema: model.schema.id
         };
+        if (scope.stubEntry) {
+          params.exclude_collection = scope.collection.id;
+        } else {
+          params.boost_collection = scope.collection.id;
+        }
         var dfd = $q.defer();
         $http.get('/api/suggest', {params: params}).then(function(res) {
           dfd.resolve(res.data.options);

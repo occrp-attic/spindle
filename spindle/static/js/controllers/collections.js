@@ -77,7 +77,8 @@ spindle.controller('CollectionController', ['$scope', '$http', '$location', '$ui
   $scope.setSchema = function(model) {
     var search = $location.search();
     search.$schema = model.schema.id;
-    $location.search(search); 
+    $location.search(search);
+    return false;
   }
     
   $scope.editSettings = function() {

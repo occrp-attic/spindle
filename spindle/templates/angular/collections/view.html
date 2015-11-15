@@ -20,7 +20,7 @@
 <div class="row">
   <div class="col-md-12">
     <uib-tabset>
-      <uib-tab ng-repeat="model in models" active="model.active" select="setSchema(model)">
+      <uib-tab ng-repeat="model in models" active="model.active" select="setSchema(model, $event)">
         <uib-tab-heading>
           <entity-icon schema="model.schema.id"></entity-icon>
           {{model.getPlural()}}

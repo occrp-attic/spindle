@@ -6,7 +6,6 @@ from loom.db import CollectionSubject, session
 from spindle import authz
 from spindle.core import get_loom_config, get_loom_indexer, validate
 from spindle.util import result_entity
-from spindle.reflect import implied_schemas
 from spindle.api.collections import get_collection
 
 entities_api = Blueprint('entities', __name__)
@@ -25,18 +24,19 @@ def collection_index(collection):
     entities = get_loom_config().entities
     schema_filter = request.args.get('$schema')
     if schema_filter is not None:
-        schema_filter = implied_schemas(schema_filter)
+        config = get_loom_config()
+        schema_filter = config.implied_schemas(schema_filter)
     # FIXME: this is a performance nightmare. Think about how to fix it.
     results = []
     for cs in collection.subjects:
         schema = entities.get_schema(cs.subject, right=authz.entity_right())
         if schema is None:
             continue
-        if schema_filter and schema not in schema_filter:
+        if schema_filter is not None and schema not in schema_filter:
             continue
-        data = entities.get(cs.subject, schema=schema, depth=2,
+        data = entities.get(cs.subject, schema=schema, depth=1,
                             right=authz.entity_right())
-        results.append(data)
+        results.append(result_entity(data))
     return jsonify({
         'results': results
     })
@@ -76,7 +76,7 @@ def collection_entity_save(collection):
                             right=authz.entity_right())
     add_to_collection(collection, subject)
     get_loom_indexer().index_one(subject, schema=schema)
-    entity = entities.get(subject, schema=schema, depth=2,
+    entity = entities.get(subject, schema=schema, depth=1,
                           right=authz.entity_right())
     return jsonify({
         'status': 'ok',
