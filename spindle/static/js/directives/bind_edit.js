@@ -15,14 +15,18 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
     replace: false,
     scope: {
       'bind': '=',
-      'collection': '='
+      'collection': '=',
+      'entity': '='
     },
     templateUrl: 'bind/edit.html',
     link: function (scope, element, attrs, model) {
       var bind = scope.bind,
           model = bind.model,
           oldData = null;
-      scope.textEntry = !model.isTemporal && !model.isCountry && !model.isObject;
+
+      // this shouldn't be hard-coded
+      scope.stubEntry = scope.entity && !scope.entity.id && model.name == 'name'; 
+      scope.textEntry = !model.isTemporal && !model.isCountry && !model.isObject && !scope.stubEntry;
       scope.countries = countries;
 
       if (model.isTemporal) {
@@ -41,6 +45,13 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
         if ($model) {
           return $model.name;
         }
+      };
+
+      scope.fillStub = function($item, $model, $label) {
+        bind.data = $item.name;
+        $http.get('/api/entities/' + $item.id).then(function(res) {
+          scope.$emit('fillStub', res.data.data);
+        });
       };
 
       scope.suggestEntities = function($viewValue) {

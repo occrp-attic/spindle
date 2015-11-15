@@ -176,7 +176,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
             $scope.rows[idx].failed = false;
             $scope.rows[idx].data = res.data.data;
             if (res.status == 201) { // new record
-              addStubRow();
+              $scope.rows.push(makeRow());
             }
           }, function(err) {
             $scope.rows[idx].saving = false;
@@ -194,6 +194,10 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
             $scope.$apply();  
           }
         }
+      });
+
+      $scope.$on('fillStub', function(evt, entity) {
+        $scope.rows[selectedCell.rowIdx] = makeRow(entity);
       });
 
       var loadData = function() {
@@ -219,34 +223,25 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
       var getRows = function(columns, entities) {
         var rows = []
         for (var i in entities.results) {
-          var entity = entities.results[i], cells = [];
-          for (var j in columns) {
-            var column = columns[j], value = entity[column.model.name];
-            var cell = schemaService.bindModel(value, column.model);
-            cells.push(cell);
-          }
-          rows.push({
-            cells: cells,
-            data: entity,
-            edit: false
-          });
+          rows.push(makeRow(entities.results[i]));
         }
         return rows;
       };
 
-      var addStubRow = function() {
+      var makeRow = function(entity) {
         var cells = [];
         for (var j in $scope.columns) {
           var column = $scope.columns[j];
-          var cell = schemaService.bindModel(undefined, column.model)
+          var value = entity ? entity[column.model.name] : undefined;
+          var cell = schemaService.bindModel(value, column.model)
           cells.push(cell);
         }
-        $scope.rows.push({
+        return {
           cells: cells,
-          data: {},
+          data: entity || {},
           edit: false,
           saving: false
-        });
+        };
       };
 
       var init = function() {
@@ -255,7 +250,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
             $scope.columns = getModelColumns($scope.model, metadata);
             $scope.rows = getRows($scope.columns, res.data);
             for (var i in [1, 2, 3]) {
-              addStubRow();
+              $scope.rows.push(makeRow());
             }
           });
         });

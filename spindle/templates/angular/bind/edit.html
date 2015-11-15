@@ -2,6 +2,15 @@
   <input type="text" ng-model="bind.data">
 </span>
 
+<span ng-if="stubEntry">
+  <input type="text" ng-model="bind.data"
+    typeahead-on-select="fillStub($item, $model, $label)"
+    uib-typeahead-editable="true"
+    typeahead-select-on-blur="false"
+    typeahead-focus-first="false"
+    uib-typeahead="c as c.name for c in suggestEntities($viewValue)">
+</span>
+
 <span ng-if="bind.model.isCountry">
   <input type="text" ng-model="bind.data"
     uib-typeahead-editable="false"
