@@ -162,6 +162,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
         }
 
         if (row.dirty && !row.saving) {
+          $scope.rows[idx].saving = true;
           data.$schema = $scope.model.schema.id;
           for (var i in row.cells) {
             var cell = row.cells[i];
@@ -209,10 +210,11 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
       });
 
       $scope.$on('fillStub', function(evt, entity) {
-        $scope.rows[selectedCell.rowIdx] = makeRow(entity);
-        $scope.rows[selectedCell.rowIdx].cells[0].dirty = true;
-        $scope.saveRow(selectedCell.rowIdx);
-        $scope.clickCell(selectedCell.rowIdx, selectedCell.colIdx);
+        var cell = selectedCell;
+        $scope.rows[cell.rowIdx] = makeRow(entity);
+        $scope.rows[cell.rowIdx].dirty = true;
+        $scope.saveRow(cell.rowIdx);
+        $scope.clickCell(cell.rowIdx, cell.colIdx);
         $scope.rows.push(makeRow());
       });
 
