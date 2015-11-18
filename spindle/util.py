@@ -29,6 +29,7 @@ def url_for(*a, **kw):
 
 def result_entity(entity):
     if '_source' in entity and '_id' in entity:
+        entity['_source']['id'] = entity['_id']
         entity = entity['_source']
     entity['$uri'] = url_for('entities.view', id=entity.get('id'))
     colls = entity.get('$collections', [])

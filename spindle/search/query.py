@@ -8,7 +8,7 @@ from spindle.util import url_for, result_entity
 from spindle.search.common import add_filter, authz_filter
 
 QUERY_FIELDS = ['name^100', '$text^10', '$latin^2']
-DEFAULT_FIELDS = ['$sources', '$collections', '$authors', 'id', '$schema',
+DEFAULT_FIELDS = ['$sources', '$collections', '$authors', '$schema',
                   '$attrcount', '$linkcount', 'name']
 
 # Scoped facets are facets where the returned facet values are returned such
