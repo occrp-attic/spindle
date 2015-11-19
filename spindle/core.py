@@ -1,5 +1,7 @@
 import os
 import yaml
+import logging
+from logging.handlers import SMTPHandler
 
 from flask import Flask, current_app
 from flask.ext.assets import Environment
@@ -44,6 +46,18 @@ def create_app(config={}):
 
     assets.init_app(app)
     oauth.init_app(app)
+
+    if not app.debug and app.config.get('MAIL_ADMINS'):
+        app_name = app.config.get('APP_NAME')
+        credentials = app.config.get('MAIL_CREDENTIALS', ())
+        mail_handler = SMTPHandler(app.config.get('MAIL_HOST'),
+                                   app.config.get('MAIL_FROM'),
+                                   app.config.get('MAIL_ADMINS'),
+                                   '%s crash report' % app_name,
+                                   credentials=credentials,
+                                   secure=())
+        mail_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_handler)
     return app
 
 

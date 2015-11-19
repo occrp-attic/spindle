@@ -19,3 +19,9 @@ OAUTH = {
     'access_token_url': 'https://investigativedashboard.org/o/token/',
     'authorize_url': 'https://investigativedashboard.org/o/authorize',
 }
+
+MAIL_FROM = os.environ.get('MAIL_FROM')
+MAIL_HOST = os.environ.get('MAIL_HOST')
+MAIL_ADMINS = [os.environ.get('MAIL_ADMIN')]
+MAIL_CREDENTIALS = (os.environ.get('MAIL_USERNAME'),
+                    os.environ.get('MAIL_PASSWORD'))
