@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from sqlalchemy import Column, Unicode, Boolean, Enum
 from sqlalchemy.orm import relationship
 
@@ -19,6 +21,7 @@ class Role(Base, CommonColumnsMixin):
     id = Column(Unicode(512), nullable=False, primary_key=True, unique=True)
     name = Column(Unicode, nullable=False)
     email = Column(Unicode, nullable=True)
+    apikey = Column(Unicode, nullable=True)
     is_admin = Column(Boolean, nullable=False, default=False)
     type = Column(Enum(*TYPES, name='role_type'), nullable=False)
     permissions = relationship("Permission", backref="role")
@@ -42,15 +45,22 @@ class Role(Base, CommonColumnsMixin):
         cls.load_or_create(cls.SYSTEM_USER, cls.SYSTEM, 'Logged-in users')
 
     @classmethod
-    def load(cls, id):
+    def by_id(cls, id):
         if id is not None:
             return session.query(cls).filter_by(id=id).first()
 
     @classmethod
+    def by_apikey(cls, apikey):
+        if apikey is not None:
+            return session.query(cls).filter_by(apikey=apikey).first()
+
+    @classmethod
     def load_or_create(cls, id, type, name, email=None, is_admin=False):
-        role = cls.load(id)
+        role = cls.by_id(id)
         if role is None:
             role = cls(id, type)
+        if role.apikey is None:
+            role.apikey = uuid4().hex
         role.name = name
         role.email = email
         role.is_admin = is_admin

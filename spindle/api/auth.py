@@ -20,6 +20,9 @@ def get_oauth_token():
 
 @auth_api.before_app_request
 def load_user():
+    auth_header = request.headers.get('Authorization')
+    if auth_header is not None:
+        apikey_check(auth_header)
     request.auth_roles = session.get('roles', [Role.SYSTEM_GUEST])
     request.auth_user = session.get('user')
     request.auth_admin = False
@@ -29,11 +32,28 @@ def load_user():
     authz.request_resources()
 
 
+def apikey_check(auth_header):
+    if not auth_header.lower().startswith('apikey'):
+        return
+    apikey = auth_header.split(' ', 1).pop()
+    role = Role.by_apikey(apikey)
+    if role is None:
+        return
+    session['roles'] = [Role.SYSTEM_GUEST, Role.SYSTEM_USER, role.id]
+    session['user'] = role.id
+    session['is_admin'] = role.is_admin
+
+
 @auth_api.route('/api/session')
 def get_session():
+    role = Role.by_id(request.auth_user)
+    if role is not None:
+        apikey = role.apikey
+        role = role.to_dict()
+        role['apikey'] = apikey
     return jsonify({
         'logged_in': request.logged_in,
-        'user': Role.load(request.auth_user),
+        'user': role,
         'roles': list(request.auth_roles),
         'login_uri': url_for('auth.authorize'),
         'sources': request.authz_sources,
