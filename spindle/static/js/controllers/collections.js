@@ -72,6 +72,7 @@ var loadSchemaModels = ['$q', '$http', 'metadataService', 'schemaService', funct
 spindle.controller('CollectionController', ['$scope', '$http', '$location', '$uibModal', 'schemaModels', 'authz', 'collection',
     function($scope, $http, $location, $uibModal, schemaModels, authz, collection) {
   $scope.collection = collection;
+  $scope.model = {};
   $scope.editable = authz.collection(authz.WRITE, collection.id);
 
   $scope.setSchema = function(model) {
@@ -104,6 +105,7 @@ spindle.controller('CollectionController', ['$scope', '$http', '$location', '$ui
       var model = schemaModels.models[i];
       if (model.schema.id == $location.search().$schema) {
         model.active = true;
+        $scope.model = model;
       }
       models.push(model);
     }

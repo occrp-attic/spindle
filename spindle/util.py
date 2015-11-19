@@ -1,4 +1,6 @@
 import os
+from collections import OrderedDict  # noqa
+
 from flask import current_app
 from flask import url_for as flask_url_for
 

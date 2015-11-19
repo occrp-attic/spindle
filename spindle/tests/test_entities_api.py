@@ -127,3 +127,32 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert len(config.types) == type_num, (len(config.types), type_num)
         assert len(config.properties) == prop_num + 1, len(config.properties)
+
+    def test_csv_export(self):
+        url = '/api/collections/%s/entities.csv' % self.coll.id
+        res = self.client.get(url)
+        assert res.status_code == 403, res
+        self.login()
+        res = self.client.get(url)
+        assert res.status_code == 400, res
+        url = url + '?$schema=%s' % self.schema_uri
+        res = self.client.get(url)
+        assert res.status_code == 200, res
+        dispo = res.headers['Content-Disposition']
+        assert 'filename=' in dispo, res.headers
+        assert ',,,,' in res.data, res.data
+
+    def test_xlsx_export(self):
+        url = '/api/collections/%s/entities.xlsx' % self.coll.id
+        res = self.client.get(url)
+        assert res.status_code == 403, res
+        self.login()
+        res = self.client.get(url)
+        assert res.status_code == 200, res
+        dispo = res.headers['Content-Disposition']
+        assert 'filename=' in dispo, res.headers
+        url = url + '?$schema=%s' % self.schema_uri
+        res = self.client.get(url)
+        assert res.status_code == 200, res
+        dispo = res.headers['Content-Disposition']
+        assert 'filename=' in dispo, res.headers

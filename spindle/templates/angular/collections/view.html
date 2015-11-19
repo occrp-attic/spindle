@@ -1,15 +1,26 @@
 <div class="row">
   <div class="col-md-12">
     <div class="pull-right">
-      <div class="btn-group" role="group" aria-label="...">
+      <div class="btn-group" uib-dropdown role="group" aria-label="...">
         <a class="btn btn-primary" ng-if="editable" ng-click="editSettings()">
           <i class="fa fa-wrench"></i>
           Settings
         </a>
-        <a class="btn btn-success" ng-disabled="true">
+        <a class="btn btn-primary" uib-dropdown-toggle>
           <i class="fa fa-download"></i>
           Download
         </a>
+        <ul class="uib-dropdown-menu" role="menu">
+          <li role="menuitem"><a href="/api/collections/{{collection.id}}/entities.xlsx?$schema={{model.schema.id | urlencode}}" target="_self">
+            Current sheet (Excel)
+          </a></li>
+          <li role="menuitem"><a href="/api/collections/{{collection.id}}/entities.csv?$schema={{model.schema.id | urlencode}}" target="_self">
+            Current sheet (CSV)
+          </a></li>
+          <li role="menuitem"><a href="/api/collections/{{collection.id}}/entities.xlsx" target="_self">
+            All sheets (Excel)
+          </a></li>
+        </ul>
       </div>
     </div>
     <h2>

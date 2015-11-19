@@ -1,14 +1,17 @@
+from itertools import groupby
+
 from flask import Blueprint, request
 from apikit import jsonify, obj_or_404, request_data, arg_int
 from werkzeug.exceptions import BadRequest
 
 from spindle import authz
 from spindle.core import get_loom_config, get_loom_indexer
-from spindle.util import result_entity
+from spindle.util import result_entity, OrderedDict
 from spindle.validation import validate
 from spindle.api.collections import get_collection
-from spindle.logic.entities import collection_entities
+from spindle.logic.entities import collection_entities, entities_to_table
 from spindle.logic.collections import collection_add_entity
+from spindle.api.export import make_csv_response, make_xlsx_response
 
 
 entities_api = Blueprint('entities', __name__)
@@ -34,6 +37,41 @@ def collection_index(collection):
     return jsonify({
         'results': results
     })
+
+
+@entities_api.route('/api/collections/<int:collection>/entities.csv')
+def collection_csv(collection):
+    collection = get_collection(collection, authz.READ)
+    schema = request.args.get('$schema')
+    if schema is None:
+        raise BadRequest()
+    results = collection_entities(collection, depth=get_depth(2),
+                                  filter_schema=schema)
+    visitor, table = entities_to_table(schema, results)
+    basename = '%s - %s' % (collection.title, visitor.plural)
+    return make_csv_response(table, basename)
+
+
+@entities_api.route('/api/collections/<int:collection>/entities.xlsx')
+def collection_xlsx(collection):
+    collection = get_collection(collection, authz.READ)
+    results = collection_entities(collection, depth=get_depth(2),
+                                  filter_schema=request.args.get('$schema'))
+    by_schema = OrderedDict()
+    for result in results:
+        by_schema.setdefault(result.get('$schema'), [])
+        by_schema[result.get('$schema')].append(result)
+    sheets = OrderedDict()
+    for schema, schema_results in by_schema.items():
+        schema_results = list(schema_results)
+        visitor, table = entities_to_table(schema, schema_results)
+        sheets[visitor.plural] = table
+
+    if '$schema' in request.args and len(sheets):
+        basename = '%s - %s' % (collection.title, sheets.keys()[0])
+    else:
+        basename = collection.title
+    return make_xlsx_response(sheets, basename)
 
 
 @entities_api.route('/api/collections/<int:collection>/entities',
