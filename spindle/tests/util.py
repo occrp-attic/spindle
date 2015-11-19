@@ -66,10 +66,14 @@ class TestCase(FlaskTestCase):
             'CELERY_ALWAYS_EAGER': True
         })
 
-    def login(self, id='tester', name=None, email=None, is_admin=False):
-        Role.load_or_create(id, Role.USER, name or id, email=email,
-                            is_admin=is_admin)
+    def create_user(self, id='tester', name=None, email=None, is_admin=False):
+        role = Role.load_or_create(id, Role.USER, name or id, email=email,
+                                   is_admin=is_admin)
         session.commit()
+        return role
+
+    def login(self, id='tester', name=None, email=None, is_admin=False):
+        self.create_user(id=id, name=name, email=email, is_admin=is_admin)
         with self.client.session_transaction() as sess:
             sess['roles'] = [Role.SYSTEM_GUEST, Role.SYSTEM_USER, id]
             sess['user'] = id

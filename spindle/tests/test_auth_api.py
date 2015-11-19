@@ -18,6 +18,19 @@ class AuthApiTestCase(TestCase):
         assert res.json.get('logged_in'), res.json
         assert res.json.get('user'), res.json
 
+    def test_header_login(self):
+        role = self.create_user()
+        session.refresh(role)
+        headers = {'Authorization': 'apikey foo'}
+        res = self.client.get('/api/session', headers=headers)
+        assert not res.json.get('logged_in'), res.json
+        assert not res.json.get('user'), res.json
+
+        headers = {'Authorization': 'apikey %s' % role.apikey}
+        res = self.client.get('/api/session', headers=headers)
+        assert res.json.get('logged_in'), res.json
+        assert res.json['user']['id'] == role.id, res.json
+
     def test_admin_all_access(self):
         self.setUpFixtures()
         self.coll = Collection()
