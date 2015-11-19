@@ -4,7 +4,8 @@ from werkzeug.exceptions import BadRequest
 
 from loom.db import CollectionSubject, session
 from spindle import authz
-from spindle.core import get_loom_config, get_loom_indexer, validate
+from spindle.core import get_loom_config, get_loom_indexer
+from spindle.validation import validate
 from spindle.util import result_entity
 from spindle.api.collections import get_collection
 

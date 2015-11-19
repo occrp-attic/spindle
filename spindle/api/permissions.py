@@ -4,7 +4,7 @@ from apikit import jsonify, request_data
 
 from loom.db import session
 from spindle import authz
-from spindle.core import validate
+from spindle.validation import validate
 from spindle.model import Role, Permission
 
 permissions_schema = 'https://schema.occrp.org/operational/permission.json#'

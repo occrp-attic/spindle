@@ -1,7 +1,6 @@
 import os
 import yaml
 
-from jsonschema import Draft4Validator
 from flask import Flask, current_app
 from flask.ext.assets import Environment
 from flask_oauthlib.client import OAuth
@@ -64,10 +63,3 @@ def get_loom_indexer():
     if not hasattr(current_app, 'loom_indexer'):
         current_app.loom_indexer = Indexer(get_loom_config())
     return current_app.loom_indexer
-
-
-def validate(data, schema):
-    resolver = current_app.loom_config.resolver
-    _, schema = resolver.resolve(schema)
-    validator = Draft4Validator(schema, resolver=resolver)
-    return validator.validate(data, schema)

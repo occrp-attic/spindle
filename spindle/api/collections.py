@@ -6,7 +6,8 @@ from sqlalchemy.orm import subqueryload
 from loom.db import session, Collection, CollectionSubject
 from spindle import authz
 from spindle.model import Permission
-from spindle.core import validate, get_loom_config
+from spindle.core import get_loom_config
+from spindle.validation import validate
 
 collections_schema = 'https://schema.occrp.org/operational/collection.json#'
 collections_api = Blueprint('collections', __name__)

@@ -3,7 +3,7 @@ from apikit import obj_or_404, Pager, jsonify, request_data
 
 from loom.db import session, Source
 from spindle import authz
-from spindle.core import validate
+from spindle.validation import validate
 
 sources_schema = 'https://schema.occrp.org/operational/source.json#'
 sources_api = Blueprint('sources', __name__)
