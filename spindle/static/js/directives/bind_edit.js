@@ -71,11 +71,15 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
         return dfd.promise;
       };
 
-      scope.$on('editBind', function(e, serial) {
+      scope.$on('editBind', function(e, serial, newData) {
         if (scope.bind.serial == serial) {
           oldData = scope.bind.data;
+          if (newData) {
+            scope.bind.data = newData;
+          }
           $timeout(function() {
-            angular.element(element).find('input').focus();
+            var el = angular.element(element).find('input');
+            el.focus();
           });
         }
       });

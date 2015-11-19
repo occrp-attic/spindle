@@ -1,6 +1,6 @@
 
-spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 'schemaService', 'metadataService',
-    function($http, $document, $rootScope, authz, schemaService, metadataService) {
+spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope', 'authz', 'schemaService', 'metadataService',
+    function($http, $document, $timeout, $rootScope, authz, schemaService, metadataService) {
   return {
     restrict: 'E',
     transclude: false,
@@ -95,12 +95,21 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
           }
           return;
         }
+
+        if (!selectedCell.editing && $scope.editable && !$event.altKey
+            && !$event.ctrlKey && !$event.metaKey) {
+          var keyId = parseInt($event.originalEvent.keyIdentifier.substring(2), 16),
+              key = String.fromCharCode(keyId);
+          key = $event.shiftKey ? key.toLocaleUpperCase() : key.toLocaleLowerCase();
+          $scope.editCell(selectedCell, key);
+        }
       });
 
       $scope.centerCell = function(cell) {
         var cellElement = angular.element(document.getElementById('cell-' + cell.serial));
         if (cellElement[0]) {
           var offset = cellElement[0].offsetLeft - (cellElement[0].clientWidth * 3);
+          // console.log('scroll to', offset);
           editorDiv.scrollLeftAnimated(Math.max(0, offset));  
         }
       };
@@ -121,11 +130,11 @@ spindle.directive('entityEditor', ['$http', '$document', '$rootScope', 'authz', 
         }
       };
 
-      $scope.editCell = function(cell) {
+      $scope.editCell = function(cell, newVal) {
         if ($scope.editable) {
           cell.editing = true;
           $scope.rows[cell.rowIdx].dirty = true;
-          $scope.$broadcast('editBind', cell.serial);
+          $scope.$broadcast('editBind', cell.serial, newVal);
         }
       };
 

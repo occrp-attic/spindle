@@ -34,7 +34,7 @@ def collection_index(collection):
             continue
         if schema_filter is not None and schema not in schema_filter:
             continue
-        data = entities.get(cs.subject, schema=schema, depth=1,
+        data = entities.get(cs.subject, schema=schema, depth=2,
                             right=authz.entity_right())
         results.append(result_entity(data))
     return jsonify({
@@ -76,7 +76,7 @@ def collection_entity_save(collection):
                             right=authz.entity_right())
     add_to_collection(collection, subject)
     get_loom_indexer().index_one(subject, schema=schema)
-    entity = entities.get(subject, schema=schema, depth=1,
+    entity = entities.get(subject, schema=schema, depth=2,
                           right=authz.entity_right())
     return jsonify({
         'status': 'ok',
