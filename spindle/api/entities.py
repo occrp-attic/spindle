@@ -1,56 +1,39 @@
 from flask import Blueprint, request
-from apikit import jsonify, obj_or_404, request_data
+from apikit import jsonify, obj_or_404, request_data, arg_int
 from werkzeug.exceptions import BadRequest
 
-from loom.db import CollectionSubject, session
 from spindle import authz
 from spindle.core import get_loom_config, get_loom_indexer
-from spindle.validation import validate
 from spindle.util import result_entity
+from spindle.validation import validate
 from spindle.api.collections import get_collection
+from spindle.logic.entities import collection_entities
+from spindle.logic.collections import collection_add_entity
+
 
 entities_api = Blueprint('entities', __name__)
+
+
+def get_depth(default):
+    return max(1, min(arg_int('depth', default=default), 3))
 
 
 @entities_api.route('/api/entities/<path:id>')
 def view(id):
     entities = get_loom_config().entities
-    data = obj_or_404(entities.get(id, depth=3, right=authz.entity_right()))
+    data = obj_or_404(entities.get(id, depth=get_depth(3),
+                                   right=authz.entity_right()))
     return jsonify({'status': 'ok', 'data': result_entity(data)})
 
 
 @entities_api.route('/api/collections/<int:collection>/entities')
 def collection_index(collection):
     collection = get_collection(collection, authz.READ)
-    entities = get_loom_config().entities
-    schema_filter = request.args.get('$schema')
-    if schema_filter is not None:
-        config = get_loom_config()
-        schema_filter = config.implied_schemas(schema_filter)
-    # FIXME: this is a performance nightmare. Think about how to fix it.
-    results = []
-    for cs in collection.subjects:
-        schema = entities.get_schema(cs.subject, right=authz.entity_right())
-        if schema is None:
-            continue
-        if schema_filter is not None and schema not in schema_filter:
-            continue
-        data = entities.get(cs.subject, schema=schema, depth=2,
-                            right=authz.entity_right())
-        results.append(result_entity(data))
+    results = collection_entities(collection, depth=get_depth(2),
+                                  filter_schema=request.args.get('$schema'))
     return jsonify({
         'results': results
     })
-
-
-def add_to_collection(collection, subject):
-    q = session.query(CollectionSubject).filter_by(subject=subject)
-    q = q.filter_by(collection_id=collection.id)
-    cs = q.first()
-    if cs is None:
-        cs = CollectionSubject(collection, subject)
-    session.add(cs)
-    session.commit()
 
 
 @entities_api.route('/api/collections/<int:collection>/entities',
@@ -71,11 +54,10 @@ def collection_entity_save(collection):
 
     # this will raise if it fails:
     validate(data, schema)
-
     subject = entities.save(schema, data, collection_id=collection.id,
                             author=request.auth_user,
                             right=authz.entity_right())
-    add_to_collection(collection, subject)
+    collection_add_entity(collection, subject)
     get_loom_indexer().index_one(subject, schema=schema)
     entity = entities.get(subject, schema=schema, depth=2,
                           right=authz.entity_right())

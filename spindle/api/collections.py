@@ -1,13 +1,12 @@
 from flask import Blueprint, request
 from apikit import obj_or_404, Pager, jsonify, request_data
-from werkzeug.exceptions import BadRequest
 from sqlalchemy.orm import subqueryload
 
-from loom.db import session, Collection, CollectionSubject
+from loom.db import session, Collection
 from spindle import authz
 from spindle.model import Permission
-from spindle.core import get_loom_config
 from spindle.validation import validate
+from spindle.logic.collections import update_subjects
 
 collections_schema = 'https://schema.occrp.org/operational/collection.json#'
 collections_api = Blueprint('collections', __name__)
@@ -18,23 +17,6 @@ def get_collection(id, right):
     collection = obj_or_404(collection)
     authz.require(authz.collection(right, collection.id))
     return collection
-
-
-def update_subjects(collection, data):
-    """ There must be a nicer way to do this in SQLA. """
-    # TODO: authz
-    subjects = data.get('subjects', [])
-    for cs in collection.subjects:
-        if cs.subject in subjects:
-            subjects.remove(cs.subject)
-        else:
-            session.delete(cs)
-    for subject in subjects:
-        if get_loom_config().entities.get_schema(subject):
-            cs = CollectionSubject(collection, subject)
-            session.add(cs)
-        else:
-            raise BadRequest()
 
 
 @collections_api.route('/api/collections')
