@@ -1,16 +1,5 @@
-FROM python:2.7.10
+FROM occrp/flask-node-base
 MAINTAINER Friedrich Lindenberg <pudo@occrp.org>
-
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
-        curl git python2.7 python-pip build-essential python-dev ruby-sass \
-        libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates \
-  && apt-get clean
-
-RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
-RUN apt-get install -y -q nodejs && curl -L https://www.npmjs.org/install.sh | sh
-RUN npm install -g bower uglifyjs
 
 COPY . /spindle
 WORKDIR /spindle
