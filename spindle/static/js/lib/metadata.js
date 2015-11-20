@@ -1,15 +1,15 @@
 
-spindle.factory('metadataService', ['$http', '$q', 'schemaService',
-    function($http, $q, schemaService) {
+libSpindle.factory('metadataService', ['$http', '$q', 'spindleConfig', 'schemaService',
+    function($http, $q, spindleConfig, schemaService) {
   var dfd = $q.defer(),
       rolesDfd = null;
 
-  $http.get('/api/metadata').then(function(res) {
+  var loadSchemas = function(metadata) {
     // After getting the metadata, resolve the list of used schemas into
     // actual objects.
-    var metadata = res.data, schemaDfds = [];
-    for (var i in res.data.schemas) {
-      var uri = res.data.schemas[i];
+    var schemaDfds = [];
+    for (var i in metadata.schemas) {
+      var uri = metadata.schemas[i];
       schemaDfds.push(schemaService.loadSchema(uri));
     }
     $q.all(schemaDfds).then(function(res) {
@@ -23,9 +23,17 @@ spindle.factory('metadataService', ['$http', '$q', 'schemaService',
     }, function(err) {
       dfd.reject(err);
     });
-  }, function(err) {
-    dfd.reject(err);
-  });
+  };
+
+  if (spindleConfig.metadata) {
+    loadSchemas(spindleConfig.metadata);
+  } else {
+    $http.get(spindleConfig.apiUrl + '/metadata').then(function(res) {
+      loadSchemas(res.data);
+    }, function(err) {
+      dfd.reject(err);
+    });  
+  }
 
   return {
     get: function() {

@@ -1,6 +1,6 @@
 
-spindle.factory('schemaService', ['$http', '$q', function($http, $q) {
-  var schemaCache = {}, schemata = {}, bindSerial = 1;
+libSpindle.factory('schemaService', ['$http', '$q', 'spindleConfig', function($http, $q, spindleConfig) {
+  var schemaCache = {}, schemata = spindleConfig.schemas, bindSerial = 1;
   /* JSON schema has a somewhat weird definition of inheritance which is most
   suitable to validation but is a bit off when doing data modelling. See:
   https://github.com/json-schema/json-schema/wiki/anyOf,-allOf,-oneOf,-not */
@@ -12,13 +12,17 @@ spindle.factory('schemaService', ['$http', '$q', function($http, $q) {
       var dfd = $q.defer()
           schemaCache[uri] = dfd.promise;
 
-      $http.get(uri).then(function(res) {
-        // cache the actual schema as well:
-        schemata[uri] = res.data;
-        dfd.resolve(res.data);
-      }, function(err) {
-        dfd.reject(err);
-      });
+      if (schemata[uri]) {
+        dfd.resolve(schemata[uri]);
+      } else {
+        $http.get(uri).then(function(res) {
+          // cache the actual schema as well:
+          schemata[uri] = res.data;
+          dfd.resolve(res.data);
+        }, function(err) {
+          dfd.reject(err);
+        });  
+      }
     }
     return schemaCache[uri]
   };

@@ -1,5 +1,5 @@
-var spindle = angular.module('spindle', ['ngRoute', 'ngAnimate', 'pikaday', 'duScroll',
-  'ui.bootstrap', 'angulartics', 'angulartics.piwik', 'infinite-scroll']);
+var spindle = angular.module('spindle', ['libSpindle', 'ngRoute', 'ngAnimate', 'pikaday',
+  'duScroll', 'ui.bootstrap', 'angulartics', 'angulartics.piwik', 'infinite-scroll']);
 
 spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider', 'pikadayConfigProvider',
     function($routeProvider, $analyticsProvider, $compileProvider, pikadayConfigProvider) {

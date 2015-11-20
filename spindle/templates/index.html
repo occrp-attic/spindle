@@ -120,12 +120,18 @@
     <script src='{{ ASSET_URL }}'></script>
   {% endassets %}
 
-  {% assets filters="uglifyjs", output="build/app.js",
+  {% assets filters="uglifyjs", output="build/lib.js",
+      "js/lib/lib.js",
+      "js/lib/util.js",
+      "js/lib/metadata.js",
+      "js/lib/schema.js",
+      "js/lib/filters.js" %}
+    <script src='{{ ASSET_URL }}'></script>
+  {% endassets %}
+
+  {% assets filters="uglifyjs", output="build/spindle.js",
       "js/app.js",
-      "js/util.js",
-      "js/services/metadata.js",
       "js/services/query.js",
-      "js/services/schema.js",
       "js/services/session.js",
       "js/services/authz.js",
       "js/directives/permissions_edit.js",
@@ -143,8 +149,7 @@
       "js/controllers/search.js",
       "js/controllers/entities.js",
       "js/controllers/sources.js",
-      "js/controllers/collections.js",
-      "js/filters.js"
+      "js/controllers/collections.js"
   %}
     <script src='{{ ASSET_URL }}'></script>
   {% endassets %}
