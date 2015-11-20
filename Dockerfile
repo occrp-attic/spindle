@@ -5,11 +5,11 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -qq && apt-get install -y -q --no-install-recommends \
         curl git python2.7 python-pip build-essential python-dev ruby-sass \
-        libxml2-dev libxslt1-dev libpq-dev curl apt-utils ca-certificates \
+        libxml2-dev libxslt1-dev libpq-dev apt-utils ca-certificates \
   && apt-get clean
 
-RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | sh
-RUN apt-get install --yes nodejs && curl -L https://www.npmjs.org/install.sh | sh
+RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
+RUN apt-get install -y -q nodejs && curl -L https://www.npmjs.org/install.sh | sh
 RUN npm install -g bower uglifyjs
 
 COPY . /spindle
