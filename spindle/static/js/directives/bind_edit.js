@@ -29,8 +29,12 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
       scope.textEntry = !model.isTemporal && !model.isCountry && !model.isObject && !scope.stubEntry;
       scope.countries = countries;
 
-      if (model.isTemporal) {
-        scope.picker = bind.data;
+      if (model.isTemporal && bind.data) {
+        scope.picker = new Pikaday({
+          format: 'YYYY-MM-DD',
+          setDefaultDate: true,
+          defaultDate: new Date(bind.data)
+        });
       }
 
       scope.onPikadaySelect = function(pikaday) {

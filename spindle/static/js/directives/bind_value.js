@@ -29,11 +29,8 @@ spindle.directive('bindValue', ['$sce', 'metadataService', function($sce, metada
             value = countries[value] ? countries[value].title : value;
           } else if (model.isURI) {
             url = value;
-          } else if (model.isDateTime) {
-            value = moment(value).format('LLL');
-            classes = 'date-time';
-          } else if (model.isDate) {
-            value = moment(value).format('LL');
+          } else if (model.isTemporal) {
+            value = moment(value).format('YYYY-MM-DD');
             classes = 'date-time';
           }
 
