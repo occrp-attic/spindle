@@ -131,7 +131,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       $scope.editCell = function(cell, newVal) {
         if ($scope.editable) {
           cell.editing = true;
-          $scope.rows[cell.rowIdx].dirty = true;
+          cell.dirty = true;
           $scope.$broadcast('editBind', cell.serial, newVal);
         }
       };
@@ -139,6 +139,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       $scope.cancelEditCell = function(cell) {
         if ($scope.editable) {
           cell.editing = false;
+          cell.dirty = true;
           $scope.$broadcast('cancelEditBind', cell.serial);
         }
       };
@@ -158,10 +159,13 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           var idx = selectedCell.rowIdx;
           selectedCell.selected = false;  
           selectedCell.editing = false;
-          $timeout.cancel(selectedCell.saveTimeout);
-          selectedCell.saveTimeout = $timeout(function() {
-            $scope.saveRow(idx);
-          }, 500);
+
+          if (selectedCell.dirty) {
+            $timeout.cancel($scope.rows[idx].saveTimeout);
+            $scope.rows[idx].saveTimeout = $timeout(function() {
+              $scope.saveRow(idx);
+            }, 500);  
+          }
         }
         $scope.selectRow(cell == null ? undefined : cell.rowIdx);
 
@@ -171,45 +175,30 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
         selectedCell = cell;
       };
 
-      $scope.saveRow = function(idx) {
+      $scope.saveRow = function(idx, forceUpdate) {
         if (!$scope.editable) return;
 
         var row = $scope.rows[idx],
-            data = {};
+            hasData = !!forceUpdate;
 
-        if (row.data && row.data.id) {
-          data.id = row.data.id;
-        }
-
-        if (row.dirty && !row.saving) {
-          $scope.rows[idx].saving = true;
-          data.$schema = $scope.model.schema.id;
-          for (var i in row.cells) {
-            var cell = row.cells[i];
-            if (cell.data) {
-              data[cell.model.name] = cell.data;            
-            }
+        // upgrade the schema, if applicable:
+        row.data.$schema = $scope.model.schema.id;
+        for (var i in row.cells) {
+          var cell = row.cells[i], name = cell.model.name;
+          if (cell.data != row.data[name]) {
+            row.data[name] = cell.data;
+            hasData = true;
           }
-
-          $http.post(apiUrl, data).then(function(res) {
-            $scope.rows[idx].saving = false;
+        }
+        if (hasData) {
+          $http.post(apiUrl, row.data).then(function(res) {
             $scope.rows[idx].failed = false;
-            $scope.rows[idx].dirty = false;
-            $scope.rows[idx].data = res.data.data;
             if (res.status == 201) { // new record
               $scope.rows.push(makeRow());
             }
           }, function(err) {
-            $scope.rows[idx].saving = false;
             $scope.rows[idx].failed = true;
-            $scope.rows[idx].dirty = false;
           });  
-        }
-      };
-
-      var flushRows = function() {
-        for (var i in $scope.rows) {
-          $scope.saveRow(i);
         }
       };
 
@@ -219,23 +208,21 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
         if (!$(event.target).closest('.entity-editor-cell').length) {
           if (selectedCell != null) {
             $scope.selectCell(null);
-            flushRows();
             $scope.$apply();  
           }
         }
       });
 
       $scope.$on('$destroy', function() {
-        flushRows();
+        $scope.selectCell(null);
       });
 
       $scope.$on('fillStub', function(evt, entity) {
         var cell = selectedCell;
         $scope.rows[cell.rowIdx] = makeRow(entity);
-        $scope.rows[cell.rowIdx].dirty = true;
-        $scope.saveRow(cell.rowIdx);
+        $scope.saveRow(cell.rowIdx, true);
         $scope.clickCell(cell.rowIdx, cell.colIdx);
-        $scope.rows.push(makeRow());
+        $scope.rows.push(makeRow({}));
       });
 
       var loadData = function() {
@@ -267,16 +254,18 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       };
 
       var makeRow = function(entity) {
-        var cells = [];
+        var cells = [], data = {id: entity ? entity.id : undefined};
         for (var j in $scope.columns) {
           var column = $scope.columns[j];
           var value = entity ? entity[column.model.name] : undefined;
-          var cell = schemaService.bindModel(value, column.model)
-          cells.push(cell);
+          if (value !== undefined) {
+            data[column.model.name] = value;
+          }
+          cells.push(schemaService.bindModel(value, column.model));
         }
         return {
           cells: cells,
-          data: entity || {},
+          data: data,
           edit: false,
           saving: false
         };

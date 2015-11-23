@@ -52,7 +52,7 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
       };
 
       scope.fillStub = function($item, $model, $label) {
-        bind.data = $item.name;
+        bind.data = undefined;
         $http.get('/api/entities/' + $item.id).then(function(res) {
           scope.$emit('fillStub', res.data.data);
         });

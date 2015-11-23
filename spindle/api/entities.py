@@ -92,10 +92,9 @@ def collection_entity_save(collection):
     update_operation = 'id' in data
 
     entities = get_loom_config().entities
-    if update_operation:
+    schema = data.get('$schema')
+    if update_operation and schema is None:
         schema = entities.get_schema(data['id'], right=authz.entity_right())
-    else:
-        schema = data.get('$schema')
 
     if schema not in get_loom_config().schemas.values():
         raise BadRequest()
