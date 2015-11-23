@@ -1,7 +1,6 @@
-from itertools import groupby
-
 from flask import Blueprint, request
 from apikit import jsonify, obj_or_404, request_data, arg_int
+from jsonmapping import Network
 from werkzeug.exceptions import BadRequest
 
 from spindle import authz
@@ -50,6 +49,17 @@ def collection_csv(collection):
     visitor, table = entities_to_table(schema, results)
     basename = '%s - %s' % (collection.title, visitor.plural)
     return make_csv_response(table, basename)
+
+
+@entities_api.route('/api/collections/<int:collection>/entities.d3.json')
+def collection_graph(collection):
+    collection = get_collection(collection, authz.READ)
+    network = Network(get_loom_config().resolver)
+    schema = request.args.get('$schema')
+    for entity in collection_entities(collection, depth=get_depth(3),
+                                      filter_schema=schema):
+        network.add(entity)
+    return jsonify(network)
 
 
 @entities_api.route('/api/collections/<int:collection>/entities.xlsx')
