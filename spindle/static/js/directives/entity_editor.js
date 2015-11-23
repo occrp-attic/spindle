@@ -108,7 +108,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       $scope.centerCell = function(cell) {
         var cellElement = angular.element(document.getElementById('cell-' + cell.serial));
         if (cellElement[0]) {
-          var leftOffset = cellElement[0].offsetLeft - (cellElement[0].clientWidth * 2);
+          var leftOffset = cellElement[0].offsetLeft - (cellElement[0].clientWidth * 3);
           editorDiv.scrollLeftAnimated(Math.max(0, leftOffset));
           var rect = cellElement[0].getBoundingClientRect(),
               viewportHeight = document.documentElement.clientHeight;
