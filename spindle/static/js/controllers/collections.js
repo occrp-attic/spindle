@@ -109,7 +109,7 @@ spindle.controller('CollectionController', ['$scope', '$http', '$location', '$ui
       }
       models.push(model);
     }
-    $scope.models = models.sort(spindleModelSort);  
+    $scope.models = models.sort(spindleModelSort);
   }
 
   init();

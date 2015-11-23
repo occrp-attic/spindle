@@ -37,7 +37,7 @@ spindle.config(['$routeProvider', '$analyticsProvider', '$compileProvider', 'pik
   $routeProvider.when('/collections/:id', {
     templateUrl: 'collections/view.html',
     controller: 'CollectionController',
-    reloadOnSearch: true,
+    reloadOnSearch: false,
     resolve: {
       collection: loadCollection,
       schemaModels: loadSchemaModels
