@@ -25,7 +25,8 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
           oldData = null;
 
       // this shouldn't be hard-coded
-      scope.stubEntry = scope.entity && !scope.entity.id && model.name == 'name'; 
+      scope.stubEntry = scope.entity && !scope.entity.id && model.name == 'name';
+      scope.entitySchema = scope.stubEntry ? scope.entity.$schema : model.schema.id;
       scope.textEntry = !model.isTemporal && !model.isCountry && !model.isObject && !scope.stubEntry;
       scope.countries = countries;
 
@@ -61,7 +62,7 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
       scope.suggestEntities = function($viewValue) {
         var params = {
           text: $viewValue,
-          $schema: model.schema.id
+          $schema: scope.entitySchema
         };
         if (scope.stubEntry) {
           params.exclude_collection = scope.collection.id;

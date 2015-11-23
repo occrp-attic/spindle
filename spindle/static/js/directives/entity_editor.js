@@ -264,7 +264,10 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       };
 
       var makeRow = function(entity) {
-        var cells = [], data = {id: entity ? entity.id : undefined};
+        var cells = [], data = {
+          id: entity ? entity.id : undefined,
+          $schema: $scope.model.schema.id
+        };
         for (var j in $scope.columns) {
           var column = $scope.columns[j];
           var value = entity ? entity[column.model.name] : undefined;
