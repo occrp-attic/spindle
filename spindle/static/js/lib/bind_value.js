@@ -1,5 +1,5 @@
 
-spindle.directive('bindValue', ['$sce', 'metadataService', function($sce, metadataService) {
+libSpindle.directive('bindValue', ['$sce', 'metadataService', function($sce, metadataService) {
   var countries = {};
   metadataService.get().then(function(metadata) {
     countries = metadata.countries;
