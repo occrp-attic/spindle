@@ -100,7 +100,9 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           var keyId = parseInt($event.originalEvent.keyIdentifier.substring(2), 16),
               key = String.fromCharCode(keyId);
           key = $event.shiftKey ? key.toLocaleUpperCase() : key.toLocaleLowerCase();
-          $scope.editCell(selectedCell, key.trim());
+          if (key.charCodeAt(0) != 0) {
+            $scope.editCell(selectedCell, key);
+          }
         }
       });
 
