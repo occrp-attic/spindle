@@ -16,7 +16,6 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
 
       var selectedCell = null,
           editorDiv = angular.element(document.getElementById('entity-editor'))
-        
 
       $rootScope.$on('keydown', function(e, $event) {
         if (selectedCell == null) {
@@ -108,8 +107,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       $scope.centerCell = function(cell) {
         var cellElement = angular.element(document.getElementById('cell-' + cell.serial));
         if (cellElement[0]) {
-          var offset = cellElement[0].offsetLeft - (cellElement[0].clientWidth * 3);
-          // console.log('scroll to', offset);
+          var offset = cellElement[0].offsetLeft - (cellElement[0].clientWidth * 2);
           editorDiv.scrollLeftAnimated(Math.max(0, offset));  
         }
       };
@@ -145,15 +143,28 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
         }
       };
 
-      $scope.selectCell = function(cell) {
-        if (selectedCell != null) {
-          selectedCell.selected = false;  
-          selectedCell.editing = false;
-
-          if (cell == null || cell.rowIdx != selectedCell.rowIdx) {
-            $scope.saveRow(selectedCell.rowIdx);
+      $scope.selectRow = function(rowIdx) {
+        for (var i in $scope.rows) {
+          if (rowIdx != undefined && i == rowIdx) {
+            $scope.rows[i].selected = true;
+          } else {
+            $scope.rows[i].selected = false;
           }
         }
+      };
+
+      $scope.selectCell = function(cell) {
+        if (selectedCell != null) {
+          var idx = selectedCell.rowIdx;
+          selectedCell.selected = false;  
+          selectedCell.editing = false;
+          $timeout.cancel(selectedCell.saveTimeout);
+          selectedCell.saveTimeout = $timeout(function() {
+            $scope.saveRow(idx);
+          }, 500);
+        }
+        $scope.selectRow(cell == null ? undefined : cell.rowIdx);
+
         if (cell != null) {
           cell.selected = true;  
         }
