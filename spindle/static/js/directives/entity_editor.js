@@ -100,7 +100,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           var keyId = parseInt($event.originalEvent.keyIdentifier.substring(2), 16),
               key = String.fromCharCode(keyId);
           key = $event.shiftKey ? key.toLocaleUpperCase() : key.toLocaleLowerCase();
-          $scope.editCell(selectedCell, key);
+          $scope.editCell(selectedCell, key.trim());
         }
       });
 
@@ -131,7 +131,6 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       $scope.editCell = function(cell, newVal) {
         if ($scope.editable) {
           cell.editing = true;
-          cell.dirty = true;
           $scope.$broadcast('editBind', cell.serial, newVal);
         }
       };
@@ -139,7 +138,6 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       $scope.cancelEditCell = function(cell) {
         if ($scope.editable) {
           cell.editing = false;
-          cell.dirty = true;
           $scope.$broadcast('cancelEditBind', cell.serial);
         }
       };
@@ -160,12 +158,10 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           selectedCell.selected = false;  
           selectedCell.editing = false;
 
-          if (selectedCell.dirty) {
-            $timeout.cancel($scope.rows[idx].saveTimeout);
-            $scope.rows[idx].saveTimeout = $timeout(function() {
-              $scope.saveRow(idx);
-            }, 500);  
-          }
+          $timeout.cancel($scope.rows[idx].saveTimeout);
+          $scope.rows[idx].saveTimeout = $timeout(function() {
+            $scope.saveRow(idx);
+          }, 500);
         }
         $scope.selectRow(cell == null ? undefined : cell.rowIdx);
 
@@ -185,14 +181,18 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
         row.data.$schema = $scope.model.schema.id;
         for (var i in row.cells) {
           var cell = row.cells[i], name = cell.model.name;
+          if (!cell.data || cell.data.length == 0) {
+            cell.data = undefined;
+          }
           if (cell.data != row.data[name]) {
-            row.data[name] = cell.data;
             hasData = true;
           }
+          row.data[name] = cell.data;
         }
         if (hasData) {
           $http.post(apiUrl, row.data).then(function(res) {
             $scope.rows[idx].failed = false;
+            $scope.rows[idx].data.id = res.data.data.id;
             if (res.status == 201) { // new record
               $scope.rows.push(makeRow());
             }
