@@ -16,7 +16,7 @@ def get_sources():
 def get_schemas():
     """ Get a list of all JSON schemas used to describe entities in the
     index, then resolve and return them. """
-    return current_app.config.get('SCHEMAS', {})
+    return current_app.config.get('SCHEMAS', {}).values()
 
 
 def get_countries():

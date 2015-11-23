@@ -100,17 +100,25 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           var keyId = parseInt($event.originalEvent.keyIdentifier.substring(2), 16),
               key = String.fromCharCode(keyId);
           key = $event.shiftKey ? key.toLocaleUpperCase() : key.toLocaleLowerCase();
-          if (key.charCodeAt(0) != 0) {
-            $scope.editCell(selectedCell, key);
-          }
+          key = key.charCodeAt(0) == 0 ? '' : key;
+          $scope.editCell(selectedCell, key);
         }
       });
 
       $scope.centerCell = function(cell) {
         var cellElement = angular.element(document.getElementById('cell-' + cell.serial));
         if (cellElement[0]) {
-          var offset = cellElement[0].offsetLeft - (cellElement[0].clientWidth * 2);
-          editorDiv.scrollLeftAnimated(Math.max(0, offset));  
+          var leftOffset = cellElement[0].offsetLeft - (cellElement[0].clientWidth * 2);
+          editorDiv.scrollLeftAnimated(Math.max(0, leftOffset));
+          var rect = cellElement[0].getBoundingClientRect(),
+              viewportHeight = document.documentElement.clientHeight;
+          var topScroll = Math.max(0, rect.bottom + (2 * rect.height) - viewportHeight);
+          if (!topScroll) {
+            topScroll = Math.min(0, rect.top - rect.height - window.pageYOffset);
+          }
+          if (topScroll != 0) {
+            $document.scrollTopAnimated(window.pageYOffset + topScroll);  
+          }
         }
       };
 
