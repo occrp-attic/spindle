@@ -42,7 +42,11 @@
         // background-color: transparentize($occrp-dark, 0.5);
     }
 
-    tr.failed {
+    tr.failed, tr.selected.failed, tr.failed:nth-of-type(odd), tr.selected.failed:nth-of-type(odd) {
         background-color: transparentize($brand-primary, 0.8);
+    }
+
+    tr.selected, tr.selected:nth-of-type(odd) {
+        background-color: transparentize($occrp-dark, 0.9);
     }
 }

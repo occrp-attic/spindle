@@ -3,7 +3,7 @@
     <tr>
       <th ng-repeat="column in columns" ng-bind="column.title"></th>
     </tr>
-    <tr ng-repeat="row in rows" ng-class="{'failed': row.failed}">
+    <tr ng-repeat="row in rows" ng-class="{'failed': row.failed, 'selected': row.selected}">
       <td ng-repeat="cell in row.cells" class="entity-editor-cell" id="cell-{{cell.serial}}"
         ng-class="{'selected': cell.selected}"
         ng-click="clickCell($parent.$index, $index, $event)">
