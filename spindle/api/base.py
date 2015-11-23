@@ -33,12 +33,7 @@ def handle_authz_error(err):
 def handle_validation_error(err):
     return jsonify({
         'status': 'error',
-        'message': err.message,
-        'cause': err.cause,
-        'value': err.validator_value,
-        'instance': err.instance,
-        'schema': err.schema,
-        'parent': err.parent
+        'message': err.message
     }, status=400)
 
 
