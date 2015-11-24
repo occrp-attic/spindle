@@ -82,8 +82,8 @@ spindle.directive('bindEdit', ['metadataService', '$timeout', '$http', '$q',
           if (newData) {
             scope.bind.data = newData;
           }
+          var el = angular.element(element).find('input');
           $timeout(function() {
-            var el = angular.element(element).find('input');
             el.focus();
           });
         }

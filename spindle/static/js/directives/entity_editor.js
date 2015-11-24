@@ -35,6 +35,8 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           } else {
             $scope.editCell(selectedCell);
           }
+          $event.preventDefault();
+          $event.stopPropagation();
           return;
         }
 
@@ -42,6 +44,8 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
         if ($event.keyCode == 27) {
           if (selectedCell.editing) {
             $scope.cancelEditCell(selectedCell);
+            $event.preventDefault();
+            $event.stopPropagation();
           }
           return;
         }
@@ -62,6 +66,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
             }  
           }
           $event.preventDefault();
+          $event.stopPropagation();
           return;
         }
 
@@ -70,6 +75,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           if (selectedCell.rowIdx > 0) {
             $scope.clickCell(selectedCell.rowIdx - 1, selectedCell.colIdx);
             $event.preventDefault();
+            $event.stopPropagation();
           }
           return;
         } else if ($event.keyCode == 40 && !selectedCell.editing) {
@@ -77,6 +83,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           if (selectedCell.rowIdx < rows) {
             $scope.clickCell(selectedCell.rowIdx + 1, selectedCell.colIdx);
             $event.preventDefault();
+            $event.stopPropagation();
           }
           return;
         } else if ($event.keyCode == 39 && !selectedCell.editing) {
@@ -84,6 +91,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           if (selectedCell.colIdx < columns) {
             $scope.clickCell(selectedCell.rowIdx, selectedCell.colIdx + 1);
             $event.preventDefault();
+            $event.stopPropagation();
           }
           return;
         } else if ($event.keyCode == 37 && !selectedCell.editing) {
@@ -91,6 +99,7 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           if (selectedCell.colIdx > 0) {
             $scope.clickCell(selectedCell.rowIdx, selectedCell.colIdx - 1);
             $event.preventDefault();
+            $event.stopPropagation();
           }
           return;
         }

@@ -17,7 +17,7 @@ SCHEMAS = {
     'building': 'https://schema.occrp.org/generic/building.json#',
     'membership': 'https://schema.occrp.org/generic/membership.json#',
     'ownership': 'https://schema.occrp.org/generic/ownership.json#',
-    'marriage': 'https://schema.occrp.org/generic/marriage.json#',
-    'parenthood': 'https://schema.occrp.org/generic/parenthood.json#',
+    'social': 'https://schema.occrp.org/generic/social.json#',
+    'family': 'https://schema.occrp.org/generic/family.json#',
     'other_name': 'https://schema.occrp.org/generic/other_name.json#',
 }
