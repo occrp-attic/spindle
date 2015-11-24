@@ -4,6 +4,22 @@ libSpindle.directive('bindValue', ['$sce', 'metadataService', function($sce, met
   metadataService.get().then(function(metadata) {
     countries = metadata.countries;
   });
+
+  var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+  };
+
+  function escapeHtml(string) {
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+      return entityMap[s];
+    });
+  }
+
   return {
     restrict: 'E',
     replace: false,
@@ -39,7 +55,7 @@ libSpindle.directive('bindValue', ['$sce', 'metadataService', function($sce, met
           } else if (classes) {
             html = '<span class="' + classes + '">' + value + '</span>';
           } else {
-            html = value + '';
+            html = escapeHtml(value);
           }
         }
         scope.html = $sce.trustAsHtml(html);
