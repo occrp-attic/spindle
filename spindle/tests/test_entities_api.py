@@ -110,6 +110,23 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 400, res
 
+    def test_remove_entity(self):
+        self.login()
+        coll_id = self.coll.id
+        url = '/api/collections/%s/entities' % coll_id
+        ent = {
+            '$schema': self.schema_uri,
+            'name': 'Mother Superior'
+        }
+        res = self.client.post(url, data=json.dumps(ent),
+                               content_type='application/json')
+        assert res.status_code == 201, res
+        data = res.json['data']
+        res = self.client.delete(url)
+        assert res.status_code == 400, res
+        res = self.client.delete(url + '?subject=%s' % data['id'])
+        assert res.status_code == 204, res
+
     def test_entity_update_dedupe(self):
         self.login()
         config = self.app.loom_config

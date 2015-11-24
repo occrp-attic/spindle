@@ -1,9 +1,13 @@
 <div class="entity-editor table-box" id="entity-editor">
   <table class="table table-striped table-bordered" ng-class="{'editable': editable}">
     <tr>
+      <th class="remove-entity"></th>
       <th ng-repeat="column in columns" ng-bind="column.title"></th>
     </tr>
     <tr ng-repeat="row in rows" ng-class="{'failed': row.failed, 'selected': row.selected}">
+      <td class="remove-entity">
+        <a ng-show="row.data.id" ng-click="removeEntity(row)"><i class="fa fa-chain-broken"></i></a>
+      </td>
       <td ng-repeat="cell in row.cells" class="entity-editor-cell" id="cell-{{cell.serial}}"
         ng-class="{'selected': cell.selected}"
         ng-click="clickCell($parent.$index, $index, $event)">

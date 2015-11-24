@@ -10,6 +10,7 @@ from spindle.validation import validate
 from spindle.api.collections import get_collection
 from spindle.logic.entities import collection_entities, entities_to_table
 from spindle.logic.collections import collection_add_entity
+from spindle.logic.collections import collection_remove_entity
 from spindle.api.export import make_csv_response, make_xlsx_response
 
 
@@ -112,3 +113,17 @@ def collection_entity_save(collection):
         'status': 'ok',
         'data': entity
     }, status=200 if update_operation else 201)
+
+
+@entities_api.route('/api/collections/<int:collection>/entities',
+                    methods=['DELETE'])
+def collection_entity_remove(collection):
+    collection = get_collection(collection, authz.WRITE)
+    subject = request.args.get('subject')
+    if subject is None:
+        raise BadRequest()
+    collection_remove_entity(collection, subject)
+    get_loom_indexer().index_one(subject)
+    return jsonify({
+        'status': 'ok'
+    }, status=204)

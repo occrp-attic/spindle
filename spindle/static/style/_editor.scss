@@ -11,6 +11,13 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+
+        &.remove-entity {
+            min-width: 1px;
+            max-width: 1.2em;
+            padding-left: 3px;
+            padding-right: 3px;
+        }
     }
 
     .editable {

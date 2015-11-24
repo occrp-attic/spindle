@@ -221,6 +221,14 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
         }
       };
 
+      $scope.removeEntity = function(row) {
+        if (!row.data.id) {
+          return;
+        }
+        $scope.rows.splice($scope.rows.indexOf(row), 1);
+        $http.delete(apiUrl, {params: {subject: row.data.id}});
+      };
+
       angular.element($document).on('click', function(event) {
         // this will listen to all clicks and blur the current cell when
         // it happens outside the editor.

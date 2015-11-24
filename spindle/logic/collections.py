@@ -14,6 +14,16 @@ def collection_add_entity(collection, subject):
     session.commit()
 
 
+def collection_remove_entity(collection, subject):
+    q = session.query(CollectionSubject).filter_by(subject=subject)
+    q = q.filter_by(collection_id=collection.id)
+    q.delete()
+    session.commit()
+
+    entities = get_loom_config().entities
+    entities.remove(subject, collection_id=collection.id)
+
+
 def update_subjects(collection, data):
     """ There must be a nicer way to do this in SQLA. """
     # TODO: authz
