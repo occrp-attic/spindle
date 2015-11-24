@@ -32,7 +32,7 @@ def view(id):
 @entities_api.route('/api/collections/<int:collection>/entities')
 def collection_index(collection):
     collection = get_collection(collection, authz.READ)
-    results = collection_entities(collection, depth=get_depth(2),
+    results = collection_entities(collection, depth=get_depth(1),
                                   filter_schema=request.args.get('$schema'))
     return jsonify({
         'results': results
@@ -107,7 +107,7 @@ def collection_entity_save(collection):
                             right=authz.entity_right())
     collection_add_entity(collection, subject)
     get_loom_indexer().index_one(subject, schema=schema)
-    entity = entities.get(subject, schema=schema, depth=2,
+    entity = entities.get(subject, schema=schema, depth=1,
                           right=authz.entity_right())
     return jsonify({
         'status': 'ok',

@@ -7,8 +7,8 @@ from spindle.util import result_entity, OrderedDict
 
 def collection_entities(collection, depth=2, filter_schema=None):
     config = get_loom_config()
-    if filter_schema is not None:
-        filter_schema = config.implied_schemas(filter_schema)
+    # if filter_schema is not None:
+    #     filter_schema = config.implied_schemas(filter_schema)
     # FIXME: this is a performance nightmare. Think about how to fix it.
     results = []
     for cs in collection.subjects:
@@ -16,7 +16,7 @@ def collection_entities(collection, depth=2, filter_schema=None):
                                             right=authz.entity_right())
         if schema is None:
             continue
-        if filter_schema is not None and schema not in filter_schema:
+        if filter_schema is not None and schema != filter_schema:
             continue
         data = config.entities.get(cs.subject, schema=schema, depth=depth,
                                    right=authz.entity_right())
