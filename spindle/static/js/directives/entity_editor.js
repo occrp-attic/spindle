@@ -121,13 +121,9 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
           editorDiv.scrollLeftAnimated(Math.max(0, leftOffset));
           var rect = cellElement[0].getBoundingClientRect(),
               viewportHeight = document.documentElement.clientHeight;
-          var topScroll = Math.max(0, rect.bottom + (2 * rect.height) - viewportHeight);
-          if (!topScroll) {
-            topScroll = Math.min(0, rect.top - rect.height - window.pageYOffset);
-          }
-          if (topScroll != 0) {
-            $document.scrollTopAnimated(window.pageYOffset + topScroll);  
-          }
+          var topOffset = viewportHeight / 3;
+          var topScroll = Math.max(0, rect.top - topOffset + window.pageYOffset);
+          $document.scrollTopAnimated(topScroll);
         }
       };
 
