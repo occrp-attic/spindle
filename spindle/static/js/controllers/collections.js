@@ -37,29 +37,50 @@ spindle.controller('CollectionNewDialog', ['$scope', '$http', '$uibModalInstance
 }]);
 
 
-var loadCollection = ['$q', '$http', '$route', function($q, $http, $route) {
+var loadCollectionEditor = ['$q', '$http', '$route', 'metadataService', 'schemaService',
+    function($q, $http, $route, metadataService, schemaService) {
+
   var dfd = $q.defer(),
-      url = '/api/collections/' + $route.current.params.id;
-  $http.get(url).then(function(res) {
-    dfd.resolve(res.data.data);
-  }, function(err) {
-    dfd.reject();
-  });
-  return dfd.promise;
-}];
+      collectionId = $route.current.params.id,
+      collectionUrl = '/api/collections/' + collectionId,
+      entitiesUrl = collectionUrl + '/entities';
 
+  // load the collection.
+  var collectionDfd = $http.get(collectionUrl);
 
-var loadSchemaModels = ['$q', '$http', 'metadataService', 'schemaService', function($q, $http, metadataService, schemaService) {
-  var dfd = $q.defer();
+  // load all schemas and make them available as models.
   metadataService.get().then(function(metadata) {
     var dfds = [];
     for (var schema in metadata.schemas) {
       dfds.push(schemaService.getModel(schema));
     }
+
     $q.all(dfds).then(function(models) {
-      dfd.resolve({
-        models: models,
-        metadata: metadata
+      var data = {
+        schema: $route.current.params.$schema,
+        models: models.sort(spindleModelSort),
+        metadata: metadata,
+        model: null
+      };
+
+      for (var i in data.models) {
+        var model = data.models[i];
+        if (data.schema == model.schema.id) {
+          data.model = model;
+        }
+      }
+
+      if (data.model === null) {
+        data.model = data.models[0];
+        data.schema = data.model.schema.id;
+      }
+
+      var entitiesDfd = $http.get(entitiesUrl, {params: {$schema: data.schema}});
+
+      $q.all([collectionDfd, entitiesDfd]).then(function(res) {
+        data.collection = res[0].data.data;
+        data.entities = res[1].data.results;
+        dfd.resolve(data);
       });
     }, function(err) {
       dfd.reject(err);
@@ -69,18 +90,17 @@ var loadSchemaModels = ['$q', '$http', 'metadataService', 'schemaService', funct
 }];
 
 
-spindle.controller('CollectionController', ['$scope', '$http', '$location', '$uibModal', 'schemaModels', 'authz', 'collection',
-    function($scope, $http, $location, $uibModal, schemaModels, authz, collection) {
-  $scope.collection = collection;
-  $scope.model = {};
-  $scope.editable = authz.collection(authz.WRITE, collection.id);
+spindle.controller('CollectionController', ['$scope', '$http', '$location', '$uibModal', 'data', 'authz',
+    function($scope, $http, $location, $uibModal, data, authz) {
+  $scope.collection = data.collection;
+  $scope.model = data.model;
+  $scope.models = data.models;
+  $scope.entities = data.entities;
+  $scope.editable = authz.collection(authz.WRITE, data.collection.id);
 
-  $scope.setSchema = function(model) {
-    var search = $location.search();
-    search.$schema = model.schema.id;
-    $location.search(search);
-    return false;
-  }
+  $scope.setModel = function(model) {
+    $location.search({$schema: model.schema.id});
+  };
     
   $scope.editSettings = function() {
     var d = $uibModal.open({
@@ -99,20 +119,6 @@ spindle.controller('CollectionController', ['$scope', '$http', '$location', '$ui
     });
   };
 
-  var init = function() {
-    var models = [];
-    for (var i in schemaModels.models) {
-      var model = schemaModels.models[i];
-      if (model.schema.id == $location.search().$schema) {
-        model.active = true;
-        $scope.model = model;
-      }
-      models.push(model);
-    }
-    $scope.models = models.sort(spindleModelSort);
-  }
-
-  init();
 }]);
 
 

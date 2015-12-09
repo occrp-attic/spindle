@@ -6,7 +6,8 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
     transclude: false,
     scope: {
       'model': '=',
-      'collection': '='
+      'collection': '=',
+      'entities': '='
     },
     templateUrl: 'entities/editor.html',
     controller: ['$scope', function($scope) {
@@ -270,8 +271,8 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
 
       var getRows = function(columns, entities) {
         var rows = []
-        for (var i in entities.results) {
-          rows.push(makeRow(entities.results[i]));
+        for (var i in entities) {
+          rows.push(makeRow(entities[i]));
         }
         return rows;
       };
@@ -299,13 +300,11 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
 
       var init = function() {
         metadataService.get().then(function(metadata) {
-          loadData().then(function(res) {
-            $scope.columns = getModelColumns($scope.model, metadata);
-            $scope.rows = getRows($scope.columns, res.data);
-            for (var i in [1, 2, 3]) {
-              $scope.rows.push(makeRow());
-            }
-          });
+          $scope.columns = getModelColumns($scope.model, metadata);
+          $scope.rows = getRows($scope.columns, $scope.entities);
+          for (var i in [1, 2, 3]) {
+            $scope.rows.push(makeRow());
+          }
         });
       };
 
