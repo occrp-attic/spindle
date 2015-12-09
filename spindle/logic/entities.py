@@ -1,6 +1,5 @@
 from jsonmapping import SchemaVisitor
 
-from loom.db import CollectionSubject, session
 from spindle import authz
 from spindle.core import get_loom_config
 from spindle.util import result_entity, OrderedDict
@@ -8,21 +7,13 @@ from spindle.util import result_entity, OrderedDict
 
 def collection_entities(collection, depth=2, filter_schema=None):
     config = get_loom_config()
-    # if filter_schema is not None:
-    #     filter_schema = config.implied_schemas(filter_schema)
     # FIXME: this is a performance nightmare. Think about how to fix it.
     results = []
-    q = session.query(CollectionSubject)
-    q = q.filter(CollectionSubject.collection == collection)
-    q = q.order_by(CollectionSubject.created_at.asc())
-    for cs in q:
-        schema = config.entities.get_schema(cs.subject,
-                                            right=authz.entity_right())
-        if schema is None:
-            continue
-        if filter_schema is not None and schema != filter_schema:
-            continue
-        data = config.entities.get(cs.subject, schema=schema, depth=depth,
+    q = config.entities.subjects(schema=filter_schema,
+                                 collection_id=collection.id,
+                                 right=authz.entity_right())
+    for (subject, schema) in q:
+        data = config.entities.get(subject, schema=schema, depth=depth,
                                    right=authz.entity_right())
         results.append(result_entity(data))
     return results
