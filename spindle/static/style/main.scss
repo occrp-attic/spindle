@@ -74,5 +74,37 @@ td.numeric, th.numeric {
 @import "nav";
 @import "search";
 @import "entity";
-@import "editor";
+// @import "editor";
 @import "admin";
+
+
+$cell-width: 10em;
+$cell-height: 2em;
+
+.entity-editor {
+    margin-top: 1em;
+    display: table;
+    overflow: scroll;
+
+    .editor-row {
+        display: table-row;
+    }
+
+    .editor-cell {
+        display: table-cell;
+        max-width: $cell-width;
+        min-width: $cell-width;
+
+        &.tiny {
+            max-width: $cell-width / 5;
+            min-width: $cell-width / 5;
+        }
+
+        min-height: $cell-height;
+        max-height: $cell-height;
+        border: 1px solid red;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}

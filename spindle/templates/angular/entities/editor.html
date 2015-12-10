@@ -1,4 +1,4 @@
-<div class="entity-editor table-box" id="entity-editor">
+<!--div class="entity-editor table-box" id="entity-editor">
   <table class="table table-striped table-bordered" ng-class="{'editable': editable}">
     <tr>
       <th class="remove-entity"></th>
@@ -16,4 +16,20 @@
       </td>
     </tr>
   </table>
+</div-->
+
+<div class="entity-editor" id="entity-editor">
+  <div class="editor-row editor-header">
+    <div class="editor-cell" ng-repeat="column in columns | limitTo:1" ng-bind="column.title"></div>
+    <div class="editor-cell tiny" class="remove-entity"></div>
+  </div>
+  <div class="editor-row" ng-repeat="row in rows" ng-class="{'failed': row.failed, 'selected': row.selected}">
+    <div ng-repeat="cell in row.cells | limitTo:1" class="editor-cell" id="cell-{{cell.serial}}"
+        ng-class="{'selected': cell.selected}"
+        ng-click="clickCell($parent.$index, $index, $event)">
+        <bind-value ng-hide="cell.editing" bind="cell"></bind-value>
+        <bind-edit ng-show="cell.editing" bind="cell" collection="collection" entity="row.data"></bind-edit>
+    </div>
+    <div class="editor-cell tiny" class="remove-entity"></div>
+  </div>
 </div>
