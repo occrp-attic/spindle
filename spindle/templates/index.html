@@ -21,7 +21,7 @@
 </head>
 <body ng-controller="AppController as app" ng-keydown="onKey($event)">
   <nav class="navbar navbar-default navbar-fixed-top" id="topnav">
-    <div class="container">
+    <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="/#/">
           <img src="/static/img/occrp-logo-bg.png">
@@ -73,12 +73,12 @@
         </div>
       </div>
     </div>
-    <div id="view" class="container">
+    <div id="view" class="container-fluid">
       <div ng-cloak ng-view autoscroll="true"></div>
     </div>
   </div>
   <footer>
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-md-6">
           <p>Organized Crime and Corruption Reporting Project</p>
