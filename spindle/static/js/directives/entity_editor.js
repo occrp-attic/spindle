@@ -196,15 +196,26 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
         // upgrade the schema, if applicable:
         row.data.$schema = $scope.model.schema.id;
         for (var i in row.cells) {
-          var cell = row.cells[i], name = cell.model.name;
+          var cell = row.cells[i],
+              name = cell.model.name;
+
           if (!cell.data || cell.data.length == 0) {
             cell.data = undefined;
           }
+
           if (cell.data != row.data[name]) {
             hasData = true;
+
+            // should type casting be handled here?
+            if (cell.model.isFloat) {
+              cell.data = parseFloat(cell.data);
+            } else if (cell.model.isInteger) {
+              cell.data = parseInt(cell.data, 10);
+            }
           }
           row.data[name] = cell.data;
         }
+
         if (hasData) {
           $http.post(apiUrl, row.data).then(function(res) {
             $scope.rows[idx].failed = false;

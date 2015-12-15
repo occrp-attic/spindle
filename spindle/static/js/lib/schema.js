@@ -121,9 +121,9 @@ libSpindle.factory('schemaService', ['$http', '$q', 'spindleConfig', function($h
     self.isArray = self.types.indexOf('array') != -1;
     self.isValue = !self.isObject && !self.isArray;
     self.isString = self.types.indexOf('string') != -1;
-    self.isBool = self.types.indexOf('boolean') != -1 || self.types.indexOf('bool');
-    self.isInteger = self.types.indexOf('integer') != -1 || self.types.indexOf('int');
-    self.isFloat = self.types.indexOf('float') != -1 || self.types.indexOf('numeric');
+    self.isBool = self.types.indexOf('boolean') != -1 || self.types.indexOf('bool') != -1;
+    self.isInteger = self.types.indexOf('integer') != -1 || self.types.indexOf('int') != -1;
+    self.isFloat = self.types.indexOf('float') != -1 || self.types.indexOf('numeric') != -1;
     self.isNumber = self.isInteger || self.isFloat;
     self.isDateTime = self.isString && self.format == 'date-time';
     self.isDate = self.isString && self.format == 'date';

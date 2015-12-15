@@ -13,6 +13,7 @@ SCHEMAS = {
     'organization': 'https://schema.occrp.org/generic/organization.json#',
     'person': 'https://schema.occrp.org/generic/person.json#',
     'company': 'https://schema.occrp.org/generic/company.json#',
+    'asset': 'https://schema.occrp.org/generic/asset.json#',
     'land': 'https://schema.occrp.org/generic/land.json#',
     'building': 'https://schema.occrp.org/generic/building.json#',
     'membership': 'https://schema.occrp.org/generic/membership.json#',
