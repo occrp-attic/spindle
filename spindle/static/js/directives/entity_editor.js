@@ -281,9 +281,16 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       };
 
       var getRows = function(columns, entities) {
-        var rows = []
-        for (var i in entities) {
-          rows.push(makeRow(entities[i]));
+        var rows = [];
+        var sorted = entities.sort(function(a, b) {
+          console.log(a, b);
+          if (a.name && b.name) {
+            return a.name.localeCompare(b.name);
+          }
+          return a.id.localeCompare(b.id);
+        });
+        for (var i in sorted) {
+          rows.push(makeRow(sorted[i]));
         }
         return rows;
       };
