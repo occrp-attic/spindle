@@ -283,7 +283,6 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       var getRows = function(columns, entities) {
         var rows = [];
         var sorted = entities.sort(function(a, b) {
-          console.log(a, b);
           if (a.name && b.name) {
             return a.name.localeCompare(b.name);
           }
