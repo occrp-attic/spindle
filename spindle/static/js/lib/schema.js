@@ -188,7 +188,7 @@ libSpindle.factory('schemaService', ['$http', '$q', 'spindleConfig', function($h
           self._prop_models.push(new Model(prop, name));
         }
       }
-      return self._prop_models;
+      return self._prop_models.sort(spindleModelSort);
     };
 
     self.getItemsModel = function() {
@@ -252,6 +252,35 @@ libSpindle.factory('schemaService', ['$http', '$q', 'spindleConfig', function($h
         return next_bind;
       }
       return next_bind.getPath(path)
+    };
+
+    self.empty = function() {
+      if (self.data === null || self.data === undefined) {
+        return true;
+      }
+      return false;
+    }
+
+    self.compareTo = function(other) {  
+      if (self.model.isNumber && !self.empty()) {
+        return self.data - other.data;
+      } else if (self.model.isString && !self.empty()) {
+        return self.data.localeCompare(other.data);
+      } else if (self.model.isObject && !self.empty()) {
+        for (var i in self.binds) {
+          var bind = self.binds[i];
+          if (!bind.schema.hidden) {
+            if (other.has(bind.model.name)) {
+              var obind = other.p[bind.model.name];
+              var cmp = bind.compareTo(obind);
+              if (cmp != 0) {
+                return cmp;
+              }
+            }  
+          }
+        }
+      }
+      return 0;
     };
 
     // end bind

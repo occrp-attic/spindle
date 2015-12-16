@@ -283,10 +283,9 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
       var getRows = function(columns, entities) {
         var rows = [];
         var sorted = entities.sort(function(a, b) {
-          if (a.name && b.name) {
-            return a.name.localeCompare(b.name);
-          }
-          return a.id.localeCompare(b.id);
+          var amodel = schemaService.bindModel(a, $scope.model),
+              bmodel = schemaService.bindModel(b, $scope.model);
+          return amodel.compareTo(bmodel);
         });
         for (var i in sorted) {
           rows.push(makeRow(sorted[i]));
