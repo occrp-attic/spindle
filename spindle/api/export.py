@@ -2,7 +2,7 @@ from StringIO import StringIO
 from unicodecsv import writer as csvwriter
 from xlsxwriter import Workbook
 
-from flask import send_file
+from flask import Response
 
 XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
@@ -16,8 +16,8 @@ def make_csv_response(rows, basename):
         for row in rows:
             writer.writerow([row.get(h) for h in headers])
     output.seek(0)
-    return send_file(output, mimetype='text/csv', as_attachment=True,
-                     attachment_filename='%s.csv' % basename)
+    headers = {'Content-Disposition': 'attachment; filename=%s.csv' % basename}
+    return Response(output, mimetype='text/csv', headers=headers)
 
 
 def make_xlsx_response(sheets, basename):
@@ -53,5 +53,6 @@ def make_xlsx_response(sheets, basename):
 
     workbook.close()
     output.seek(0)
-    return send_file(output, mimetype=XLSX_MIME, as_attachment=True,
-                     attachment_filename='%s.xlsx' % basename)
+    fn = basename + '.xlsx'
+    headers = {'Content-Disposition': 'attachment; filename=%s' % fn}
+    return Response(output, mimetype=XLSX_MIME, headers=headers)
