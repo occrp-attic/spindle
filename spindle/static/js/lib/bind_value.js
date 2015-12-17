@@ -45,8 +45,12 @@ libSpindle.directive('bindValue', ['$sce', 'metadataService', function($sce, met
             value = countries[value] ? countries[value].title : value;
           } else if (model.isURI) {
             url = value;
+          } else if (model.isNumber) {
+            //value = numeral(value).format('0.00a');
+            value = numeral(value).format();
+            classes = 'numeric';
           } else if (model.isTemporal) {
-            value = moment(value).format('YYYY-MM-DD');
+            value = moment(value).format('LL');
             classes = 'date-time';
           }
 

@@ -208,9 +208,9 @@ spindle.directive('entityEditor', ['$http', '$document', '$timeout', '$rootScope
 
             // should type casting be handled here?
             if (cell.model.isFloat) {
-              cell.data = parseFloat(cell.data);
+              cell.data = parseFloat(numeral().unformat(cell.data));
             } else if (cell.model.isInteger) {
-              cell.data = parseInt(cell.data, 10);
+              cell.data = parseInt(numeral().unformat(cell.data), 10);
             }
           }
           row.data[name] = cell.data;
