@@ -1,7 +1,7 @@
 
 var loadCollections = ['$q', '$http', function($q, $http) {
   var dfd = $q.defer();
-  $http.get('/api/collections').then(function(res) {
+  $http.get('/api/collections?limit=1000').then(function(res) {
     dfd.resolve(res.data);
   }, function(err) {
     dfd.reject();
