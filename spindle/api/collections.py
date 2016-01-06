@@ -27,7 +27,7 @@ def index():
     q = session.query(Collection)
     q = q.filter(Collection.id.in_(collections))
     q = q.options(subqueryload('subjects'))
-    q = q.order_by(Collection.updated_at.desc())
+    q = q.order_by(Collection.title.asc())
     return jsonify(Pager(q))
 
 
